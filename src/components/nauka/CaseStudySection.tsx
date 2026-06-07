@@ -19,7 +19,6 @@ interface Project {
   featured: boolean;
 }
 
-// Fallback data
 const fallbackProjects: Project[] = [
   {
     id: 'mitsubishi', slug: 'mitsubishi', client: 'Mitsubishi Motor Indonesia',
@@ -39,13 +38,13 @@ const fallbackProjects: Project[] = [
     id: 'jasaprotect', slug: 'jasaprotect', client: 'JasaProtect',
     category: 'Landing Page', title: 'Platform Asuransi yang Bikin Orang Ngerti Apa yang Mereka Beli',
     description: 'Asuransi itu kompleks — terlalu banyak pilihan, terlalu banyak istilah, terlalu sedikit kejelasan. JasaProtect hadir sebagai broker yang membuat memilih asuransi terasa mudah, bukan membingungkan.',
-    approach: 'Interface perbandingan transparan, penjelasan dalam bahasa sehari-hari, dan alur pemilihan terpandu. Mengurangi kelelahan keputusan sekaligus menghormati kecerdasan pengguna.',
+    approach: 'Interface perbandingan transparan, penjelasan dalam bahasa sehari-hari, dan alur pemilihan terpandu.',
     liveUrl: 'https://jasa-proteksi.vercel.app', image: '/portfolio/jasaprotect.png', color: '#6366f1', featured: false,
   },
   {
     id: 'naukagadget', slug: 'nauka-gadget', client: 'Nauka Gadget',
     category: 'E-Commerce', title: 'Toko Gadget yang Terasa Premium, Bukan Marketplace Murahan',
-    description: 'Jual gadget di marketplace itu gampang — tapi margin tipis dan brand tidak terbangun. Nauka Gadget butuh toko online sendiri yang bikin customer merasa belanja di tempat resmi, bukan lapak abu-abu.',
+    description: 'Jual gadget di marketplace itu gampang — tapi margin tipis dan brand tidak terbangun. Nauka Gadget butuh toko online sendiri yang bikin customer merasa belanja di tempat resmi.',
     approach: 'E-commerce dengan desain premium, katalog terorganisir, garansi resmi, dan checkout yang ga bikin orang kabur.',
     liveUrl: 'https://naukagadget.vercel.app', image: '/portfolio/nauka-gadget.png', color: '#8b5cf6', featured: false,
   },
@@ -53,14 +52,14 @@ const fallbackProjects: Project[] = [
     id: 'nauka-kostay', slug: 'nauka-kostay', client: 'Nauka Kostay',
     category: 'Website Profesional', title: 'Kos yang Dipesan Seperti Hotel — Karena Penghuni Layak Dapat Yang Terbaik',
     description: 'Kost itu bisnis, tapi penghuninya manusia. Kostay butuh kehadiran digital yang bikin calon penghuni merasa dihargai — bukan sekadar lihat foto kamar dan harga.',
-    approach: 'Digital hospitality experience: virtual tour, fasilitas yang ditampilkan dengan pride, testimoni penghuni, dan booking flow yang bikin orang merasa sedang check-in hotel.',
+    approach: 'Digital hospitality experience: virtual tour, fasilitas yang ditampilkan dengan pride, testimoni penghuni, dan booking flow yang seamless.',
     liveUrl: 'https://nauka-kostay.vercel.app', image: '/portfolio/nauka-kostay.png', color: '#d97706', featured: false,
   },
   {
     id: 'ghazy', slug: 'ghazy', client: 'Ghazy Computer',
     category: 'Sistem Inventory', title: 'Dari Spreadsheet Chaos ke Sistem yang Jalan Sendiri',
-    description: 'Bisnis buyback laptop yang berkembang tenggelam dalam spreadsheet. Mereka butuh sistem yang bisa menangani penawaran, tracking barang, pickup, dan pembayaran — tanpa harus buka 10 tab Excel.',
-    approach: 'Web app dengan flow submit barang → evaluasi → penawaran harga → pickup → pembayaran. Semua terlacak, terorganisir, dan bisa diakses dari mana saja.',
+    description: 'Bisnis buyback laptop yang berkembang tenggelam dalam spreadsheet. Mereka butuh sistem yang bisa menangani penawaran, tracking barang, pickup, dan pembayaran.',
+    approach: 'Web app dengan flow submit barang → evaluasi → penawaran harga → pickup → pembayaran. Semua terlacak dan terorganisir.',
     liveUrl: 'https://ghazycomputer.com', image: '/portfolio/ghazy-computer.png', color: '#e11d48', featured: true,
   },
 ];
@@ -74,7 +73,6 @@ export function CaseStudySection() {
   const [dragOffset, setDragOffset] = useState(0);
   const [projects, setProjects] = useState<Project[]>(fallbackProjects);
 
-  // Fetch projects from API
   useEffect(() => {
     fetch('/api/public/projects')
       .then((res) => res.json())
@@ -97,16 +95,14 @@ export function CaseStudySection() {
   const nextSlide = useCallback(() => goToSlide(currentIndex + 1), [currentIndex, goToSlide]);
   const prevSlide = useCallback(() => goToSlide(currentIndex - 1), [currentIndex, goToSlide]);
 
-  // Wheel navigation
+  // Wheel navigation — desktop only
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
-
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) return;
 
     let scrollCooldown = false;
-
     const handleWheel = (e: WheelEvent) => {
       if (scrollCooldown) return;
       if (Math.abs(e.deltaY) > 30) {
@@ -141,7 +137,7 @@ export function CaseStudySection() {
   const onMouseUp = () => handleDragEnd();
   const onMouseLeave = () => { if (isDragging) handleDragEnd(); };
 
-  // Keyboard navigation
+  // Keyboard
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
@@ -169,9 +165,9 @@ export function CaseStudySection() {
         </div>
       </div>
 
-      {/* Full-bleed poster showcase */}
+      {/* ━━ DESKTOP: Full-bleed poster showcase ━━ */}
       <div
-        className="full-bleed-project"
+        className="hidden md:block"
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
@@ -180,71 +176,118 @@ export function CaseStudySection() {
         onMouseUp={onMouseUp}
         onMouseLeave={onMouseLeave}
       >
-        {projects.map((project, idx) => (
-          <div
-            key={project.id}
-            className="absolute inset-0"
-            style={{
-              opacity: currentIndex === idx ? 1 : 0,
-              transform: currentIndex === idx
-                ? `translateX(${dragOffset}px) scale(1)`
-                : currentIndex > idx
-                  ? 'translateX(-3%) scale(1.02)'
-                  : 'translateX(3%) scale(1.02)',
-              transition: 'opacity 1.2s cubic-bezier(0.25, 0.1, 0.25, 1), transform 1.4s cubic-bezier(0.25, 0.1, 0.25, 1)',
-              zIndex: currentIndex === idx ? 1 : 0,
-            }}
-          >
-            {/* Full-bleed image */}
-            <div className="relative w-full h-full min-h-[60vh] sm:min-h-[70vh] lg:min-h-[80vh]">
-              {project.image && (
-                <Image
-                  src={project.image}
-                  alt={`${project.client} — ${project.category} by Nauka Motion`}
-                  fill
-                  sizes="100vw"
-                  className="object-cover object-top"
-                  priority={idx < 2}
-                />
-              )}
-
-              {/* Dark gradient overlay at bottom for text */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10" />
-
-              {/* Text overlay at bottom */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-10 lg:p-16">
-                <div className="container-wide">
-                  <span
-                    className="text-caption font-medium uppercase tracking-[0.15em] px-2.5 py-1 rounded-md inline-block mb-3 sm:mb-4"
-                    style={{ backgroundColor: `${project.color}20`, color: project.color }}
-                  >
-                    {project.category}
-                  </span>
-
-                  <h3 className="text-h1 sm:text-display font-heading text-white mb-3 sm:mb-4 leading-tight max-w-[800px]">
-                    {project.title}
-                  </h3>
-
-                  <p className="text-body-lg text-white/70 max-w-[600px] leading-relaxed mb-4 sm:mb-6">
-                    {project.description}
-                  </p>
-
-                  {project.liveUrl && (
-                    <a
-                      href={project.liveUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-body font-medium text-[var(--nauka-accent-light)] hover:text-white transition-colors inline-flex items-center gap-2"
+        <div className="full-bleed-project">
+          {projects.map((project, idx) => (
+            <div
+              key={project.id}
+              className="absolute inset-0"
+              style={{
+                opacity: currentIndex === idx ? 1 : 0,
+                transform: currentIndex === idx
+                  ? `translateX(${dragOffset}px) scale(1)`
+                  : currentIndex > idx
+                    ? 'translateX(-3%) scale(1.02)'
+                    : 'translateX(3%) scale(1.02)',
+                transition: 'opacity 1.2s cubic-bezier(0.25, 0.1, 0.25, 1), transform 1.4s cubic-bezier(0.25, 0.1, 0.25, 1)',
+                zIndex: currentIndex === idx ? 1 : 0,
+              }}
+            >
+              <div className="relative w-full h-full min-h-[70vh] lg:min-h-[80vh]">
+                {project.image && (
+                  <Image
+                    src={project.image}
+                    alt={`${project.client} — ${project.category} by Nauka Motion`}
+                    fill
+                    sizes="100vw"
+                    className="object-cover object-top"
+                    priority={idx < 2}
+                  />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10" />
+                <div className="absolute bottom-0 left-0 right-0 p-10 lg:p-16">
+                  <div className="container-wide">
+                    <span
+                      className="text-caption font-medium uppercase tracking-[0.15em] px-2.5 py-1 rounded-md inline-block mb-4"
+                      style={{ backgroundColor: `${project.color}20`, color: project.color }}
                     >
-                      Lihat Live
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                  )}
+                      {project.category}
+                    </span>
+                    <h3 className="text-display font-heading text-white mb-4 leading-tight max-w-[800px]">
+                      {project.title}
+                    </h3>
+                    <p className="text-body-lg text-white/70 max-w-[600px] leading-relaxed mb-6">
+                      {project.description}
+                    </p>
+                    {project.liveUrl && (
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-body font-medium text-[var(--nauka-accent-light)] hover:text-white transition-colors inline-flex items-center gap-2"
+                      >
+                        Lihat Live
+                        <ExternalLink className="w-4 h-4" />
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ━━ MOBILE: Stacked card — image + text below ━━ */}
+      <div className="md:hidden container-wide pb-2">
+        <div
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        >
+          {/* Image card — clean, no text overlay */}
+          <div className="relative w-full aspect-[16/10] rounded-xl overflow-hidden mb-5">
+            {currentProject.image && (
+              <Image
+                src={currentProject.image}
+                alt={`${currentProject.client} — ${currentProject.category} by Nauka Motion`}
+                fill
+                sizes="100vw"
+                className="object-cover object-top"
+                priority
+              />
+            )}
+            {/* Client name badge on image */}
+            <div className="absolute top-4 left-4">
+              <span
+                className="text-caption font-medium uppercase tracking-[0.15em] px-2.5 py-1 rounded-md backdrop-blur-sm"
+                style={{ backgroundColor: `${currentProject.color}30`, color: currentProject.color }}
+              >
+                {currentProject.category}
+              </span>
+            </div>
           </div>
-        ))}
+
+          {/* Text below image — clean, readable */}
+          <div className="px-1">
+            <h3 className="text-h2 font-heading text-white mb-2 leading-tight">
+              {currentProject.title}
+            </h3>
+            <p className="text-body text-white/60 leading-relaxed mb-3">
+              {currentProject.description}
+            </p>
+            {currentProject.liveUrl && (
+              <a
+                href={currentProject.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-body-sm font-medium text-[var(--nauka-accent-light)] hover:text-white transition-colors inline-flex items-center gap-1.5"
+              >
+                Lihat Live
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Navigation controls */}
@@ -272,7 +315,7 @@ export function CaseStudySection() {
             </span>
           </div>
 
-          {/* Dot navigation */}
+          {/* Dot navigation — hidden on mobile */}
           <div className="hidden sm:flex items-center gap-2">
             {projects.map((project, i) => (
               <button

@@ -9,11 +9,9 @@ import { ArrowRight, ArrowUpRight } from 'lucide-react';
 /**
  * HeroSection — Nauka Motion Redesign
  *
- * Background: Solid black with subtle grid + vignette
- * Right side (desktop): Auto-rotating project screenshots from /portfolio/*.png
+ * Desktop: Text left + single crossfade image right (only 2 images rendered at a time)
  * Mobile: Horizontal scroll carousel below text
  * Word-reveal animation for headline
- * Warm ambient glow effect
  */
 
 const heroProjects = [
@@ -38,7 +36,7 @@ export function HeroSection() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Auto-rotate project preview every 4 seconds
+  // Auto-rotate — slow and calm, 6 seconds
   useEffect(() => {
     if (isHovered) return;
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -46,13 +44,12 @@ export function HeroSection() {
 
     const interval = setInterval(() => {
       setActiveProject((prev) => (prev + 1) % heroProjects.length);
-    }, 5000);
+    }, 6000);
 
     return () => clearInterval(interval);
   }, [isHovered]);
 
   const headlineWords = ['Membangun', 'Produk', 'Digital', 'Dengan', 'Arah', 'Yang', 'Jelas'];
-
   let wordIndex = 0;
 
   // Mobile carousel drag
@@ -77,11 +74,13 @@ export function HeroSection() {
     setIsDragging(false);
   }, []);
 
+  // Only render current + previous for smooth crossfade (no jarring stack)
+  const visibleIndices = [activeProject, (activeProject - 1 + heroProjects.length) % heroProjects.length];
+
   return (
     <section ref={heroRef} className="relative min-h-[100dvh] sm:min-h-[90vh] lg:min-h-[100vh] flex items-center bg-black pt-14 sm:pt-16 lg:pt-20">
       {/* Background — solid black + cinematic layers */}
       <div className="absolute inset-0 z-0">
-        {/* Blueprint grid */}
         <div
           className="absolute inset-0 opacity-30"
           style={{
@@ -92,8 +91,6 @@ export function HeroSection() {
             backgroundSize: '60px 60px',
           }}
         />
-
-        {/* Ambient warm glow — centered behind project preview area */}
         <div
           className="absolute inset-0 hidden lg:block"
           style={{
@@ -106,8 +103,6 @@ export function HeroSection() {
             background: 'radial-gradient(ellipse 40% 35% at 50% 65%, rgba(217, 164, 65, 0.03) 0%, rgba(217, 164, 65, 0.008) 50%, transparent 100%)',
           }}
         />
-
-        {/* Vignette */}
         <div
           className="absolute inset-0"
           style={{
@@ -117,7 +112,7 @@ export function HeroSection() {
       </div>
 
       <div className="relative z-10 container-wide w-full py-8 sm:py-24 lg:py-0">
-        {/* Desktop layout: side by side */}
+        {/* Desktop layout */}
         <div className="hidden lg:grid lg:grid-cols-12 gap-6 items-center">
           {/* Text side — 7 columns */}
           <div className="lg:col-span-7 max-w-[700px]">
@@ -128,10 +123,7 @@ export function HeroSection() {
               Small Movement. Real Impact.
             </p>
 
-            <h1
-              className="text-display font-heading text-white mb-6 sm:mb-8"
-              style={{ perspective: '600px' }}
-            >
+            <h1 className="text-display font-heading text-white mb-6 sm:mb-8" style={{ perspective: '600px' }}>
               <span className="block">
                 {headlineWords.slice(0, 3).map((word) => {
                   const idx = wordIndex++;
@@ -204,20 +196,20 @@ export function HeroSection() {
             onMouseLeave={() => setIsHovered(false)}
           >
             <div className="project-preview-card relative w-full max-w-[420px] aspect-[4/3] overflow-hidden">
-              {heroProjects.map((project, idx) => (
+              {/* Only render current + previous slide for smooth crossfade */}
+              {visibleIndices.map((idx) => (
                 <div
-                  key={project.name}
+                  key={heroProjects[idx].name}
                   className="absolute inset-0"
                   style={{
                     opacity: activeProject === idx ? 1 : 0,
-                    transform: activeProject === idx ? 'scale(1)' : 'scale(1.03)',
-                    transition: 'opacity 1.4s cubic-bezier(0.25, 0.1, 0.25, 1), transform 1.8s cubic-bezier(0.25, 0.1, 0.25, 1)',
+                    transition: 'opacity 2s ease-in-out',
                     zIndex: activeProject === idx ? 1 : 0,
                   }}
                 >
                   <Image
-                    src={project.image}
-                    alt={`${project.name} — by Nauka Motion`}
+                    src={heroProjects[idx].image}
+                    alt={`${heroProjects[idx].name} — by Nauka Motion`}
                     fill
                     sizes="(max-width: 1024px) 100vw, 42vw"
                     className="object-cover object-top rounded-xl"
@@ -228,7 +220,7 @@ export function HeroSection() {
 
               {/* Project name overlay on hover */}
               <div
-                className={`absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 via-black/30 to-transparent rounded-b-xl transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}
+                className={`absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 via-black/30 to-transparent rounded-b-xl transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'}`}
               >
                 <span
                   className="text-caption font-medium uppercase tracking-[0.15em] px-2.5 py-1 rounded-md"
@@ -251,7 +243,7 @@ export function HeroSection() {
                 <button
                   key={project.name}
                   onClick={() => setActiveProject(i)}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  className={`w-2 h-2 rounded-full transition-all duration-500 ${
                     i === activeProject
                       ? 'w-6 bg-[var(--nauka-accent-light)]'
                       : 'bg-white/20 hover:bg-white/40'
@@ -274,10 +266,7 @@ export function HeroSection() {
               Small Movement. Real Impact.
             </p>
 
-            <h1
-              className="text-display font-heading text-white mb-3"
-              style={{ perspective: '600px' }}
-            >
+            <h1 className="text-display font-heading text-white mb-3" style={{ perspective: '600px' }}>
               <span className="block">
                 {headlineWords.slice(0, 3).map((word) => {
                   const idx = wordIndex++;
