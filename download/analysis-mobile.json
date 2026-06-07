@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "This is a **mobile view** of the Nauka Motion portfolio website, displayed in a web browser (likely on an Android device, given the status bar icons). Here’s a detailed breakdown:  \n\n\n### 1. **Status Bar (Top)**  \n- Time: `10.49` (with a notification badge showing `7`).  \n- Connectivity: `4G` and `5G` network indicators, plus a `14,1 KB/s` data speed.  \n- Battery: `19%` charge remaining, with a charging icon.  \n\n\n### 2. **Header Section**  \n- **Logo/Title**: “Nauka Motion” is centered at the top.  \n- **Menu Icon**: A hamburger menu (three horizontal lines) is on the right, for navigation.  \n\n\n### 3. **Hero/Image Section**  \n- A large, dark (black) rectangular placeholder (likely a hero image or video) occupies the top portion of the screen.  \n\n\n### 4. **Service Categories (“YANG KAMI BANGUN”)**  \nA section titled *“YANG KAMI BANGUN”* (Indonesian for “What We Build”) lists service categories with icons:  \n- `Landing Page` (document icon)  \n- `Website Profesional` (globe icon)  \n- `E-Commerce` (shopping cart icon)  \n- `Sistem Inventory` (database icon)  \n- `ERP` (gear icon)  \n- `Tools` (wrench icon)  \n- `Admin Panel & CMS` (grid icon)  \n\n\n### 5. **Statistics Section**  \nThree key metrics are displayed in a row, with large, bold numbers and descriptive text:  \n- `30+` → `PROYEK SELESAI` (Indonesian for “Completed Projects”)  \n- `7` → `TIPE LAYANAN` (Indonesian for “Service Types”)  \n- `5` → `INDUSTRI` (Indonesian for “Industries”)  \n\n\n### 6. **Footer/Navigation**  \n- A section titled *“LAYANAN”* (Indonesian for “Services”) appears at the bottom (partially visible, suggesting more content below).  \n- **Browser Bar**: At the very bottom, the URL `naukamotion.vercel.app` is visible, along with browser navigation icons (home, tabs, and a menu).  \n\n\n### Overall Layout & Design  \nThe design is clean and minimal, with a light background for text sections and a dark hero area. The mobile view prioritizes readability, with clear typography and organized sections to highlight services and achievements.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1780840514,
+  "id": "202606072155059ca88f28589c4469",
+  "model": "glm-4.6v",
+  "object": "chat.completion",
+  "request_id": "202606072155059ca88f28589c4469",
+  "usage": {
+    "completion_tokens": 553,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 3441,
+    "prompt_tokens_details": {
+      "cached_tokens": 6
+    },
+    "total_tokens": 3994
+  }
+}
