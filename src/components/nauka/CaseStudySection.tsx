@@ -183,14 +183,15 @@ export function CaseStudySection() {
         {projects.map((project, idx) => (
           <div
             key={project.id}
-            className="absolute inset-0 transition-all duration-700 ease-in-out"
+            className="absolute inset-0"
             style={{
               opacity: currentIndex === idx ? 1 : 0,
               transform: currentIndex === idx
-                ? `translateX(${dragOffset}px)`
+                ? `translateX(${dragOffset}px) scale(1)`
                 : currentIndex > idx
-                  ? 'translateX(-8%)'
-                  : 'translateX(8%)',
+                  ? 'translateX(-3%) scale(1.02)'
+                  : 'translateX(3%) scale(1.02)',
+              transition: 'opacity 1.2s cubic-bezier(0.25, 0.1, 0.25, 1), transform 1.4s cubic-bezier(0.25, 0.1, 0.25, 1)',
               zIndex: currentIndex === idx ? 1 : 0,
             }}
           >

@@ -46,7 +46,7 @@ export function HeroSection() {
 
     const interval = setInterval(() => {
       setActiveProject((prev) => (prev + 1) % heroProjects.length);
-    }, 4000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [isHovered]);
@@ -203,13 +203,15 @@ export function HeroSection() {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
-            <div className="project-preview-card relative w-full max-w-[420px] aspect-[4/3]">
+            <div className="project-preview-card relative w-full max-w-[420px] aspect-[4/3] overflow-hidden">
               {heroProjects.map((project, idx) => (
                 <div
                   key={project.name}
-                  className="absolute inset-0 transition-opacity duration-700 ease-in-out"
+                  className="absolute inset-0"
                   style={{
                     opacity: activeProject === idx ? 1 : 0,
+                    transform: activeProject === idx ? 'scale(1)' : 'scale(1.03)',
+                    transition: 'opacity 1.4s cubic-bezier(0.25, 0.1, 0.25, 1), transform 1.8s cubic-bezier(0.25, 0.1, 0.25, 1)',
                     zIndex: activeProject === idx ? 1 : 0,
                   }}
                 >
