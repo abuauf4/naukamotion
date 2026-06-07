@@ -388,10 +388,25 @@ body::after {
   position: relative;
   width: 100vw;
   margin-left: calc(-50vw + 50%);
+  min-height: 60vh;
+  height: 70vh;
   overflow: hidden;
   cursor: grab;
   -webkit-user-select: none;
   user-select: none;
+}
+
+@media (min-width: 768px) {
+  .full-bleed-project {
+    min-height: 70vh;
+    height: 80vh;
+  }
+}
+
+@media (min-width: 1024px) {
+  .full-bleed-project {
+    height: 85vh;
+  }
 }
 
 .full-bleed-project:active {
