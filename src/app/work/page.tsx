@@ -163,7 +163,7 @@ export default function WorkPage() {
                   className={`scroll-reveal ${index % 2 === 1 ? 'scroll-reveal-delay-2' : 'scroll-reveal-delay-1'} group block rounded-xl bg-white border border-[var(--nauka-border)] overflow-hidden transition-all duration-400 ease-out hover:shadow-lg hover:shadow-black/[0.06] hover:-translate-y-1 hover:border-[var(--nauka-accent)]/20`}
                 >
                   {/* Image */}
-                  <div className="relative aspect-[16/10] sm:aspect-[16/9] overflow-hidden bg-[var(--nauka-bg-secondary)]">
+                  <div className="relative aspect-[16/9] overflow-hidden bg-[var(--nauka-bg-secondary)]">
                     <Image
                       src={project.image}
                       alt={`${project.client} — ${project.category} by Nauka Motion`}

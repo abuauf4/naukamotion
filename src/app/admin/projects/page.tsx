@@ -235,27 +235,38 @@ export default function ProjectsPage() {
         image: form.image || null,
       }
 
+      let res: Response
       if (editingProject) {
-        const res = await fetch(`/api/admin/projects/${editingProject.id}`, {
+        res = await fetch(`/api/admin/projects/${editingProject.id}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         })
-        if (!res.ok) throw new Error('Failed to update')
-        toast.success('Proyek berhasil diperbarui')
       } else {
-        const res = await fetch('/api/admin/projects', {
+        res = await fetch('/api/admin/projects', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         })
-        if (!res.ok) throw new Error('Failed to create')
-        toast.success('Proyek berhasil ditambahkan')
       }
+
+      // Handle 401 — session expired
+      if (res.status === 401) {
+        toast.error('Sesi expired. Silakan login kembali.')
+        window.location.href = '/admin/login'
+        return
+      }
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}))
+        throw new Error(errData.error || `Gagal menyimpan (status ${res.status})`)
+      }
+
+      toast.success(editingProject ? 'Proyek berhasil diperbarui' : 'Proyek berhasil ditambahkan')
       setFormOpen(false)
       fetchProjects()
-    } catch {
-      toast.error('Gagal menyimpan proyek')
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Gagal menyimpan proyek')
     } finally {
       setSaving(false)
     }
@@ -321,7 +332,7 @@ export default function ProjectsPage() {
                 className="group overflow-hidden py-0 gap-0 transition-shadow hover:shadow-md"
               >
                 {/* Image */}
-                <div className="relative aspect-[16/10] overflow-hidden bg-gray-100">
+                <div className="relative aspect-[16/9] overflow-hidden bg-gray-100">
                   {project.image ? (
                     <Image
                       src={project.image}
@@ -518,7 +529,7 @@ export default function ProjectsPage() {
                   <Label>Gambar Proyek</Label>
                   {form.image ? (
                     <div className="relative group rounded-lg overflow-hidden border border-gray-200">
-                      <div className="relative aspect-[16/10] bg-gray-50">
+                      <div className="relative aspect-[16/9] bg-gray-50">
                         <Image
                           src={form.image}
                           alt="Preview"

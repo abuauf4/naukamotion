@@ -235,7 +235,7 @@ export function HeroSection() {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
-            <div className="project-preview-card relative w-full max-w-[420px] aspect-[4/3] overflow-hidden">
+            <div className="project-preview-card relative w-full max-w-[420px] aspect-[16/9] overflow-hidden">
               {/* Only render current + previous slide for smooth crossfade */}
               {visibleIndices.map((idx) => (
                 <div
@@ -386,7 +386,7 @@ export function HeroSection() {
             {heroProjects.map((project) => (
               <div
                 key={project.id}
-                className="flex-shrink-0 w-[260px] aspect-[4/3] rounded-xl overflow-hidden relative snap-start"
+                className="flex-shrink-0 w-[260px] aspect-[16/9] rounded-xl overflow-hidden relative snap-start"
               >
                 {project.image && (
                   <Image

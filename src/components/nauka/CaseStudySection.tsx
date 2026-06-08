@@ -245,7 +245,7 @@ export function CaseStudySection() {
           onTouchEnd={onTouchEnd}
         >
           {/* Image card — clean, no text overlay */}
-          <div className="relative w-full aspect-[16/10] rounded-xl overflow-hidden mb-5">
+          <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden mb-5">
             {currentProject.image && (
               <Image
                 src={currentProject.image}
