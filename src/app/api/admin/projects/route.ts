@@ -5,10 +5,13 @@ export async function GET() {
   try {
     const { data: projects, error } = await supabaseAdmin
       .from('projects')
-      .select('*, clientRef:clients(*)')
+      .select('*')
       .order('"order"', { ascending: true });
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase fetch error:', error);
+      throw error;
+    }
 
     return NextResponse.json(projects ?? []);
   } catch (error) {
@@ -40,10 +43,13 @@ export async function POST(request: Request) {
         status: body.status ?? 'published',
         clientId: body.clientId,
       })
-      .select('*, clientRef:clients(*)')
+      .select('*')
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase insert error:', error);
+      throw error;
+    }
 
     return NextResponse.json(project, { status: 201 });
   } catch (error: unknown) {

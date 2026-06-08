@@ -9,7 +9,7 @@ export async function GET(
     const { id } = await params;
     const { data: project, error } = await supabaseAdmin
       .from('projects')
-      .select('*, clientRef:clients(*)')
+      .select('*')
       .eq('id', id)
       .single();
 
@@ -31,16 +31,7 @@ export async function PATCH(
     const { id } = await params;
     const body = await request.json();
 
-    // Check existence first
-    const { data: existing, error: findError } = await supabaseAdmin
-      .from('projects')
-      .select('id')
-      .eq('id', id)
-      .single();
-
-    if (findError || !existing) {
-      return NextResponse.json({ error: 'Not found' }, { status: 404 });
-    }
+    console.log('PATCH project id:', id, 'body keys:', Object.keys(body));
 
     // Build update object — only include fields that are provided
     const updateData: Record<string, unknown> = {};
@@ -58,14 +49,26 @@ export async function PATCH(
     if (body.status !== undefined) updateData.status = body.status;
     if (body.clientId !== undefined) updateData.clientId = body.clientId;
 
+    console.log('Update data:', JSON.stringify(updateData));
+
     const { data: project, error } = await supabaseAdmin
       .from('projects')
       .update(updateData)
       .eq('id', id)
-      .select('*, clientRef:clients(*)')
+      .select('*')
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase update error:', error);
+      return NextResponse.json(
+        { error: `Update gagal: ${error.message}` },
+        { status: 500 }
+      );
+    }
+
+    if (!project) {
+      return NextResponse.json({ error: 'Project not found' }, { status: 404 });
+    }
 
     return NextResponse.json(project);
   } catch (error) {
@@ -80,17 +83,6 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-
-    // Check existence first
-    const { data: existing, error: findError } = await supabaseAdmin
-      .from('projects')
-      .select('id')
-      .eq('id', id)
-      .single();
-
-    if (findError || !existing) {
-      return NextResponse.json({ error: 'Not found' }, { status: 404 });
-    }
 
     const { error } = await supabaseAdmin
       .from('projects')
