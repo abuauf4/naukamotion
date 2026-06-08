@@ -16,12 +16,15 @@ export async function GET() {
     if (error) throw error;
 
     if (projects && projects.length > 0) {
-      const enriched = projects.map((p) => ({
-        ...p,
-        image: p.image
-          ? `${p.image}?v=${new Date(p.updatedAt).getTime()}`
-          : null,
-      }));
+      const enriched = projects.map((p) => {
+        let imageUrl = p.image || null;
+        if (imageUrl) {
+          // Remove existing ?v= or &v= from upload cache-buster to avoid double ?v=
+          const cleanUrl = imageUrl.split('?')[0];
+          imageUrl = `${cleanUrl}?v=${new Date(p.updatedAt).getTime()}`;
+        }
+        return { ...p, image: imageUrl };
+      });
       return NextResponse.json(enriched, {
         headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300' },
       });

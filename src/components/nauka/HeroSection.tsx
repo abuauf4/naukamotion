@@ -44,8 +44,9 @@ export function HeroSection() {
   const [activeProject, setActiveProject] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [carouselScroll, setCarouselScroll] = useState(0);
-  const [heroProjects, setHeroProjects] = useState<HeroProject[]>(defaultHeroProjects);
+  const [heroProjects, setHeroProjects] = useState<HeroProject[]>([]);
   const [settings, setSettings] = useState<SiteSettings>({});
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   // Fetch projects and settings from API
   useEffect(() => {
@@ -65,6 +66,7 @@ export function HeroSection() {
       if (settingsData && typeof settingsData === 'object') {
         setSettings(settingsData);
       }
+      setDataLoaded(true);
     });
   }, []);
 
@@ -76,6 +78,7 @@ export function HeroSection() {
 
   // Auto-rotate — slow and calm, 6 seconds
   useEffect(() => {
+    if (!dataLoaded || heroProjects.length === 0) return;
     if (isHovered) return;
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) return;
@@ -85,7 +88,7 @@ export function HeroSection() {
     }, 6000);
 
     return () => clearInterval(interval);
-  }, [isHovered, heroProjects.length]);
+  }, [isHovered, heroProjects.length, dataLoaded]);
 
   const headlineText = settings.headline || 'Membangun Produk Digital Dengan Arah Yang Jelas';
   const headlineWords = headlineText.split(' ');
@@ -115,7 +118,61 @@ export function HeroSection() {
   }, []);
 
   // Only render current + previous for smooth crossfade (no jarring stack)
-  const visibleIndices = [activeProject, (activeProject - 1 + heroProjects.length) % heroProjects.length];
+  const visibleIndices = heroProjects.length > 0 ? [activeProject, (activeProject - 1 + heroProjects.length) % heroProjects.length] : [];
+
+  // Don't render images until data is loaded — prevents flash of old/fallback images
+  if (!dataLoaded) {
+    return (
+      <section ref={heroRef} className="relative min-h-[100dvh] sm:min-h-[90vh] lg:min-h-[100vh] flex items-center bg-black pt-14 sm:pt-16 lg:pt-20">
+        <div className="absolute inset-0 z-0">
+          <div
+            className="absolute inset-0 opacity-30"
+            style={{
+              backgroundImage: `
+              linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px)
+            `,
+              backgroundSize: '60px 60px',
+            }}
+          />
+        </div>
+        <div className="relative z-10 container-wide w-full py-8 sm:py-24 lg:py-0">
+          <div className="hidden lg:grid lg:grid-cols-12 gap-6 items-center">
+            <div className="lg:col-span-7 max-w-[700px]">
+              <div className="h-6 w-48 bg-white/5 rounded animate-pulse mb-5 sm:mb-7" />
+              <div className="h-14 w-full bg-white/5 rounded animate-pulse mb-6 sm:mb-8" />
+              <div className="h-6 w-96 bg-white/5 rounded animate-pulse mb-8 sm:mb-10" />
+              <div className="flex gap-4">
+                <div className="h-12 w-36 bg-white/5 rounded-lg animate-pulse" />
+                <div className="h-12 w-32 bg-white/5 rounded-lg animate-pulse" />
+              </div>
+            </div>
+            <div className="lg:col-span-5 flex items-center justify-center">
+              <div className="w-full max-w-[420px] aspect-[16/9] bg-white/5 rounded-xl animate-pulse" />
+            </div>
+          </div>
+          <div className="lg:hidden">
+            <div className="max-w-[700px] mb-6">
+              <div className="h-5 w-36 bg-white/5 rounded animate-pulse mb-2" />
+              <div className="h-10 w-full bg-white/5 rounded animate-pulse mb-3" />
+              <div className="h-5 w-72 bg-white/5 rounded animate-pulse mb-4" />
+              <div className="flex gap-3">
+                <div className="h-10 w-28 bg-white/5 rounded-lg animate-pulse" />
+                <div className="h-10 w-24 bg-white/5 rounded-lg animate-pulse" />
+              </div>
+            </div>
+            <div className="flex gap-3 overflow-x-auto pb-4" style={{ scrollbarWidth: 'none' }}>
+              {[1,2,3].map(i => (
+                <div key={i} className="flex-shrink-0 w-[260px] aspect-[16/9] bg-white/5 rounded-xl animate-pulse" />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (heroProjects.length === 0) return null;
 
   return (
     <section ref={heroRef} className="relative min-h-[100dvh] sm:min-h-[90vh] lg:min-h-[100vh] flex items-center bg-black pt-14 sm:pt-16 lg:pt-20">

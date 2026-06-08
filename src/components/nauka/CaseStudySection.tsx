@@ -71,7 +71,8 @@ export function CaseStudySection() {
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [dragOffset, setDragOffset] = useState(0);
-  const [projects, setProjects] = useState<Project[]>(fallbackProjects);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   useEffect(() => {
     fetch('/api/public/projects')
@@ -80,8 +81,11 @@ export function CaseStudySection() {
         if (Array.isArray(data) && data.length > 0) {
           setProjects(data);
         }
+        setDataLoaded(true);
       })
-      .catch(() => {});
+      .catch(() => {
+        setDataLoaded(true);
+      });
   }, []);
 
   const totalSlides = projects.length;
@@ -148,6 +152,28 @@ export function CaseStudySection() {
     section.addEventListener('keydown', handleKeyDown);
     return () => section.removeEventListener('keydown', handleKeyDown);
   }, [nextSlide, prevSlide]);
+
+  // Don't render images until data is loaded — prevents flash of old/fallback images
+  if (!dataLoaded) {
+    return (
+      <section className="bg-texture-deep text-white">
+        <div className="container-wide pt-14 sm:pt-20 lg:pt-28 pb-6 sm:pb-10">
+          <div className="max-w-[600px]">
+            <div className="h-4 w-32 bg-white/5 rounded animate-pulse mb-3 sm:mb-4" />
+            <div className="h-10 w-72 bg-white/5 rounded animate-pulse" />
+          </div>
+        </div>
+        <div className="hidden md:block">
+          <div className="relative w-full min-h-[70vh] lg:min-h-[80vh] bg-white/5 animate-pulse" />
+        </div>
+        <div className="md:hidden container-wide pb-2">
+          <div className="w-full aspect-[16/9] bg-white/5 rounded-xl animate-pulse mb-5" />
+          <div className="h-8 w-48 bg-white/5 rounded animate-pulse mb-2" />
+          <div className="h-5 w-full bg-white/5 rounded animate-pulse mb-3" />
+        </div>
+      </section>
+    );
+  }
 
   if (projects.length === 0) return null;
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
@@ -14,69 +14,41 @@ import { Footer } from '@/components/nauka/Footer';
  * Hero (dark) → Portfolio Grid (light, 2-col desktop / 1-col mobile) → CTA (accent)
  * Each card: image, project name, category badge, brief description, "Lihat Detail" link
  * Scroll-reveal via IntersectionObserver
+ * Fetches projects from /api/public/projects
  */
 
-const projects = [
-  {
-    id: 'mitsubishi',
-    client: 'Mitsubishi Solusi Mobil',
-    category: 'Landing Page',
-    href: '/work/mitsubishi',
-    image: '/portfolio/mitsubishi.png',
-    color: '#0d9488',
-    description: 'Website dealer yang memperlakukan setiap kendaraan sebagai pengalaman — dari spesifikasi teknis sampai jadwal test drive dalam satu alur yang mengalir.',
-  },
-  {
-    id: 'geely',
-    client: 'Geely Pluit Motor',
-    category: 'Landing Page',
-    href: '/work/geely',
-    image: '/portfolio/geely-pluit.png',
-    color: '#2563eb',
-    description: 'Kehadiran digital yang terasa sama modern-nya dengan teknologi EV yang mereka jual — bukan website dealer konvensional yang terasa 2018.',
-  },
-  {
-    id: 'jasaprotect',
-    client: 'Jasa Protect',
-    category: 'Website Profesional',
-    href: '/work/jasaprotect',
-    image: '/portfolio/jasaprotect.png',
-    color: '#6366f1',
-    description: 'Platform asuransi yang membuat memilih asuransi terasa mudah, bukan membingungkan. 500+ orang sudah terlindungi.',
-  },
-  {
-    id: 'naukagadget',
-    client: 'Nauka Gadget',
-    category: 'E-Commerce',
-    href: '/work/naukagadget',
-    image: '/portfolio/nauka-gadget.png',
-    color: '#8b5cf6',
-    description: 'Toko gadget premium dengan desain mewah, katalog terorganisir, garansi resmi, dan checkout yang tidak bikin orang kabur.',
-  },
-  {
-    id: 'nauka-kostay',
-    client: 'Nauka Kostay',
-    category: 'Sistem Bisnis',
-    href: '/work/nauka-kostay',
-    image: '/portfolio/nauka-kostay.png',
-    color: '#d97706',
-    description: 'Digital hospitality experience — kos yang dipesan seperti hotel, dengan virtual tour, fasilitas, dan booking flow yang bikin calon penghuni merasa dihargai.',
-  },
-  {
-    id: 'ghazy',
-    client: 'Ghazy Computer',
-    category: 'Website Profesional',
-    href: '/work/ghazy',
-    image: '/portfolio/ghazy-computer.png',
-    color: '#e11d48',
-    description: 'Dari spreadsheet chaos ke sistem yang jalan sendiri — flow submit, evaluasi, penawaran, pickup, dan pembayaran, semua terlacak dan terorganisir.',
-  },
-];
+interface WorkProject {
+  id: string;
+  slug: string;
+  client: string;
+  category: string;
+  title: string;
+  description: string;
+  image: string | null;
+  color: string;
+}
 
 export default function WorkPage() {
   const heroRef = useRef<HTMLElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLElement>(null);
+  const [projects, setProjects] = useState<WorkProject[]>([]);
+  const [dataLoaded, setDataLoaded] = useState(false);
+
+  // Fetch projects from API
+  useEffect(() => {
+    fetch('/api/public/projects')
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setProjects(data);
+        }
+        setDataLoaded(true);
+      })
+      .catch(() => {
+        setDataLoaded(true);
+      });
+  }, []);
 
   // IntersectionObserver for scroll-reveal
   useEffect(() => {
@@ -110,22 +82,19 @@ export default function WorkPage() {
 
     const observers: (IntersectionObserver | undefined)[] = [];
 
-    // Hero elements
     const heroObs = revealElements(heroRef.current, '.scroll-reveal');
     if (heroObs) observers.push(heroObs);
 
-    // Grid cards
     const gridObs = revealElements(gridRef.current, '.scroll-reveal');
     if (gridObs) observers.push(gridObs);
 
-    // CTA
     const ctaObs = revealElements(ctaRef.current, '.scroll-reveal, .scroll-reveal-scale');
     if (ctaObs) observers.push(ctaObs);
 
     return () => {
       observers.forEach((obs) => obs?.disconnect());
     };
-  }, []);
+  }, [dataLoaded]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -155,55 +124,78 @@ export default function WorkPage() {
         {/* ━━ Portfolio Grid — Light ━━ */}
         <section className="bg-texture-primary py-14 sm:py-20 lg:py-28">
           <div ref={gridRef} className="container-wide">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-              {projects.map((project, index) => (
-                <Link
-                  key={project.id}
-                  href={project.href}
-                  className={`scroll-reveal ${index % 2 === 1 ? 'scroll-reveal-delay-2' : 'scroll-reveal-delay-1'} group block rounded-xl bg-white border border-[var(--nauka-border)] overflow-hidden transition-all duration-400 ease-out hover:shadow-lg hover:shadow-black/[0.06] hover:-translate-y-1 hover:border-[var(--nauka-accent)]/20`}
-                >
-                  {/* Image */}
-                  <div className="relative aspect-[16/9] overflow-hidden bg-[var(--nauka-bg-secondary)]">
-                    <Image
-                      src={project.image}
-                      alt={`${project.client} — ${project.category} by Nauka Motion`}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                      className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                    />
-                    {/* Gradient overlay on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            {!dataLoaded ? (
+              /* Loading skeleton */
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+                {[1,2,3,4].map((i) => (
+                  <div key={i} className="rounded-xl bg-white border border-[var(--nauka-border)] overflow-hidden">
+                    <div className="aspect-[16/9] bg-[var(--nauka-bg-secondary)] animate-pulse" />
+                    <div className="p-5 sm:p-6">
+                      <div className="h-4 w-28 bg-gray-100 rounded animate-pulse mb-3" />
+                      <div className="h-6 w-48 bg-gray-100 rounded animate-pulse mb-2" />
+                      <div className="h-4 w-full bg-gray-100 rounded animate-pulse mb-4" />
+                      <div className="h-4 w-24 bg-gray-100 rounded animate-pulse" />
+                    </div>
                   </div>
+                ))}
+              </div>
+            ) : projects.length === 0 ? (
+              <div className="text-center py-20">
+                <p className="text-body-lg text-[var(--nauka-text-secondary)]">Belum ada proyek yang dipublikasikan.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+                {projects.map((project, index) => (
+                  <Link
+                    key={project.id}
+                    href={`/work/${project.slug}`}
+                    className={`scroll-reveal ${index % 2 === 1 ? 'scroll-reveal-delay-2' : 'scroll-reveal-delay-1'} group block rounded-xl bg-white border border-[var(--nauka-border)] overflow-hidden transition-all duration-400 ease-out hover:shadow-lg hover:shadow-black/[0.06] hover:-translate-y-1 hover:border-[var(--nauka-accent)]/20`}
+                  >
+                    {/* Image */}
+                    <div className="relative aspect-[16/9] overflow-hidden bg-[var(--nauka-bg-secondary)]">
+                      {project.image && (
+                        <Image
+                          src={project.image}
+                          alt={`${project.client} — ${project.category} by Nauka Motion`}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                        />
+                      )}
+                      {/* Gradient overlay on hover */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    </div>
 
-                  {/* Content */}
-                  <div className="p-5 sm:p-6">
-                    {/* Category badge */}
-                    <span
-                      className="text-caption font-medium uppercase tracking-[0.12em] px-2.5 py-1 rounded-md inline-block mb-3"
-                      style={{ backgroundColor: `${project.color}12`, color: project.color }}
-                    >
-                      {project.category}
-                    </span>
+                    {/* Content */}
+                    <div className="p-5 sm:p-6">
+                      {/* Category badge */}
+                      <span
+                        className="text-caption font-medium uppercase tracking-[0.12em] px-2.5 py-1 rounded-md inline-block mb-3"
+                        style={{ backgroundColor: `${project.color}12`, color: project.color }}
+                      >
+                        {project.category}
+                      </span>
 
-                    {/* Project name */}
-                    <h3 className="text-h3 font-heading text-[var(--nauka-text-primary)] mb-2 group-hover:text-[var(--nauka-accent-dark)] transition-colors duration-300">
-                      {project.client}
-                    </h3>
+                      {/* Project name */}
+                      <h3 className="text-h3 font-heading text-[var(--nauka-text-primary)] mb-2 group-hover:text-[var(--nauka-accent-dark)] transition-colors duration-300">
+                        {project.client}
+                      </h3>
 
-                    {/* Description */}
-                    <p className="text-body-sm text-[var(--nauka-text-secondary)] leading-relaxed mb-4 line-clamp-3">
-                      {project.description}
-                    </p>
+                      {/* Description */}
+                      <p className="text-body-sm text-[var(--nauka-text-secondary)] leading-relaxed mb-4 line-clamp-3">
+                        {project.description}
+                      </p>
 
-                    {/* Lihat Detail link */}
-                    <span className="inline-flex items-center gap-1.5 text-body-sm font-medium text-[var(--nauka-accent)] group-hover:text-[var(--nauka-accent-dark)] transition-colors duration-300">
-                      Lihat Detail
-                      <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
+                      {/* Lihat Detail link */}
+                      <span className="inline-flex items-center gap-1.5 text-body-sm font-medium text-[var(--nauka-accent)] group-hover:text-[var(--nauka-accent-dark)] transition-colors duration-300">
+                        Lihat Detail
+                        <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         </section>
 
