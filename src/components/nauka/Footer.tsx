@@ -1,10 +1,13 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 /**
  * Footer — Nauka Motion Redesign
  * - Clean, confident, minimal
  * - "Cara Berpikir" instead of "Tentang"
- * - WhatsApp and email in brand column
+ * - WhatsApp and email fetched from settings API
  * - Dark background with texture
  */
 
@@ -37,7 +40,32 @@ const footerNavSections = [
   },
 ];
 
+interface SiteSettings {
+  site_name?: string;
+  whatsapp?: string;
+  email?: string;
+  founder?: string;
+}
+
 export function Footer() {
+  const [settings, setSettings] = useState<SiteSettings>({});
+
+  useEffect(() => {
+    fetch('/api/public/settings')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && typeof data === 'object') {
+          setSettings(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const siteName = settings.site_name || 'Nauka Motion';
+  const whatsappNumber = settings.whatsapp || '6281234567890';
+  const emailAddress = settings.email || 'hello@naukamotion.id';
+  const founder = settings.founder || 'Abu Aufa';
+
   return (
     <footer className="bg-texture-deep text-white">
       <div className="container-wide py-12 sm:py-16 lg:py-20">
@@ -47,7 +75,7 @@ export function Footer() {
           <div className="sm:col-span-2 lg:col-span-4">
             <Link href="/" className="inline-block mb-4 sm:mb-5">
               <span className="text-h3 font-heading text-white tracking-tight">
-                Nauka Motion
+                {siteName}
               </span>
             </Link>
             <p className="text-body-sm text-white/50 leading-relaxed max-w-[280px] mb-4 sm:mb-5">
@@ -57,7 +85,7 @@ export function Footer() {
             {/* Contact options in brand column */}
             <div className="flex flex-col gap-2.5 mb-3">
               <a
-                href="https://wa.me/6281234567890"
+                href={`https://wa.me/${whatsappNumber}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-body-sm text-[#25D366]/80 hover:text-[#25D366] transition-colors duration-300 inline-flex items-center gap-2"
@@ -68,18 +96,18 @@ export function Footer() {
                 Chat via WhatsApp
               </a>
               <a
-                href="mailto:hello@naukamotion.id"
+                href={`mailto:${emailAddress}`}
                 className="text-body-sm text-white/50 hover:text-white/80 transition-colors duration-300 inline-flex items-center gap-2"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
                 </svg>
-                hello@naukamotion.id
+                {emailAddress}
               </a>
             </div>
 
             <p className="text-caption text-white/30">
-              Didirikan oleh Abu Aufa
+              Didirikan oleh {founder}
             </p>
           </div>
 
@@ -112,7 +140,7 @@ export function Footer() {
         {/* Bottom */}
         <div className="pt-6 sm:pt-8 border-t border-white/8 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">
           <p className="text-caption text-white/30">
-            &copy; 2026 Nauka Motion. Hak cipta dilindungi.
+            &copy; 2026 {siteName}. Hak cipta dilindungi.
           </p>
           <div className="flex gap-6">
             <Link href="/legal/privacy" className="text-caption text-white/30 hover:text-white/50 transition-colors duration-300">

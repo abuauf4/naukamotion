@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { Globe, Layout, ShoppingCart, Database, Mail, Package } from 'lucide-react';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 
@@ -7,7 +8,7 @@ import { useScrollReveal } from '@/hooks/useScrollReveal';
  * TrustBarSection — Yang Kami Bangun
  *
  * Clean bar of project type badges with descriptions.
- * Simple stats: 30+ Proyek, 7 Tipe Layanan, 5 Industri.
+ * Stats fetched from /api/public/settings (stats_projects, stats_services, stats_industries).
  * Light background (bg-texture-secondary).
  */
 
@@ -20,15 +21,39 @@ const projectTypes = [
   { label: 'Sistem inventory', icon: Package, description: 'Tracking barang, penawaran, dan pembayaran terorganisir' },
 ];
 
-const stats = [
+const defaultStats = [
   { value: '30+', label: 'Proyek Selesai' },
   { value: '7', label: 'Tipe Layanan' },
   { value: '5', label: 'Industri' },
 ];
 
+interface SiteSettings {
+  stats_projects?: string;
+  stats_services?: string;
+  stats_industries?: string;
+}
+
 export function TrustBarSection() {
   const headerRef = useScrollReveal();
   const statsRef = useScrollReveal();
+  const [settings, setSettings] = useState<SiteSettings>({});
+
+  useEffect(() => {
+    fetch('/api/public/settings')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && typeof data === 'object') {
+          setSettings(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const stats = [
+    { value: settings.stats_projects || defaultStats[0].value, label: 'Proyek Selesai' },
+    { value: settings.stats_services || defaultStats[1].value, label: 'Tipe Layanan' },
+    { value: settings.stats_industries || defaultStats[2].value, label: 'Industri' },
+  ];
 
   return (
     <section className="py-10 sm:py-14 lg:py-20 bg-texture-secondary">

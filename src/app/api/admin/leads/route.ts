@@ -1,24 +1,27 @@
-import { NextResponse } from 'next/server'
+import { NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/lib/supabase';
 
 export async function GET() {
   try {
-    const { db } = await import('@/lib/db')
-    const leads = await db.lead.findMany({
-      orderBy: { createdAt: 'desc' },
-    })
-    return NextResponse.json(leads)
+    const { data: leads, error } = await supabaseAdmin
+      .from('leads')
+      .select('*')
+      .order('"createdAt"', { ascending: false });
+
+    if (error) throw error;
+    return NextResponse.json(leads ?? []);
   } catch {
     // DB unavailable — return empty (leads only come from form submissions)
-    return NextResponse.json([])
+    return NextResponse.json([]);
   }
 }
 
 export async function POST(request: Request) {
   try {
-    const { db } = await import('@/lib/db')
-    const body = await request.json()
-    const lead = await db.lead.create({
-      data: {
+    const body = await request.json();
+    const { data: lead, error } = await supabaseAdmin
+      .from('leads')
+      .insert({
         name: body.name,
         email: body.email,
         phone: body.phone,
@@ -27,11 +30,18 @@ export async function POST(request: Request) {
         message: body.message,
         status: body.status ?? 'new',
         notes: body.notes,
-      },
-    })
-    return NextResponse.json(lead, { status: 201 })
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return NextResponse.json(lead, { status: 201 });
   } catch (error) {
-    console.error('Failed to create lead:', error)
-    return NextResponse.json({ error: 'Gagal menyimpan lead — database tidak tersedia' }, { status: 500 })
+    console.error('Failed to create lead:', error);
+    return NextResponse.json(
+      { error: 'Gagal menyimpan lead — database tidak tersedia' },
+      { status: 500 }
+    );
   }
 }

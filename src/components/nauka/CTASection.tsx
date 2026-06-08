@@ -12,11 +12,16 @@ import { useScrollReveal } from '@/hooks/useScrollReveal';
  *
  * Title: "Mari Memulai Proyek Anda"
  * Form with Name, Email, Textarea
- * WhatsApp + Email contact options
+ * WhatsApp + Email contact options (fetched from settings)
  * POST to /api/admin/leads
  * Magnetic button effect on desktop
  * NO hidden contact, accessible
  */
+
+interface SiteSettings {
+  whatsapp?: string;
+  email?: string;
+}
 
 export function CTASection() {
   const cardRef = useScrollReveal();
@@ -25,6 +30,22 @@ export function CTASection() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const [settings, setSettings] = useState<SiteSettings>({});
+
+  // Fetch settings for WhatsApp/email
+  useEffect(() => {
+    fetch('/api/public/settings')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && typeof data === 'object') {
+          setSettings(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const whatsappNumber = settings.whatsapp || '6281234567890';
+  const emailAddress = settings.email || 'hello@naukamotion.id';
 
   // Magnetic button effect — desktop only
   const handleMouseMove = useCallback((e: MouseEvent) => {
@@ -207,7 +228,7 @@ export function CTASection() {
                   {/* Contact options */}
                   <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
                     <a
-                      href="https://wa.me/6281234567890"
+                      href={`https://wa.me/${whatsappNumber}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-2 px-4 py-2.5 bg-[#25D366]/10 text-[#25D366] rounded-lg hover:bg-[#25D366]/20 transition-colors text-body-sm font-medium flex-1 sm:flex-none justify-center"
@@ -216,11 +237,11 @@ export function CTASection() {
                       Chat via WhatsApp
                     </a>
                     <a
-                      href="mailto:hello@naukamotion.id"
+                      href={`mailto:${emailAddress}`}
                       className="flex items-center gap-2 px-4 py-2.5 bg-[var(--nauka-bg-primary)] border border-[var(--nauka-border)] text-[var(--nauka-text-secondary)] rounded-lg hover:text-[var(--nauka-text-primary)] hover:border-[var(--nauka-accent)]/30 transition-colors text-body-sm font-medium flex-1 sm:flex-none justify-center"
                     >
                       <Mail className="w-4 h-4" />
-                      hello@naukamotion.id
+                      {emailAddress}
                     </a>
                   </div>
                 </div>

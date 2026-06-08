@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/lib/supabase';
 import { createAdminToken } from '@/lib/auth';
 
 // Admin credentials from env (fallback if DB is not available)
@@ -21,10 +22,13 @@ export async function POST(request: NextRequest) {
     let admin: { id: string; username: string; name: string } | null = null;
 
     try {
-      const { db } = await import('@/lib/db');
-      const dbAdmin = await db.admin.findUnique({ where: { username } });
+      const { data: dbAdmin, error } = await supabaseAdmin
+        .from('admins')
+        .select('id, username, name, password')
+        .eq('username', username)
+        .single();
 
-      if (dbAdmin && dbAdmin.password === password) {
+      if (!error && dbAdmin && dbAdmin.password === password) {
         admin = { id: dbAdmin.id, username: dbAdmin.username, name: dbAdmin.name };
       }
     } catch {

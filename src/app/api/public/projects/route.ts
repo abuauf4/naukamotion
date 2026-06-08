@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { supabasePublic } from '@/lib/supabase';
 import { fallbackProjects } from '@/lib/fallback-data';
 
 export const dynamic = 'force-dynamic';
@@ -6,28 +7,15 @@ export const revalidate = 0;
 
 export async function GET() {
   try {
-    const { db } = await import('@/lib/db');
-    const projects = await db.project.findMany({
-      where: { status: 'published' },
-      orderBy: { order: 'asc' },
-      select: {
-        id: true,
-        slug: true,
-        client: true,
-        category: true,
-        title: true,
-        description: true,
-        approach: true,
-        liveUrl: true,
-        image: true,
-        color: true,
-        featured: true,
-        order: true,
-        updatedAt: true,
-      },
-    });
+    const { data: projects, error } = await supabasePublic
+      .from('projects')
+      .select('id, slug, client, category, title, description, approach, "liveUrl", image, color, featured, "order", "updatedAt"')
+      .eq('status', 'published')
+      .order('"order"', { ascending: true });
 
-    if (projects.length > 0) {
+    if (error) throw error;
+
+    if (projects && projects.length > 0) {
       const enriched = projects.map((p) => ({
         ...p,
         image: p.image

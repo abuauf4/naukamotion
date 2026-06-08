@@ -1,28 +1,21 @@
 import { NextResponse } from 'next/server';
+import { supabasePublic } from '@/lib/supabase';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export async function GET() {
   try {
-    const { db } = await import('@/lib/db');
-    const insights = await db.insight.findMany({
-      where: { status: 'published' },
-      orderBy: { publishedAt: 'desc' },
-      take: 3,
-      select: {
-        id: true,
-        slug: true,
-        title: true,
-        excerpt: true,
-        topic: true,
-        author: true,
-        thumbnail: true,
-        publishedAt: true,
-      },
-    });
+    const { data: insights, error } = await supabasePublic
+      .from('insights')
+      .select('id, slug, title, excerpt, topic, author, thumbnail, "publishedAt"')
+      .eq('status', 'published')
+      .order('"publishedAt"', { ascending: false })
+      .limit(3);
 
-    return NextResponse.json(insights, {
+    if (error) throw error;
+
+    return NextResponse.json(insights ?? [], {
       headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300' },
     });
   } catch {

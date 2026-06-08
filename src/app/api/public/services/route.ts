@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { supabasePublic } from '@/lib/supabase';
 import { fallbackServices } from '@/lib/fallback-data';
 
 export const dynamic = 'force-dynamic';
@@ -6,13 +7,15 @@ export const revalidate = 0;
 
 export async function GET() {
   try {
-    const { db } = await import('@/lib/db');
-    const services = await db.service.findMany({
-      where: { status: 'published' },
-      orderBy: { order: 'asc' },
-    });
+    const { data: services, error } = await supabasePublic
+      .from('services')
+      .select('*')
+      .eq('status', 'published')
+      .order('"order"', { ascending: true });
 
-    if (services.length > 0) {
+    if (error) throw error;
+
+    if (services && services.length > 0) {
       return NextResponse.json(services, {
         headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300' },
       });

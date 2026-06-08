@@ -12,16 +12,31 @@ import { ArrowRight, ArrowUpRight } from 'lucide-react';
  * Desktop: Text left + single crossfade image right (only 2 images rendered at a time)
  * Mobile: Horizontal scroll carousel below text
  * Word-reveal animation for headline
+ * Fetches projects from /api/public/projects
  */
 
-const heroProjects = [
-  { name: 'Mitsubishi', image: '/portfolio/mitsubishi.png', color: '#0d9488' },
-  { name: 'Geely', image: '/portfolio/geely-pluit.png', color: '#2563eb' },
-  { name: 'JasaProtect', image: '/portfolio/jasaprotect.png', color: '#6366f1' },
-  { name: 'Nauka Gadget', image: '/portfolio/nauka-gadget.png', color: '#8b5cf6' },
-  { name: 'Nauka Kostay', image: '/portfolio/nauka-kostay.png', color: '#d97706' },
-  { name: 'Ghazy Computer', image: '/portfolio/ghazy-computer.png', color: '#e11d48' },
+interface HeroProject {
+  id: string;
+  slug: string;
+  client: string;
+  image: string | null;
+  color: string;
+}
+
+const defaultHeroProjects: HeroProject[] = [
+  { id: 'mitsubishi', slug: 'mitsubishi', client: 'Mitsubishi', image: '/portfolio/mitsubishi.png', color: '#0d9488' },
+  { id: 'geely', slug: 'geely-pluit', client: 'Geely', image: '/portfolio/geely-pluit.png', color: '#2563eb' },
+  { id: 'jasaprotect', slug: 'jasaprotect', client: 'JasaProtect', image: '/portfolio/jasaprotect.png', color: '#6366f1' },
+  { id: 'naukagadget', slug: 'nauka-gadget', client: 'Nauka Gadget', image: '/portfolio/nauka-gadget.png', color: '#8b5cf6' },
+  { id: 'naukakostay', slug: 'nauka-kostay', client: 'Nauka Kostay', image: '/portfolio/nauka-kostay.png', color: '#d97706' },
+  { id: 'ghazy', slug: 'ghazy', client: 'Ghazy Computer', image: '/portfolio/ghazy-computer.png', color: '#e11d48' },
 ];
+
+interface SiteSettings {
+  tagline?: string;
+  headline?: string;
+  subtitle?: string;
+}
 
 export function HeroSection() {
   const heroRef = useRef<HTMLElement>(null);
@@ -29,6 +44,29 @@ export function HeroSection() {
   const [activeProject, setActiveProject] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [carouselScroll, setCarouselScroll] = useState(0);
+  const [heroProjects, setHeroProjects] = useState<HeroProject[]>(defaultHeroProjects);
+  const [settings, setSettings] = useState<SiteSettings>({});
+
+  // Fetch projects and settings from API
+  useEffect(() => {
+    Promise.all([
+      fetch('/api/public/projects').then(r => r.json()).catch(() => []),
+      fetch('/api/public/settings').then(r => r.json()).catch(() => ({})),
+    ]).then(([projectsData, settingsData]) => {
+      if (Array.isArray(projectsData) && projectsData.length > 0) {
+        setHeroProjects(projectsData.map((p: Record<string, unknown>) => ({
+          id: p.id as string,
+          slug: p.slug as string,
+          client: p.client as string,
+          image: p.image as string | null,
+          color: p.color as string,
+        })));
+      }
+      if (settingsData && typeof settingsData === 'object') {
+        setSettings(settingsData);
+      }
+    });
+  }, []);
 
   // Word reveal on mount
   useEffect(() => {
@@ -47,9 +85,11 @@ export function HeroSection() {
     }, 6000);
 
     return () => clearInterval(interval);
-  }, [isHovered]);
+  }, [isHovered, heroProjects.length]);
 
-  const headlineWords = ['Membangun', 'Produk', 'Digital', 'Dengan', 'Arah', 'Yang', 'Jelas'];
+  const headlineText = settings.headline || 'Membangun Produk Digital Dengan Arah Yang Jelas';
+  const headlineWords = headlineText.split(' ');
+  const midPoint = Math.ceil(headlineWords.length / 2);
   let wordIndex = 0;
 
   // Mobile carousel drag
@@ -120,16 +160,16 @@ export function HeroSection() {
               className={`text-caption font-medium uppercase tracking-[0.3em] text-[var(--nauka-accent-light)] mb-5 sm:mb-7 transition-all duration-700 ${wordsRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
               style={{ transitionDelay: '100ms' }}
             >
-              Small Movement. Real Impact.
+              {settings.tagline || 'Small Movement. Real Impact.'}
             </p>
 
             <h1 className="text-display font-heading text-white mb-6 sm:mb-8" style={{ perspective: '600px' }}>
               <span className="block">
-                {headlineWords.slice(0, 3).map((word) => {
+                {headlineWords.slice(0, midPoint).map((word) => {
                   const idx = wordIndex++;
                   return (
                     <span
-                      key={word}
+                      key={word + idx}
                       className={`word-reveal ${wordsRevealed ? 'revealed' : ''}`}
                       style={{ transitionDelay: `${300 + idx * 120}ms` }}
                     >
@@ -139,11 +179,11 @@ export function HeroSection() {
                 })}
               </span>
               <span className="block">
-                {headlineWords.slice(3).map((word) => {
+                {headlineWords.slice(midPoint).map((word) => {
                   const idx = wordIndex++;
                   return (
                     <span
-                      key={word}
+                      key={word + idx}
                       className={`word-reveal ${wordsRevealed ? 'revealed' : ''}`}
                       style={{ transitionDelay: `${300 + idx * 120}ms` }}
                     >
@@ -158,7 +198,7 @@ export function HeroSection() {
               className={`text-body-lg text-white/70 sm:text-white/75 mb-8 sm:mb-10 max-w-[520px] leading-relaxed transition-all duration-700 ${wordsRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
               style={{ transitionDelay: '1100ms' }}
             >
-              Dari website bisnis, sistem operasional, hingga pengalaman digital yang membantu bisnis bertumbuh.
+              {settings.subtitle || 'Dari website bisnis, sistem operasional, hingga pengalaman digital yang membantu bisnis bertumbuh.'}
             </p>
 
             <div
@@ -199,7 +239,7 @@ export function HeroSection() {
               {/* Only render current + previous slide for smooth crossfade */}
               {visibleIndices.map((idx) => (
                 <div
-                  key={heroProjects[idx].name}
+                  key={heroProjects[idx]?.id || idx}
                   className="absolute inset-0"
                   style={{
                     opacity: activeProject === idx ? 1 : 0,
@@ -207,14 +247,16 @@ export function HeroSection() {
                     zIndex: activeProject === idx ? 1 : 0,
                   }}
                 >
-                  <Image
-                    src={heroProjects[idx].image}
-                    alt={`${heroProjects[idx].name} — by Nauka Motion`}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 42vw"
-                    className="object-cover object-top rounded-xl"
-                    priority={idx < 2}
-                  />
+                  {heroProjects[idx]?.image && (
+                    <Image
+                      src={heroProjects[idx].image}
+                      alt={`${heroProjects[idx].client} — by Nauka Motion`}
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 42vw"
+                      className="object-cover object-top rounded-xl"
+                      priority={idx < 2}
+                    />
+                  )}
                 </div>
               ))}
 
@@ -229,7 +271,7 @@ export function HeroSection() {
                     color: heroProjects[activeProject]?.color,
                   }}
                 >
-                  {heroProjects[activeProject]?.name}
+                  {heroProjects[activeProject]?.client}
                 </span>
               </div>
 
@@ -241,14 +283,14 @@ export function HeroSection() {
             <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2">
               {heroProjects.map((project, i) => (
                 <button
-                  key={project.name}
+                  key={project.id}
                   onClick={() => setActiveProject(i)}
                   className={`w-2 h-2 rounded-full transition-all duration-500 ${
                     i === activeProject
                       ? 'w-6 bg-[var(--nauka-accent-light)]'
                       : 'bg-white/20 hover:bg-white/40'
                   }`}
-                  aria-label={`Preview ${project.name}`}
+                  aria-label={`Preview ${project.client}`}
                 />
               ))}
             </div>
@@ -263,16 +305,16 @@ export function HeroSection() {
               className={`text-caption font-medium uppercase tracking-[0.3em] text-[var(--nauka-accent-light)] mb-2 transition-all duration-700 ${wordsRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
               style={{ transitionDelay: '100ms' }}
             >
-              Small Movement. Real Impact.
+              {settings.tagline || 'Small Movement. Real Impact.'}
             </p>
 
             <h1 className="text-display font-heading text-white mb-3" style={{ perspective: '600px' }}>
               <span className="block">
-                {headlineWords.slice(0, 3).map((word) => {
+                {headlineWords.slice(0, midPoint).map((word) => {
                   const idx = wordIndex++;
                   return (
                     <span
-                      key={word}
+                      key={word + idx}
                       className={`word-reveal ${wordsRevealed ? 'revealed' : ''}`}
                       style={{ transitionDelay: `${300 + idx * 120}ms` }}
                     >
@@ -282,11 +324,11 @@ export function HeroSection() {
                 })}
               </span>
               <span className="block">
-                {headlineWords.slice(3).map((word) => {
+                {headlineWords.slice(midPoint).map((word) => {
                   const idx = wordIndex++;
                   return (
                     <span
-                      key={word}
+                      key={word + idx}
                       className={`word-reveal ${wordsRevealed ? 'revealed' : ''}`}
                       style={{ transitionDelay: `${300 + idx * 120}ms` }}
                     >
@@ -301,7 +343,7 @@ export function HeroSection() {
               className={`text-body-lg text-white/70 mb-4 leading-relaxed transition-all duration-700 ${wordsRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
               style={{ transitionDelay: '1100ms' }}
             >
-              Dari website bisnis, sistem operasional, hingga pengalaman digital yang membantu bisnis bertumbuh.
+              {settings.subtitle || 'Dari website bisnis, sistem operasional, hingga pengalaman digital yang membantu bisnis bertumbuh.'}
             </p>
 
             <div
@@ -343,16 +385,18 @@ export function HeroSection() {
           >
             {heroProjects.map((project) => (
               <div
-                key={project.name}
+                key={project.id}
                 className="flex-shrink-0 w-[260px] aspect-[4/3] rounded-xl overflow-hidden relative snap-start"
               >
-                <Image
-                  src={project.image}
-                  alt={`${project.name} — by Nauka Motion`}
-                  fill
-                  sizes="260px"
-                  className="object-cover object-top"
-                />
+                {project.image && (
+                  <Image
+                    src={project.image}
+                    alt={`${project.client} — by Nauka Motion`}
+                    fill
+                    sizes="260px"
+                    className="object-cover object-top"
+                  />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-3">
                   <span
@@ -362,7 +406,7 @@ export function HeroSection() {
                       color: project.color,
                     }}
                   >
-                    {project.name}
+                    {project.client}
                   </span>
                 </div>
               </div>

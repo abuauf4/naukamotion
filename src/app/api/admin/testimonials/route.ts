@@ -1,29 +1,32 @@
-import { NextResponse } from 'next/server'
-import { fallbackTestimonials } from '@/lib/fallback-data'
+import { NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/lib/supabase';
+import { fallbackTestimonials } from '@/lib/fallback-data';
 
 export async function GET() {
   try {
-    const { db } = await import('@/lib/db')
-    const testimonials = await db.testimonial.findMany({
-      orderBy: { order: 'asc' },
-    })
+    const { data: testimonials, error } = await supabaseAdmin
+      .from('testimonials')
+      .select('*')
+      .order('"order"', { ascending: true });
 
-    if (testimonials.length > 0) {
-      return NextResponse.json(testimonials)
+    if (error) throw error;
+
+    if (testimonials && testimonials.length > 0) {
+      return NextResponse.json(testimonials);
     }
 
-    return NextResponse.json(fallbackTestimonials)
+    return NextResponse.json(fallbackTestimonials);
   } catch {
-    return NextResponse.json(fallbackTestimonials)
+    return NextResponse.json(fallbackTestimonials);
   }
 }
 
 export async function POST(request: Request) {
   try {
-    const { db } = await import('@/lib/db')
-    const body = await request.json()
-    const testimonial = await db.testimonial.create({
-      data: {
+    const body = await request.json();
+    const { data: testimonial, error } = await supabaseAdmin
+      .from('testimonials')
+      .insert({
         quote: body.quote,
         author: body.author,
         role: body.role,
@@ -32,11 +35,18 @@ export async function POST(request: Request) {
         order: body.order ?? 0,
         status: body.status ?? 'published',
         projectId: body.projectId,
-      },
-    })
-    return NextResponse.json(testimonial, { status: 201 })
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return NextResponse.json(testimonial, { status: 201 });
   } catch (error) {
-    console.error('Failed to create testimonial:', error)
-    return NextResponse.json({ error: 'Gagal membuat testimonial — database tidak tersedia' }, { status: 500 })
+    console.error('Failed to create testimonial:', error);
+    return NextResponse.json(
+      { error: 'Gagal membuat testimonial — database tidak tersedia' },
+      { status: 500 }
+    );
   }
 }

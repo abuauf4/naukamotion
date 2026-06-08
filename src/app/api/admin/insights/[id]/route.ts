@@ -1,20 +1,25 @@
-import { NextResponse } from 'next/server'
-import { db } from '@/lib/db'
+import { NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/lib/supabase';
 
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params
-    const insight = await db.insight.findUnique({ where: { id } })
-    if (!insight) {
-      return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    const { id } = await params;
+    const { data: insight, error } = await supabaseAdmin
+      .from('insights')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error || !insight) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 });
     }
-    return NextResponse.json(insight)
+    return NextResponse.json(insight);
   } catch (error) {
-    console.error('Failed to fetch insight:', error)
-    return NextResponse.json({ error: 'Failed to fetch insight' }, { status: 500 })
+    console.error('Failed to fetch insight:', error);
+    return NextResponse.json({ error: 'Failed to fetch insight' }, { status: 500 });
   }
 }
 
@@ -23,34 +28,47 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params
-    const body = await request.json()
+    const { id } = await params;
+    const body = await request.json();
 
-    const existing = await db.insight.findUnique({ where: { id } })
-    if (!existing) {
-      return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    // Check existence first
+    const { data: existing, error: findError } = await supabaseAdmin
+      .from('insights')
+      .select('id')
+      .eq('id', id)
+      .single();
+
+    if (findError || !existing) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 });
     }
 
-    const insight = await db.insight.update({
-      where: { id },
-      data: {
-        ...(body.slug !== undefined && { slug: body.slug }),
-        ...(body.title !== undefined && { title: body.title }),
-        ...(body.excerpt !== undefined && { excerpt: body.excerpt }),
-        ...(body.body !== undefined && { body: body.body }),
-        ...(body.topic !== undefined && { topic: body.topic }),
-        ...(body.author !== undefined && { author: body.author }),
-        ...(body.thumbnail !== undefined && { thumbnail: body.thumbnail }),
-        ...(body.status !== undefined && { status: body.status }),
-        ...(body.publishedAt !== undefined && {
-          publishedAt: body.publishedAt ? new Date(body.publishedAt) : null,
-        }),
-      },
-    })
-    return NextResponse.json(insight)
+    // Build update object
+    const updateData: Record<string, unknown> = {};
+    if (body.slug !== undefined) updateData.slug = body.slug;
+    if (body.title !== undefined) updateData.title = body.title;
+    if (body.excerpt !== undefined) updateData.excerpt = body.excerpt;
+    if (body.body !== undefined) updateData.body = body.body;
+    if (body.topic !== undefined) updateData.topic = body.topic;
+    if (body.author !== undefined) updateData.author = body.author;
+    if (body.thumbnail !== undefined) updateData.thumbnail = body.thumbnail;
+    if (body.status !== undefined) updateData.status = body.status;
+    if (body.publishedAt !== undefined) {
+      updateData.publishedAt = body.publishedAt || null;
+    }
+
+    const { data: insight, error } = await supabaseAdmin
+      .from('insights')
+      .update(updateData)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return NextResponse.json(insight);
   } catch (error) {
-    console.error('Failed to update insight:', error)
-    return NextResponse.json({ error: 'Failed to update insight' }, { status: 500 })
+    console.error('Failed to update insight:', error);
+    return NextResponse.json({ error: 'Failed to update insight' }, { status: 500 });
   }
 }
 
@@ -59,17 +77,29 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params
+    const { id } = await params;
 
-    const existing = await db.insight.findUnique({ where: { id } })
-    if (!existing) {
-      return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    // Check existence first
+    const { data: existing, error: findError } = await supabaseAdmin
+      .from('insights')
+      .select('id')
+      .eq('id', id)
+      .single();
+
+    if (findError || !existing) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 });
     }
 
-    await db.insight.delete({ where: { id } })
-    return NextResponse.json({ success: true })
+    const { error } = await supabaseAdmin
+      .from('insights')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Failed to delete insight:', error)
-    return NextResponse.json({ error: 'Failed to delete insight' }, { status: 500 })
+    console.error('Failed to delete insight:', error);
+    return NextResponse.json({ error: 'Failed to delete insight' }, { status: 500 });
   }
 }

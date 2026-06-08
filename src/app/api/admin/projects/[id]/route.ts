@@ -1,23 +1,25 @@
-import { NextResponse } from 'next/server'
-import { db } from '@/lib/db'
+import { NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/lib/supabase';
 
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params
-    const project = await db.project.findUnique({
-      where: { id },
-      include: { clientRef: true },
-    })
-    if (!project) {
-      return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    const { id } = await params;
+    const { data: project, error } = await supabaseAdmin
+      .from('projects')
+      .select('*, clientRef:clients(*)')
+      .eq('id', id)
+      .single();
+
+    if (error || !project) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 });
     }
-    return NextResponse.json(project)
+    return NextResponse.json(project);
   } catch (error) {
-    console.error('Failed to fetch project:', error)
-    return NextResponse.json({ error: 'Failed to fetch project' }, { status: 500 })
+    console.error('Failed to fetch project:', error);
+    return NextResponse.json({ error: 'Failed to fetch project' }, { status: 500 });
   }
 }
 
@@ -26,37 +28,49 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params
-    const body = await request.json()
+    const { id } = await params;
+    const body = await request.json();
 
-    const existing = await db.project.findUnique({ where: { id } })
-    if (!existing) {
-      return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    // Check existence first
+    const { data: existing, error: findError } = await supabaseAdmin
+      .from('projects')
+      .select('id')
+      .eq('id', id)
+      .single();
+
+    if (findError || !existing) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 });
     }
 
-    const project = await db.project.update({
-      where: { id },
-      data: {
-        ...(body.slug !== undefined && { slug: body.slug }),
-        ...(body.title !== undefined && { title: body.title }),
-        ...(body.client !== undefined && { client: body.client }),
-        ...(body.category !== undefined && { category: body.category }),
-        ...(body.description !== undefined && { description: body.description }),
-        ...(body.approach !== undefined && { approach: body.approach }),
-        ...(body.liveUrl !== undefined && { liveUrl: body.liveUrl }),
-        ...(body.image !== undefined && { image: body.image }),
-        ...(body.color !== undefined && { color: body.color }),
-        ...(body.featured !== undefined && { featured: body.featured }),
-        ...(body.order !== undefined && { order: body.order }),
-        ...(body.status !== undefined && { status: body.status }),
-        ...(body.clientId !== undefined && { clientId: body.clientId }),
-      },
-      include: { clientRef: true },
-    })
-    return NextResponse.json(project)
+    // Build update object — only include fields that are provided
+    const updateData: Record<string, unknown> = {};
+    if (body.slug !== undefined) updateData.slug = body.slug;
+    if (body.title !== undefined) updateData.title = body.title;
+    if (body.client !== undefined) updateData.client = body.client;
+    if (body.category !== undefined) updateData.category = body.category;
+    if (body.description !== undefined) updateData.description = body.description;
+    if (body.approach !== undefined) updateData.approach = body.approach;
+    if (body.liveUrl !== undefined) updateData.liveUrl = body.liveUrl;
+    if (body.image !== undefined) updateData.image = body.image;
+    if (body.color !== undefined) updateData.color = body.color;
+    if (body.featured !== undefined) updateData.featured = body.featured;
+    if (body.order !== undefined) updateData.order = body.order;
+    if (body.status !== undefined) updateData.status = body.status;
+    if (body.clientId !== undefined) updateData.clientId = body.clientId;
+
+    const { data: project, error } = await supabaseAdmin
+      .from('projects')
+      .update(updateData)
+      .eq('id', id)
+      .select('*, clientRef:clients(*)')
+      .single();
+
+    if (error) throw error;
+
+    return NextResponse.json(project);
   } catch (error) {
-    console.error('Failed to update project:', error)
-    return NextResponse.json({ error: 'Failed to update project' }, { status: 500 })
+    console.error('Failed to update project:', error);
+    return NextResponse.json({ error: 'Failed to update project' }, { status: 500 });
   }
 }
 
@@ -65,17 +79,29 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params
+    const { id } = await params;
 
-    const existing = await db.project.findUnique({ where: { id } })
-    if (!existing) {
-      return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    // Check existence first
+    const { data: existing, error: findError } = await supabaseAdmin
+      .from('projects')
+      .select('id')
+      .eq('id', id)
+      .single();
+
+    if (findError || !existing) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 });
     }
 
-    await db.project.delete({ where: { id } })
-    return NextResponse.json({ success: true })
+    const { error } = await supabaseAdmin
+      .from('projects')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Failed to delete project:', error)
-    return NextResponse.json({ error: 'Failed to delete project' }, { status: 500 })
+    console.error('Failed to delete project:', error);
+    return NextResponse.json({ error: 'Failed to delete project' }, { status: 500 });
   }
 }

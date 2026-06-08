@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { supabasePublic } from '@/lib/supabase';
 import { fallbackTestimonials } from '@/lib/fallback-data';
 
 export const dynamic = 'force-dynamic';
@@ -6,13 +7,15 @@ export const revalidate = 0;
 
 export async function GET() {
   try {
-    const { db } = await import('@/lib/db');
-    const testimonials = await db.testimonial.findMany({
-      where: { status: 'published' },
-      orderBy: { order: 'asc' },
-    });
+    const { data: testimonials, error } = await supabasePublic
+      .from('testimonials')
+      .select('*')
+      .eq('status', 'published')
+      .order('"order"', { ascending: true });
 
-    if (testimonials.length > 0) {
+    if (error) throw error;
+
+    if (testimonials && testimonials.length > 0) {
       return NextResponse.json(testimonials, {
         headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300' },
       });
