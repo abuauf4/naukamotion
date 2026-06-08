@@ -140,10 +140,10 @@ export default function FaqPage() {
     setSaving(true)
     try {
       if (editing) {
-        const res = await fetch('/api/admin/faqs', {
+        const res = await fetch(`/api/admin/faqs/${editing.id}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: editing.id, ...form }),
+          body: JSON.stringify(form),
         })
         if (!res.ok) {
           const data = await res.json()
@@ -174,7 +174,7 @@ export default function FaqPage() {
   const handleDelete = async () => {
     if (!deleting) return
     try {
-      const res = await fetch(`/api/admin/faqs?id=${deleting.id}`, {
+      const res = await fetch(`/api/admin/faqs/${deleting.id}`, {
         method: 'DELETE',
       })
       if (!res.ok) throw new Error('Gagal menghapus')

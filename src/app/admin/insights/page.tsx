@@ -161,10 +161,10 @@ export default function InsightsPage() {
     setSaving(true)
     try {
       if (editing) {
-        const res = await fetch('/api/admin/insights', {
+        const res = await fetch(`/api/admin/insights/${editing.id}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: editing.id, ...form }),
+          body: JSON.stringify(form),
         })
         if (!res.ok) {
           const data = await res.json()
@@ -195,7 +195,7 @@ export default function InsightsPage() {
   const handleDelete = async () => {
     if (!deleting) return
     try {
-      const res = await fetch(`/api/admin/insights?id=${deleting.id}`, {
+      const res = await fetch(`/api/admin/insights/${deleting.id}`, {
         method: 'DELETE',
       })
       if (!res.ok) throw new Error('Gagal menghapus')
