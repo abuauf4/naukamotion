@@ -38,8 +38,8 @@ const coreValues = [
 
 /* ━━ Stats Data ━━ */
 const stats = [
-  { value: '30+', label: 'Proyek Selesai', icon: Briefcase },
-  { value: '6+', label: 'Industri', icon: TrendingUp },
+  { value: '6', label: 'Proyek Selesai', icon: Briefcase },
+  { value: '4', label: 'Industri', icon: TrendingUp },
   { value: 'Jakarta', label: 'Berbasis', icon: MapPin },
 ];
 

@@ -79,12 +79,12 @@ const PROJECT_STATUS_LABELS: Record<string, string> = {
 }
 
 const CATEGORY_OPTIONS = [
-  'Automotive Sales Website',
-  'Business Premium Website',
-  'Business System',
-  'CMS Platform',
+  'Website Profesional',
+  'Landing Page',
+  'E-Commerce',
+  'Sistem Inventory',
+  'Sistem Bisnis',
   'Digital Invitation',
-  'Digital Experience Strategy',
 ]
 
 interface ProjectForm {

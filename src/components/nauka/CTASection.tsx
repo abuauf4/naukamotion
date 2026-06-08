@@ -45,7 +45,7 @@ export function CTASection() {
   }, []);
 
   const whatsappNumber = settings.whatsapp || '6281234567890';
-  const emailAddress = settings.email || 'hello@naukamotion.id';
+  const emailAddress = settings.email || 'halo@naukamotion.id';
 
   // Magnetic button effect — desktop only
   const handleMouseMove = useCallback((e: MouseEvent) => {

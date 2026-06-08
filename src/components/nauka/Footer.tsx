@@ -63,7 +63,7 @@ export function Footer() {
 
   const siteName = settings.site_name || 'Nauka Motion';
   const whatsappNumber = settings.whatsapp || '6281234567890';
-  const emailAddress = settings.email || 'hello@naukamotion.id';
+  const emailAddress = settings.email || 'halo@naukamotion.id';
   const founder = settings.founder || 'Abu Aufa';
 
   return (

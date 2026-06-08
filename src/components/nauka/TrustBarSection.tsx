@@ -22,9 +22,9 @@ const projectTypes = [
 ];
 
 const defaultStats = [
-  { value: '30+', label: 'Proyek Selesai' },
-  { value: '7', label: 'Tipe Layanan' },
-  { value: '5', label: 'Industri' },
+  { value: '6', label: 'Proyek Selesai' },
+  { value: '6', label: 'Tipe Layanan' },
+  { value: '4', label: 'Industri' },
 ];
 
 interface SiteSettings {

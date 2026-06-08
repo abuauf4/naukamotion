@@ -69,7 +69,7 @@ const servicesData: Record<
       'Setiap website yang kami bangun dimulai dengan pemahaman mendalam tentang audiens Anda — siapa mereka, apa yang mereka cari, dan bagaimana mereka membuat keputusan. Dari sana, kami merancang pengalaman yang memandu pengunjung melalui perjalanan yang jelas: dari menemukan Anda, memahami nilai yang Anda tawarkan, hingga mengambil tindakan.',
       'Performa adalah fondasi, bukan fitur tambahan. Website kami dioptimasi untuk kecepatan loading, aksesibilitas, dan SEO — memastikan bisnis Anda mudah ditemukan dan nyaman dijelajahi di perangkat apa pun.',
     ],
-    relatedProjects: ['PT Maju Bersama', 'Klinik Sehat Prima', 'Nusa Property Group'],
+    relatedProjects: ['Mitsubishi Motor Indonesia', 'Geely Pluit', 'Nauka Kostay'],
   },
   'business-system-development': {
     title: 'Business System Development',
@@ -87,7 +87,7 @@ const servicesData: Record<
       'Setiap sistem dimulai dengan pemetaan proses yang ada — mengidentifikasi bottleneck, redundansi, dan peluang automasi. Kami tidak hanya membangun teknologi; kami memahami alur bisnis Anda terlebih dahulu sebelum menulis satu baris kode pun.',
       'Dari dashboard manajemen yang menampilkan KPI penting, integrasi dengan sistem yang sudah ada, hingga keamanan data berlapis — sistem kami dirancang untuk tumbuh bersama bisnis Anda, bukan menjadi penghambat.',
     ],
-    relatedProjects: ['LogiTrack System', 'HRM Pro Dashboard', 'Inventory Smart'],
+    relatedProjects: ['Ghazy Computer'],
   },
   'cms-platform': {
     title: 'CMS Platform',
@@ -105,7 +105,7 @@ const servicesData: Record<
       'Dengan editor visual yang intuitif, siapa pun di tim Anda bisa membuat, mengedit, dan mempublikasikan konten tanpa menyentuh kode. Sistem kami mendukung multi-bahasa, pengelolaan media terpusat, dan penjadwalan publikasi — semua dari satu dashboard.',
       'Keamanan dan keandalan bukan opsi, tapi standar. Setiap perubahan tersimpan dalam versi history, backup otomatis berjalan setiap hari, dan sistem permissions memastikan orang yang tepat memiliki akses yang tepat.',
     ],
-    relatedProjects: ['MediaKita CMS', 'EduContent Platform', 'RetailHub Manager'],
+    relatedProjects: ['Nauka Gadget', 'JasaProtect'],
   },
   'automotive-sales-website': {
     title: 'Automotive Sales Website',
@@ -123,7 +123,7 @@ const servicesData: Record<
       'Katalog unit kami bukan sekadar daftar mobil. Setiap unit ditampilkan dengan foto berkualitas tinggi, spesifikasi lengkap, dan harga transparan — lengkap dengan simulasi kredit real-time yang membantu calon pembeli langsung melihat kemampuan finansial mereka.',
       'Lead management terintegrasi memastikan tidak ada calon pembeli yang terlewat. Setiap inquiry masuk langsung diteruskan ke tim sales, dengan notifikasi WhatsApp otomatis dan dashboard tracking yang menunjukkan status setiap lead.',
     ],
-    relatedProjects: ['AutoPrime Dealer', 'MobilKu Showroom', 'DriveNow Otomotif'],
+    relatedProjects: ['Mitsubishi Motor Indonesia', 'Geely Pluit'],
   },
   'business-premium-website': {
     title: 'Business Premium Website',
@@ -141,7 +141,7 @@ const servicesData: Record<
       'Animasi signature dan micro-interactions yang cermat menciptakan pengalaman browsing yang terasa hidup dan berkarakter. Bukan animasi untuk pamer — tapi animasi yang melayani tujuan: memandu perhatian, memperkuat pesan, dan menciptakan kesan profesional yang melekat.',
       'Meskipun penuh detail visual, performa tetap menjadi prioritas utama. Kami mengoptimasi setiap aset, menerapkan lazy loading cerdas, dan memastikan skor Core Web Vitals tetap di level A+. Karena pengalaman yang indah tidak ada artinya jika pengunjung menunggu terlalu lama.',
     ],
-    relatedProjects: ['LuxBrand Corporate', 'Atelier Studio', 'Apex Consulting'],
+    relatedProjects: ['Nauka Kostay', 'Geely Pluit'],
   },
   'digital-experience-strategy': {
     title: 'Digital Experience Strategy',
@@ -159,7 +159,7 @@ const servicesData: Record<
       'Proses kami dimulai dengan audit digital komprehensif — mengevaluasi website, sistem, dan seluruh ekosistem digital Anda. Dari sana, kami mengidentifikasi gap, peluang optimasi, dan prioritas yang memberikan ROI tertinggi.',
       'Hasilnya bukan sekadar dokumen strategi yang berdebu di laci. Kami menyusun roadmap teknologi yang actionable, mendefinisikan KPI yang terukur, dan merekomendasikan technology stack yang tepat untuk kebutuhan unik bisnis Anda.',
     ],
-    relatedProjects: ['Digital Transformation PT XYZ', 'E-Commerce Strategy RetailCo', 'Tech Stack Review StartupABC'],
+    relatedProjects: ['Mitsubishi Motor Indonesia', 'Ghazy Computer', 'JasaProtect'],
   },
 };
 

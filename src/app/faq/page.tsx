@@ -13,11 +13,12 @@ import { Footer } from '@/components/nauka/Footer';
  * Frequently Asked Questions page with expandable accordion-style Q&A.
  * Structure: Dark Hero → FAQ List → CTA
  * All text in Bahasa Indonesia.
+ * FAQ data fetched from /api/public/faqs (Supabase).
  * Scroll reveal via IntersectionObserver.
  */
 
-/* ━━ FAQ Data ━━ */
-const faqItems = [
+/* ━━ Fallback FAQ Data ━━ */
+const defaultFaqItems = [
   {
     question: 'Berapa lama waktu pengerjaan website?',
     answer:
@@ -57,7 +58,7 @@ function FAQItem({
   onToggle,
   delay,
 }: {
-  item: (typeof faqItems)[number];
+  item: { question: string; answer: string };
   isOpen: boolean;
   onToggle: () => void;
   delay: number;
@@ -126,7 +127,19 @@ function FAQItem({
 
 /* ━━ Page Component ━━ */
 export default function FAQPage() {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [faqItems, setFaqItems] = useState(defaultFaqItems);
+
+  useEffect(() => {
+    fetch('/api/public/faqs')
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setFaqItems(data.map((d: { question: string; answer: string }) => ({ question: d.question, answer: d.answer })));
+        }
+      })
+      .catch(() => {});
+  }, []);
   const heroRef = useRef<HTMLElement>(null);
   const ctaRef = useRef<HTMLElement>(null);
 
