@@ -1,20 +1,21 @@
 import { NextResponse } from 'next/server'
-import { db } from '@/lib/db'
 
 export async function GET() {
   try {
+    const { db } = await import('@/lib/db')
     const leads = await db.lead.findMany({
       orderBy: { createdAt: 'desc' },
     })
     return NextResponse.json(leads)
-  } catch (error) {
-    console.error('Failed to fetch leads:', error)
-    return NextResponse.json({ error: 'Failed to fetch leads' }, { status: 500 })
+  } catch {
+    // DB unavailable — return empty (leads only come from form submissions)
+    return NextResponse.json([])
   }
 }
 
 export async function POST(request: Request) {
   try {
+    const { db } = await import('@/lib/db')
     const body = await request.json()
     const lead = await db.lead.create({
       data: {
@@ -31,6 +32,6 @@ export async function POST(request: Request) {
     return NextResponse.json(lead, { status: 201 })
   } catch (error) {
     console.error('Failed to create lead:', error)
-    return NextResponse.json({ error: 'Failed to create lead' }, { status: 500 })
+    return NextResponse.json({ error: 'Gagal menyimpan lead — database tidak tersedia' }, { status: 500 })
   }
 }

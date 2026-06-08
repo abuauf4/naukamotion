@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server';
+import { fallbackProjects } from '@/lib/fallback-data';
+import { fallbackTestimonials } from '@/lib/fallback-data';
 
 export async function GET() {
   try {
@@ -53,26 +55,36 @@ export async function GET() {
       }),
     ]);
 
-    return NextResponse.json({
-      totalLeads,
-      newLeadsThisMonth,
-      activeProjects,
-      publishedInsights,
-      totalTestimonials,
-      recentLeads,
-      recentProjects,
-    });
-  } catch (error) {
-    console.error('Dashboard error:', error);
-    // Return empty dashboard data instead of crashing
-    return NextResponse.json({
-      totalLeads: 0,
-      newLeadsThisMonth: 0,
-      activeProjects: 0,
-      publishedInsights: 0,
-      totalTestimonials: 0,
-      recentLeads: [],
-      recentProjects: [],
-    });
+    // If DB has data, return it
+    if (activeProjects > 0 || totalLeads > 0) {
+      return NextResponse.json({
+        totalLeads,
+        newLeadsThisMonth,
+        activeProjects,
+        publishedInsights,
+        totalTestimonials,
+        recentLeads,
+        recentProjects,
+      });
+    }
+  } catch {
+    // DB unavailable — fall through to fallback
   }
+
+  // Fallback data — from hardcoded portfolio
+  return NextResponse.json({
+    totalLeads: 0,
+    newLeadsThisMonth: 0,
+    activeProjects: fallbackProjects.filter((p) => p.status === 'published').length,
+    publishedInsights: 0,
+    totalTestimonials: fallbackTestimonials.filter((t) => t.status === 'published').length,
+    recentLeads: [],
+    recentProjects: fallbackProjects.slice(0, 5).map((p) => ({
+      id: p.id,
+      title: p.title,
+      client: p.client,
+      category: p.category,
+      status: p.status,
+    })),
+  });
 }
