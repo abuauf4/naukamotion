@@ -1,21 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/lib/supabase';
 
 export async function POST(request: NextRequest) {
   try {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-    if (!supabaseUrl || !serviceKey || serviceKey === 'placeholder') {
-      console.error('Supabase not configured:', {
-        url: supabaseUrl ? 'SET' : 'MISSING',
-        key: serviceKey ? (serviceKey === 'placeholder' ? 'PLACEHOLDER' : 'SET') : 'MISSING',
-      });
-      return NextResponse.json(
-        { error: 'Supabase belum dikonfigurasi. Set NEXT_PUBLIC_SUPABASE_URL dan SUPABASE_SERVICE_ROLE_KEY di environment variables.' },
-        { status: 500 }
-      );
-    }
-
     const formData = await request.formData();
     const file = formData.get('file') as File | null;
     const folder = (formData.get('folder') as string) || 'portfolio';
@@ -40,47 +27,42 @@ export async function POST(request: NextRequest) {
     if (file.size > 5 * 1024 * 1024) {
       return NextResponse.json(
         { error: 'Ukuran file terlalu besar. Maksimal 5MB.' },
-        { status: 400 }
+        { status: 500 }
       );
     }
 
     // Generate unique filename
     const timestamp = Date.now();
     const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-    const filename = `${folder}/${timestamp}-${safeName}`;
+    const filePath = `${timestamp}-${safeName}`;
 
-    // Upload to Supabase Storage via REST API
+    // Upload to Supabase Storage using SDK
     const arrayBuffer = await file.arrayBuffer();
+    const { error: uploadError } = await supabaseAdmin.storage
+      .from(folder)
+      .upload(filePath, arrayBuffer, {
+        contentType: file.type,
+        upsert: true,
+      });
 
-    const uploadRes = await fetch(
-      `${supabaseUrl}/storage/v1/object/${folder}/${timestamp}-${safeName}`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${serviceKey}`,
-          'Content-Type': file.type,
-          'x-upsert': 'true',
-        },
-        body: arrayBuffer,
-      }
-    );
-
-    if (!uploadRes.ok) {
-      const errText = await uploadRes.text();
-      console.error('Supabase upload error:', uploadRes.status, errText);
+    if (uploadError) {
+      console.error('Supabase upload error:', uploadError);
       return NextResponse.json(
-        { error: `Upload gagal: ${uploadRes.status}` },
+        { error: `Upload gagal: ${uploadError.message}` },
         { status: 500 }
       );
     }
 
-    // Return public URL with cache-bust
-    const publicUrl = `${supabaseUrl}/storage/v1/object/public/${filename}`;
-    const cacheBustUrl = `${publicUrl}?v=${timestamp}`;
+    // Get public URL
+    const { data: urlData } = supabaseAdmin.storage
+      .from(folder)
+      .getPublicUrl(filePath);
+
+    const publicUrl = `${urlData.publicUrl}?v=${timestamp}`;
 
     return NextResponse.json({
-      url: cacheBustUrl,
-      path: filename,
+      url: publicUrl,
+      path: `${folder}/${filePath}`,
     });
   } catch (error) {
     console.error('Upload error:', error);
@@ -94,16 +76,6 @@ export async function POST(request: NextRequest) {
 // DELETE — remove a file from storage
 export async function DELETE(request: NextRequest) {
   try {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-    if (!supabaseUrl || !serviceKey) {
-      return NextResponse.json(
-        { error: 'Supabase not configured' },
-        { status: 500 }
-      );
-    }
-
     const { path } = await request.json();
 
     if (!path) {
@@ -113,19 +85,17 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const deleteRes = await fetch(
-      `${supabaseUrl}/storage/v1/object/${path}`,
-      {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${serviceKey}`,
-        },
-      }
-    );
+    // path format: "portfolio/timestamp-filename.ext"
+    const parts = path.split('/');
+    const bucket = parts[0];
+    const filePath = parts.slice(1).join('/');
 
-    if (!deleteRes.ok) {
-      const err = await deleteRes.text();
-      console.error('Supabase delete error:', err);
+    const { error } = await supabaseAdmin.storage
+      .from(bucket)
+      .remove([filePath]);
+
+    if (error) {
+      console.error('Supabase delete error:', error);
       return NextResponse.json(
         { error: 'Delete failed' },
         { status: 500 }
