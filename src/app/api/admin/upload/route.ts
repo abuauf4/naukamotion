@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     if (file.size > 5 * 1024 * 1024) {
       return NextResponse.json(
         { error: 'Ukuran file terlalu besar. Maksimal 5MB.' },
-        { status: 500 }
+        { status: 400 }
       );
     }
 
@@ -36,9 +36,9 @@ export async function POST(request: NextRequest) {
     const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
     const filePath = `${timestamp}-${safeName}`;
 
-    // Upload to Supabase Storage using SDK
+    // Upload to Supabase Storage
     const arrayBuffer = await file.arrayBuffer();
-    const { error: uploadError } = await supabaseAdmin.storage
+    const { data: uploadData, error: uploadError } = await supabaseAdmin.storage
       .from(folder)
       .upload(filePath, arrayBuffer, {
         contentType: file.type,
@@ -53,12 +53,37 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get public URL
+    console.log('Upload success, path:', uploadData?.path);
+
+    // Get public URL — this only works if the bucket is set to Public
     const { data: urlData } = supabaseAdmin.storage
       .from(folder)
       .getPublicUrl(filePath);
 
+    if (!urlData?.publicUrl) {
+      console.error('Failed to get public URL');
+      return NextResponse.json(
+        { error: 'Gagal mendapatkan URL gambar. Pastikan bucket Storage diset ke Public.' },
+        { status: 500 }
+      );
+    }
+
     const publicUrl = `${urlData.publicUrl}?v=${timestamp}`;
+
+    // Verify the image is actually accessible
+    try {
+      const verifyRes = await fetch(urlData.publicUrl, { method: 'HEAD' });
+      if (!verifyRes.ok) {
+        console.error('Image not publicly accessible. Status:', verifyRes.status);
+        return NextResponse.json(
+          { error: `Gambar ter-upload tapi tidak bisa diakses (status ${verifyRes.status}). Pastikan bucket "${folder}" diset ke Public di Supabase Storage.` },
+          { status: 500 }
+        );
+      }
+    } catch (verifyErr) {
+      console.error('Verify fetch failed:', verifyErr);
+      // Don't block the upload — just warn in logs
+    }
 
     return NextResponse.json({
       url: publicUrl,

@@ -227,3 +227,37 @@ CREATE TRIGGER set_insights_updated_at BEFORE UPDATE ON insights FOR EACH ROW EX
 CREATE TRIGGER set_testimonials_updated_at BEFORE UPDATE ON testimonials FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER set_leads_updated_at BEFORE UPDATE ON leads FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER set_faqs_updated_at BEFORE UPDATE ON faqs FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- ══════════════════════════════════════
+-- STORAGE BUCKET — for image uploads
+-- ══════════════════════════════════════
+
+-- Create the "portfolio" bucket if it doesn't exist, set it to PUBLIC
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES (
+  'portfolio',
+  'portfolio',
+  true,
+  5242880,  -- 5MB limit
+  ARRAY['image/png', 'image/jpeg', 'image/webp', 'image/gif']
+) ON CONFLICT (id) DO UPDATE SET
+  public = true,
+  file_size_limit = 5242880,
+  allowed_mime_types = ARRAY['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
+
+-- Storage policies: anyone can read, only service_role can upload/delete
+DROP POLICY IF EXISTS "Public read portfolio images" ON storage.objects;
+CREATE POLICY "Public read portfolio images" ON storage.objects
+  FOR SELECT USING (bucket_id = 'portfolio');
+
+DROP POLICY IF EXISTS "Service role upload portfolio" ON storage.objects;
+CREATE POLICY "Service role upload portfolio" ON storage.objects
+  FOR INSERT WITH CHECK (bucket_id = 'portfolio' AND auth.role() = 'service_role');
+
+DROP POLICY IF EXISTS "Service role update portfolio" ON storage.objects;
+CREATE POLICY "Service role update portfolio" ON storage.objects
+  FOR UPDATE USING (bucket_id = 'portfolio' AND auth.role() = 'service_role');
+
+DROP POLICY IF EXISTS "Service role delete portfolio" ON storage.objects;
+CREATE POLICY "Service role delete portfolio" ON storage.objects
+  FOR DELETE USING (bucket_id = 'portfolio' AND auth.role() = 'service_role');
