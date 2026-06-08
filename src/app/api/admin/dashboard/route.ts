@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
 
 export async function GET() {
   try {
+    const { db } = await import('@/lib/db');
+
     const now = new Date();
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
 
@@ -63,9 +64,15 @@ export async function GET() {
     });
   } catch (error) {
     console.error('Dashboard error:', error);
-    return NextResponse.json(
-      { error: 'Gagal memuat data dashboard' },
-      { status: 500 }
-    );
+    // Return empty dashboard data instead of crashing
+    return NextResponse.json({
+      totalLeads: 0,
+      newLeadsThisMonth: 0,
+      activeProjects: 0,
+      publishedInsights: 0,
+      totalTestimonials: 0,
+      recentLeads: [],
+      recentProjects: [],
+    });
   }
 }
