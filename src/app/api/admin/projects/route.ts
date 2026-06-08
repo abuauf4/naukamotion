@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
-import { fallbackProjects } from '@/lib/fallback-data';
 
 export async function GET() {
   try {
@@ -11,15 +10,13 @@ export async function GET() {
 
     if (error) throw error;
 
-    if (projects && projects.length > 0) {
-      return NextResponse.json(projects);
-    }
-
-    // DB empty — return fallback
-    return NextResponse.json(fallbackProjects);
-  } catch {
-    // DB unavailable — return fallback
-    return NextResponse.json(fallbackProjects);
+    return NextResponse.json(projects ?? []);
+  } catch (error) {
+    console.error('Failed to fetch projects:', error);
+    return NextResponse.json(
+      { error: 'Gagal memuat data proyek dari database' },
+      { status: 500 }
+    );
   }
 }
 

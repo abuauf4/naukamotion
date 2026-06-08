@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
-import { fallbackProjects } from '@/lib/fallback-data';
-import { fallbackTestimonials } from '@/lib/fallback-data';
 
 export async function GET() {
   try {
@@ -26,44 +24,20 @@ export async function GET() {
       supabaseAdmin.from('projects').select('id, title, client, category, status').order('"createdAt"', { ascending: false }).limit(5),
     ]);
 
-    const totalLeads = totalLeadsResult.count ?? 0;
-    const newLeadsThisMonth = newLeadsThisMonthResult.count ?? 0;
-    const activeProjects = activeProjectsResult.count ?? 0;
-    const publishedInsights = publishedInsightsResult.count ?? 0;
-    const totalTestimonials = totalTestimonialsResult.count ?? 0;
-    const recentLeads = recentLeadsResult.data ?? [];
-    const recentProjects = recentProjectsResult.data ?? [];
-
-    // If DB has data, return it
-    if (activeProjects > 0 || totalLeads > 0) {
-      return NextResponse.json({
-        totalLeads,
-        newLeadsThisMonth,
-        activeProjects,
-        publishedInsights,
-        totalTestimonials,
-        recentLeads,
-        recentProjects,
-      });
-    }
-  } catch {
-    // DB unavailable — fall through to fallback
+    return NextResponse.json({
+      totalLeads: totalLeadsResult.count ?? 0,
+      newLeadsThisMonth: newLeadsThisMonthResult.count ?? 0,
+      activeProjects: activeProjectsResult.count ?? 0,
+      publishedInsights: publishedInsightsResult.count ?? 0,
+      totalTestimonials: totalTestimonialsResult.count ?? 0,
+      recentLeads: recentLeadsResult.data ?? [],
+      recentProjects: recentProjectsResult.data ?? [],
+    });
+  } catch (error) {
+    console.error('Failed to fetch dashboard data:', error);
+    return NextResponse.json(
+      { error: 'Gagal memuat data dashboard' },
+      { status: 500 }
+    );
   }
-
-  // Fallback data — from hardcoded portfolio
-  return NextResponse.json({
-    totalLeads: 0,
-    newLeadsThisMonth: 0,
-    activeProjects: fallbackProjects.filter((p) => p.status === 'published').length,
-    publishedInsights: 0,
-    totalTestimonials: fallbackTestimonials.filter((t) => t.status === 'published').length,
-    recentLeads: [],
-    recentProjects: fallbackProjects.slice(0, 5).map((p) => ({
-      id: p.id,
-      title: p.title,
-      client: p.client,
-      category: p.category,
-      status: p.status,
-    })),
-  });
 }

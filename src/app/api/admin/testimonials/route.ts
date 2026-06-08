@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
-import { fallbackTestimonials } from '@/lib/fallback-data';
 
 export async function GET() {
   try {
@@ -11,13 +10,13 @@ export async function GET() {
 
     if (error) throw error;
 
-    if (testimonials && testimonials.length > 0) {
-      return NextResponse.json(testimonials);
-    }
-
-    return NextResponse.json(fallbackTestimonials);
-  } catch {
-    return NextResponse.json(fallbackTestimonials);
+    return NextResponse.json(testimonials ?? []);
+  } catch (error) {
+    console.error('Failed to fetch testimonials:', error);
+    return NextResponse.json(
+      { error: 'Gagal memuat data testimonial dari database' },
+      { status: 500 }
+    );
   }
 }
 
