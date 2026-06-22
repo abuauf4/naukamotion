@@ -1,15 +1,13 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
-import { Quote, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useScrollReveal } from '@/hooks/useScrollReveal';
+import { useEffect, useState } from 'react';
+import { useReveal } from '@/hooks/useReveal';
 
 /**
- * TestimonialSection — Carousel
+ * TestimonialSection — (Developer Theme)
  *
- * Shows all testimonials in a carousel with navigation.
- * Featured testimonial shown first.
- * Clean design on light background.
+ * Single featured testimonial, large display. No carousel.
+ * If multiple testimonials exist, picks the first featured one.
  */
 
 interface Testimonial {
@@ -21,123 +19,125 @@ interface Testimonial {
   featured: boolean;
 }
 
-const fallbackTestimonials: Testimonial[] = [
-  {
-    id: '1', quote: 'Hasilnya jauh melebihi ekspektasi kami. Website yang dibangun bukan cuma bagus dilihat, tapi benar-benar berfungsi untuk menarik dan mengkonversi pelanggan. Prosesnya juga transparan — kami tahu setiap langkah apa yang dikerjakan.',
-    author: 'Rizky Pratama', role: 'Marketing Director', company: 'Geely Pluit', featured: true,
-  },
-  {
-    id: '2', quote: 'Sistem inventaris yang dibangun Nauka Motion menghemat waktu operasional kami hingga 40%. Akhirnya kami punya data real-time tanpa harus input manual berkali-kali.',
-    author: 'Ahmad Fauzi', role: null, company: 'Ghazy Computer', featured: false,
-  },
-  {
-    id: '3', quote: 'Dari briefing sampai launch, komunikasinya jelas dan responsif. Kami butuh partner yang ngerti bisnis otomotif — dan mereka memahami kebutuhan dealer seperti kami.',
-    author: 'Dewi Santika', role: null, company: 'Mitsubishi Serpong', featured: false,
-  },
-  {
-    id: '4', quote: 'Kami udah coba beberapa vendor, tapi cuma Nauka Motion yang bener-bener ngerjain sampai tuntas. Website-nya clean, cepat, dan klien kami langsung percaya sejak pertama kali buka.',
-    author: 'Irfan Hakim', role: null, company: 'JasaProtect', featured: false,
-  },
-];
+const fallbackTestimonial: Testimonial = {
+  id: '1',
+  quote: 'Hasilnya jauh melebihi ekspektasi kami. Website yang dibangun bukan cuma bagus dilihat, tapi benar-benar berfungsi untuk menarik dan mengkonversi pelanggan. Prosesnya juga transparan — kami tahu setiap langkah apa yang dikerjakan.',
+  author: 'Rizky Pratama',
+  role: 'Marketing Director',
+  company: 'Geely Pluit',
+  featured: true,
+};
+
+// Split quote into 4 lines for line-mask reveal
+function splitQuote(quote: string): string[] {
+  const words = quote.split(' ');
+  const total = words.length;
+  const perLine = Math.ceil(total / 4);
+  const lines: string[] = [];
+  for (let i = 0; i < total; i += perLine) {
+    lines.push(words.slice(i, i + perLine).join(' '));
+  }
+  return lines.slice(0, 4);
+}
 
 export function TestimonialSection() {
-  const mainQuoteRef = useScrollReveal();
-  const [testimonials, setTestimonials] = useState<Testimonial[]>(fallbackTestimonials);
+  const containerRef = useReveal<HTMLDivElement>();
+  const [testimonial, setTestimonial] = useState<Testimonial>(fallbackTestimonial);
 
   useEffect(() => {
     fetch('/api/public/testimonials')
-      .then((res) => res.json())
+      .then((r) => r.json())
       .then((data) => {
-        if (Array.isArray(data) && data.length > 0) setTestimonials(data);
+        if (Array.isArray(data) && data.length > 0) {
+          // Prefer featured testimonial
+          const featured = data.find((t: Testimonial) => t.featured) || data[0];
+          setTestimonial(featured);
+        }
       })
       .catch(() => {});
   }, []);
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  // Reorder: featured first, then others
-  const sortedTestimonials = testimonials.length > 0
-    ? [
-        ...testimonials.filter((t) => t.featured),
-        ...testimonials.filter((t) => !t.featured),
-      ]
-    : [];
-
-  const total = sortedTestimonials.length;
-  const currentTestimonial = sortedTestimonials[currentIndex] || null;
-
-  const goTo = useCallback((index: number) => {
-    setCurrentIndex(((index % total) + total) % total);
-  }, [total]);
-
-  const goNext = useCallback(() => goTo(currentIndex + 1), [currentIndex, goTo]);
-  const goPrev = useCallback(() => goTo(currentIndex - 1), [currentIndex, goTo]);
-
-  // Auto-rotate every 6 seconds
-  useEffect(() => {
-    if (total <= 1) return;
-    const timer = setInterval(goNext, 6000);
-    return () => clearInterval(timer);
-  }, [total, goNext]);
-
-  if (!currentTestimonial) return null;
+  const lines = splitQuote(testimonial.quote);
 
   return (
-    <section className="py-14 sm:py-20 lg:py-28 bg-texture-primary">
-      <div className="container-narrow">
-        <div ref={mainQuoteRef} className="text-center scroll-reveal">
-          <Quote className="w-8 h-8 sm:w-10 sm:h-10 text-[var(--nauka-accent)] mx-auto mb-6 sm:mb-8 opacity-30" strokeWidth={1.5} />
-
-          <blockquote
-            key={currentTestimonial.id}
-            className="text-body-lg sm:text-[1.3125rem] text-[var(--nauka-text-primary)] leading-relaxed mb-8 sm:mb-10 max-w-[620px] mx-auto animate-[fadeIn_0.5s_ease-out]"
-            style={{ lineHeight: '1.8' }}
+    <section
+      ref={containerRef}
+      id="testimonial"
+      style={{
+        padding: '160px 0',
+        background: 'var(--bg-soft)',
+        transition: 'background 500ms var(--ease-soft)',
+      }}
+    >
+      <div className="container-wide">
+        <div style={{ maxWidth: '820px', margin: '0 auto', textAlign: 'left' }}>
+          {/* Mark */}
+          <span
+            className="fade-up"
+            style={{
+              fontFamily: 'var(--font-instrument)',
+              fontStyle: 'italic',
+              fontSize: '3.5rem',
+              lineHeight: 0.6,
+              color: 'var(--accent)',
+              margin: '0 0 24px',
+              fontWeight: 400,
+              display: 'block',
+            }}
           >
-            &ldquo;{currentTestimonial.quote}&rdquo;
+            &ldquo;
+          </span>
+
+          {/* Quote with line-mask reveal */}
+          <blockquote
+            style={{
+              fontFamily: 'var(--font-clash)',
+              fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
+              fontWeight: 500,
+              lineHeight: 1.3,
+              color: 'var(--ink)',
+              margin: '0 0 48px',
+              letterSpacing: '-0.025em',
+              fontFeatureSettings: "var(--display-features)",
+            }}
+          >
+            {lines.map((line, idx) => (
+              <span key={idx} className={`line-mask ${idx > 0 ? `delay-${idx}` : ''}`}>
+                <span className="line-inner">{line}</span>
+              </span>
+            ))}
           </blockquote>
 
-          <div key={`author-${currentTestimonial.id}`} className="animate-[fadeIn_0.5s_ease-out]">
-            <div className="text-h4 font-heading text-[var(--nauka-text-primary)] mb-1">
-              {currentTestimonial.author}
+          {/* Author */}
+          <div className="fade-up delay-4" style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+            <div
+              style={{
+                width: '48px',
+                height: '48px',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, var(--accent), var(--accent-soft))',
+                flexShrink: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#fff',
+                fontFamily: 'var(--font-clash)',
+                fontWeight: 500,
+                fontSize: '1.125rem',
+                letterSpacing: '-0.02em',
+              }}
+            >
+              {testimonial.author.charAt(0)}
             </div>
-            <div className="text-caption text-[var(--nauka-text-tertiary)]">
-              {currentTestimonial.role ? `${currentTestimonial.role}, ` : ''}{currentTestimonial.company}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+              <span style={{ fontSize: '0.9375rem', fontWeight: 500, color: 'var(--ink)', letterSpacing: '-0.005em' }}>
+                {testimonial.author}
+              </span>
+              <span style={{ fontFamily: 'var(--font-jetbrains)', fontSize: '0.75rem', color: 'var(--ink-faint)', letterSpacing: 0 }}>
+                {testimonial.role ? `${testimonial.role} · ` : ''}{testimonial.company}
+              </span>
             </div>
           </div>
-
-          {total > 1 && (
-            <div className="flex items-center justify-center gap-4 mt-6 sm:mt-8">
-              <button
-                onClick={goPrev}
-                className="w-8 h-8 rounded-full border border-[var(--nauka-border)] flex items-center justify-center text-[var(--nauka-text-tertiary)] hover:text-[var(--nauka-accent)] hover:border-[var(--nauka-accent)] transition-colors"
-                aria-label="Testimoni sebelumnya"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <div className="flex gap-1.5">
-                {sortedTestimonials.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => goTo(i)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      i === currentIndex
-                        ? 'bg-[var(--nauka-accent)] w-5'
-                        : 'bg-[var(--nauka-border)] hover:bg-[var(--nauka-text-tertiary)]'
-                    }`
-                    }
-                    aria-label={`Testimoni ${i + 1}`}
-                  />
-                ))}
-              </div>
-              <button
-                onClick={goNext}
-                className="w-8 h-8 rounded-full border border-[var(--nauka-border)] flex items-center justify-center text-[var(--nauka-text-tertiary)] hover:text-[var(--nauka-accent)] hover:border-[var(--nauka-accent)] transition-colors"
-                aria-label="Testimoni berikutnya"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-          )}
         </div>
       </div>
     </section>
