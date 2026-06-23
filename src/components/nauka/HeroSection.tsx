@@ -55,7 +55,6 @@ export function HeroSection() {
   const [settings, setSettings] = useState<SiteSettings>({});
   const [dataLoaded, setDataLoaded] = useState(false);
   const [wordsRevealed, setWordsRevealed] = useState(false);
-  const [wireframeDrawing, setWireframeDrawing] = useState(false);
 
   useEffect(() => {
     fetch('/api/public/settings')
@@ -70,11 +69,7 @@ export function HeroSection() {
   // Trigger word-reveal after a short delay so initial state renders first
   useEffect(() => {
     const t1 = setTimeout(() => setWordsRevealed(true), 200);
-    const t2 = setTimeout(() => setWireframeDrawing(true), 600);
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
+    return () => clearTimeout(t1);
   }, []);
 
   const headline = settings.headline || 'Membangun produk digital dengan arah yang jelas.';
@@ -180,11 +175,11 @@ export function HeroSection() {
               <path
                 key={idx}
                 d={p.d}
-                className={`wf-path ${p.cls} ${wireframeDrawing ? 'revealed' : ''}`}
+                className={`wf-path ${p.cls}`}
                 style={{
                   // @ts-expect-error custom property
                   '--wf-length': p.len,
-                  transitionDelay: `${p.delay}ms`,
+                  animationDelay: `${p.delay}ms`,
                 }}
               />
             ))}
@@ -193,8 +188,8 @@ export function HeroSection() {
               cx="232"
               cy="60"
               r="3"
-              className={`wf-glow-dot ${wireframeDrawing ? 'revealed' : ''}`}
-              style={{ transitionDelay: '1800ms' }}
+              className="wf-glow-dot"
+              style={{ animationDelay: '1800ms' }}
             />
           </svg>
         </div>

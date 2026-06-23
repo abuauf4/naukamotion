@@ -460,8 +460,8 @@
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    WIREFRAME DRAWING — SVG stroke-dashoffset animation
-   Each path starts fully offset (invisible) then draws to 0.
-   Staggered via inline transitionDelay on each .wf-path.
+   Loops forever (draw → undraw → draw → ...).
+   Staggered via inline animationDelay on each .wf-path.
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 .hero-wireframe-wrap {
@@ -485,11 +485,13 @@
   stroke-linejoin: round;
   stroke-dasharray: var(--wf-length, 1000);
   stroke-dashoffset: var(--wf-length, 1000);
-  transition: stroke-dashoffset 1.4s var(--ease-out);
+  /* 5s draw + 5s undraw (alternate) = 10s total cycle, infinite */
+  animation: wf-draw 5s var(--ease-out) infinite alternate;
   will-change: stroke-dashoffset;
 }
-.wf-path.revealed {
-  stroke-dashoffset: 0;
+@keyframes wf-draw {
+  from { stroke-dashoffset: var(--wf-length, 1000); }
+  to   { stroke-dashoffset: 0; }
 }
 .wf-path.wf-accent {
   stroke: var(--accent);
@@ -499,21 +501,25 @@
   stroke: var(--ink-ghost);
   stroke-width: 1;
 }
-/* Glow dot at the end of each path — appears as the line completes */
+/* Glow dot at the end of each path — pulses in sync with draw cycle */
 .wf-glow-dot {
   fill: var(--accent);
   opacity: 0;
-  transition: opacity 400ms var(--ease-out);
+  animation: wf-glow 10s ease-in-out infinite;
 }
-.wf-glow-dot.revealed {
-  opacity: 1;
+@keyframes wf-glow {
+  0%, 100% { opacity: 0; }
+  35%, 65% { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
   .wf-path {
+    animation: none !important;
     stroke-dashoffset: 0 !important;
-    transition: none !important;
   }
-  .wf-glow-dot { opacity: 1 !important; }
+  .wf-glow-dot {
+    animation: none !important;
+    opacity: 1 !important;
+  }
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
