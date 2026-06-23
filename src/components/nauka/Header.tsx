@@ -29,6 +29,23 @@ export function Header() {
   const pathname = usePathname();
   const { theme, toggle, mounted } = useTheme();
 
+  // Only homepage hero overlaps navbar (transparent hero behind frosted glass).
+  // All other pages get body padding-top so content starts below navbar.
+  const isHome = pathname === '/';
+
+  useEffect(() => {
+    if (isHome) {
+      document.body.classList.add('home-page');
+      document.body.classList.remove('inner-page');
+    } else {
+      document.body.classList.add('inner-page');
+      document.body.classList.remove('home-page');
+    }
+    return () => {
+      document.body.classList.remove('home-page', 'inner-page');
+    };
+  }, [isHome]);
+
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40);
     handleScroll();

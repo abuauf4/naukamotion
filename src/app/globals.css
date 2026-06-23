@@ -319,6 +319,17 @@
     transition: background 500ms var(--ease-soft), color 500ms var(--ease-soft);
   }
 
+  /* Inner pages (non-homepage): content starts below the fixed navbar.
+     Homepage hero overlaps navbar (transparent hero behind frosted glass). */
+  body.inner-page {
+    padding-top: 100px;
+  }
+  @media (min-width: 768px) {
+    body.inner-page {
+      padding-top: 108px;
+    }
+  }
+
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-clash);
     font-feature-settings: var(--display-features);
