@@ -1,22 +1,20 @@
 import { Header } from '@/components/nauka/Header';
 import { HeroSection } from '@/components/nauka/HeroSection';
+import { CapabilityPillarsSection } from '@/components/nauka/CapabilityPillarsSection';
 import { FeaturedProjectsSection } from '@/components/nauka/FeaturedProjectsSection';
-import { TechStackSection } from '@/components/nauka/TechStackSection';
-import { VenturesSection } from '@/components/nauka/VenturesSection';
-import { ArchiveSection } from '@/components/nauka/ArchiveSection';
+import { ProcessSection } from '@/components/nauka/ProcessSection';
 import { CTASection } from '@/components/nauka/CTASection';
 import { Footer } from '@/components/nauka/Footer';
 import { ScrollProgress } from '@/components/nauka/ScrollProgress';
 
 /**
- * Abu Aufa — Personal Portfolio Homepage
+ * Abu Aufa — Personal Portfolio v2 (Ink & Code concept)
  *
  * Section flow:
- *   Hero (name + title + stats + tech marquee)
- *   → Featured Projects (6 across industries)
- *   → Tech Stack (grid)
- *   → Ventures (6 businesses)
- *   → Archive (other projects)
+ *   Hero (morph ink→code animation)
+ *   → Capability Pillars (5 strength categories)
+ *   → Featured Work (11 projects grouped by industry)
+ *   → Process (5-step workflow)
  *   → Contact CTA
  */
 
@@ -28,10 +26,9 @@ export default function HomePage() {
 
       <main style={{ flex: 1 }}>
         <HeroSection />
+        <CapabilityPillarsSection />
         <FeaturedProjectsSection />
-        <TechStackSection />
-        <VenturesSection />
-        <ArchiveSection />
+        <ProcessSection />
         <CTASection />
       </main>
 

@@ -55,32 +55,33 @@
 }
 
 :root {
-  /* ━━ Light theme — GitHub canvas + accent blue ━━ */
-  --bg: #F6F8FA;
-  --bg-soft: #EAEEF2;
+  /* ━━ Light theme — warm canvas + ink red accent ━━ */
+  --bg: #FAFAF8;
+  --bg-soft: #F4F2EC;
   --bg-card: #FFFFFF;
-  --bg-deep: #0D1117;
+  --bg-deep: #1A1A1A;
 
-  --ink: #1F2328;
-  --ink-soft: #59636E;
-  --ink-faint: #818B98;
-  --ink-ghost: #AEB2B8;
+  --ink: #1A1A1A;
+  --ink-soft: #555555;
+  --ink-faint: #999999;
+  --ink-ghost: #B5B0A8;
+  --code-gray: #2D2D2D;
 
-  --line: #D0D7DE;
-  --line-soft: #E8ECF0;
+  --line: #E8E6E0;
+  --line-soft: #F0EEE8;
 
-  --accent: #0969DA;
-  --accent-soft: #69B1FF;
-  --accent-deep: #0550AE;
-  --accent-glow: rgba(9, 105, 218, 0.12);
+  --accent: #8B2E2E;
+  --accent-soft: #B85454;
+  --accent-deep: #6B1F1F;
+  --accent-glow: rgba(139, 46, 46, 0.12);
 
   --green: #1A7F37;
   --green-soft: #4AC26B;
 
   --radius: 0.625rem;
 
-  --font-clash: 'Clash Display', 'Inter Tight', -apple-system, sans-serif;
-  --font-instrument: 'Instrument Serif', 'Clash Display', serif;
+  --font-clash: 'Fraunces', 'Clash Display', serif;
+  --font-instrument: 'Fraunces', serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-jetbrains: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 
@@ -127,23 +128,24 @@
 }
 
 [data-theme="dark"] {
-  --bg: #0D1117;
-  --bg-soft: #161B22;
-  --bg-card: #161B22;
-  --bg-deep: #010409;
+  --bg: #14110F;
+  --bg-soft: #1F1B18;
+  --bg-card: #1F1B18;
+  --bg-deep: #0A0907;
 
-  --ink: #E6EDF3;
-  --ink-soft: #7D8590;
-  --ink-faint: #6E7681;
-  --ink-ghost: #484F58;
+  --ink: #F0EDE7;
+  --ink-soft: #A8A39C;
+  --ink-faint: #6B6660;
+  --ink-ghost: #4A4540;
+  --code-gray: #D4D0CA;
 
-  --line: #30363D;
-  --line-soft: #21262D;
+  --line: #2D2925;
+  --line-soft: #221F1C;
 
-  --accent: #2F81F7;
-  --accent-soft: #69B1FF;
-  --accent-deep: #1F6FEB;
-  --accent-glow: rgba(47, 129, 247, 0.18);
+  --accent: #C75050;
+  --accent-soft: #E07878;
+  --accent-deep: #A03838;
+  --accent-glow: rgba(199, 80, 80, 0.18);
 
   --green: #3FB950;
   --green-soft: #4AC26B;
@@ -173,35 +175,42 @@
 
 .t-display {
   font-family: var(--font-clash);
-  font-weight: 700;
+  font-weight: 500;
   font-size: clamp(2.5rem, 7vw, 5.5rem);
-  line-height: 1.0;
+  line-height: 1.02;
   letter-spacing: -0.035em;
-  font-feature-settings: var(--display-features);
+  font-variation-settings: 'opsz' 144, 'wght' 500, 'SOFT' 80;
+  font-feature-settings: 'liga' 1, 'ss01' 1;
+  font-optical-sizing: auto;
 }
 .t-display .accent {
   font-family: var(--font-instrument);
   font-style: italic;
   font-weight: 400;
+  font-variation-settings: 'opsz' 144, 'wght' 400, 'SOFT' 100;
   letter-spacing: -0.01em;
 }
 
 .t-h1 {
   font-family: var(--font-clash);
-  font-weight: 600;
+  font-weight: 500;
   font-size: clamp(2rem, 4.5vw, 3.5rem);
-  line-height: 1.05;
+  line-height: 1.08;
   letter-spacing: -0.03em;
-  font-feature-settings: var(--display-features);
+  font-variation-settings: 'opsz' 100, 'wght' 500, 'SOFT' 60;
+  font-feature-settings: 'liga' 1, 'ss01' 1;
+  font-optical-sizing: auto;
 }
 
 .t-h2 {
   font-family: var(--font-clash);
-  font-weight: 600;
+  font-weight: 500;
   font-size: clamp(1.5rem, 3vw, 2.25rem);
   line-height: 1.1;
   letter-spacing: -0.025em;
-  font-feature-settings: var(--display-features);
+  font-variation-settings: 'opsz' 60, 'wght' 500, 'SOFT' 60;
+  font-feature-settings: 'liga' 1, 'ss01' 1;
+  font-optical-sizing: auto;
 }
 
 .t-h3 {
@@ -210,7 +219,9 @@
   font-size: clamp(1.25rem, 2.2vw, 1.5rem);
   line-height: 1.2;
   letter-spacing: -0.02em;
-  font-feature-settings: var(--display-features);
+  font-variation-settings: 'opsz' 40, 'wght' 500, 'SOFT' 50;
+  font-feature-settings: 'liga' 1, 'ss01' 1;
+  font-optical-sizing: auto;
 }
 
 .t-body {
