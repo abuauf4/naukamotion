@@ -316,9 +316,10 @@
 
   html {
     scroll-behavior: smooth;
-    /* Prevent horizontal scroll — hide overflow on both html & body */
-    overflow-x: hidden;
-    max-width: 100vw;
+    /* Only prevent horizontal overflow — keep vertical scroll working.
+       Use overflow-x: clip instead of hidden to avoid iOS Safari bug
+       where hidden triggers overflow-y: hidden too. */
+    overflow-x: clip;
     /* Prevent iOS text auto-zoom on orientation change */
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
@@ -331,12 +332,9 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-    overflow-x: hidden;
-    max-width: 100vw;
+    overflow-x: clip;
     letter-spacing: -0.005em;
     transition: background 500ms var(--ease-soft), color 500ms var(--ease-soft);
-    /* Prevent overscroll bounce on iOS */
-    overscroll-behavior-y: none;
   }
 
   /* Inner pages (non-homepage): content starts below the fixed navbar.
