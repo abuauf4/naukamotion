@@ -1,38 +1,29 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 /**
- * Footer — (Developer Theme)
- *
- * Always dark (GitHub deep bg). 4-column grid: brand + 3 nav columns.
+ * Footer — Abu Aufa Personal Portfolio
+ * Always dark. 4-column: brand + 3 nav.
  */
-
-interface SiteSettings {
-  site_name?: string;
-  whatsapp?: string;
-  email?: string;
-  founder?: string;
-}
 
 const footerNavSections = [
   {
-    title: '// Layanan',
+    title: '// Navigasi',
     links: [
-      { label: 'Website Development', href: '/services/website-development' },
-      { label: 'Business System', href: '/services/business-system-development' },
-      { label: 'CMS Platform', href: '/services/cms-platform' },
-      { label: 'Semua Layanan', href: '/services' },
+      { label: 'Karya', href: '/#projects' },
+      { label: 'Ventures', href: '/#ventures' },
+      { label: 'Tech Stack', href: '/#stack' },
+      { label: 'Arsip', href: '/#archive' },
     ],
   },
   {
-    title: '// Perusahaan',
+    title: '// Ventures',
     links: [
-      { label: 'Cara Berpikir', href: '/about' },
-      { label: 'Karya', href: '/work' },
-      { label: 'Wawasan', href: '/insights' },
-      { label: 'Kontak', href: '/contact' },
+      { label: 'Nauka Motion', href: 'https://naukamotion.id' },
+      { label: 'Jakarta Laptops', href: '#' },
+      { label: 'Ghazy Computer', href: 'https://ghazycomputer.com' },
+      { label: 'Tumbuh.id', href: '#' },
     ],
   },
   {
@@ -46,30 +37,8 @@ const footerNavSections = [
 ];
 
 export function Footer() {
-  const [settings, setSettings] = useState<SiteSettings>({});
-
-  useEffect(() => {
-    fetch('/api/public/settings')
-      .then((r) => r.json())
-      .then((data) => {
-        if (data && typeof data === 'object') setSettings(data);
-      })
-      .catch(() => {});
-  }, []);
-
-  const siteName = settings.site_name || 'Nauka Motion';
-  const whatsappNumber = settings.whatsapp || '6289662524542';
-  const emailAddress = settings.email || 'naukamotion@gmail.com';
-  const founder = settings.founder || 'Abu Aufa';
-
   return (
-    <footer
-      style={{
-        background: '#0D1117',
-        color: '#B0B8C1',
-        padding: '80px 0 40px',
-      }}
-    >
+    <footer style={{ background: '#0D1117', color: '#B0B8C1', padding: '80px 0 40px' }}>
       <div className="container-wide">
         {/* Top */}
         <div
@@ -88,40 +57,20 @@ export function Footer() {
               style={{
                 fontFamily: 'var(--font-clash)',
                 fontWeight: 600,
-                fontSize: '1.375rem',
+                fontSize: '1.5rem',
                 color: '#fff',
                 margin: '0 0 16px',
                 letterSpacing: '-0.025em',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
               }}
             >
-              <span
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '22px',
-                  height: '22px',
-                  background: 'var(--accent)',
-                  color: '#fff',
-                  borderRadius: '5px',
-                  fontFamily: 'var(--font-jetbrains)',
-                  fontSize: '0.75rem',
-                  fontWeight: 500,
-                }}
-              >
-                N
-              </span>
-              {siteName}
+              Abu Aufa<span style={{ color: 'var(--accent-soft)' }}>.</span>
             </h3>
             <p style={{ fontSize: '0.9375rem', lineHeight: 1.6, color: '#7D8590', margin: '0 0 24px', letterSpacing: '-0.005em' }}>
-              Produk digital yang menciptakan dampak nyata, bukan sekadar tampilan indah.
+              Fullstack Developer &amp; Digital Product Builder. Membangun produk digital lintas industri dari Jakarta.
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.875rem', letterSpacing: '-0.005em' }}>
               <a
-                href={`https://wa.me/${whatsappNumber}`}
+                href="https://wa.me/6289662524542"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ color: '#B0B8C1', transition: 'color 250ms var(--ease-out)' }}
@@ -131,24 +80,18 @@ export function Footer() {
                 WhatsApp · 0896 6252 4542
               </a>
               <a
-                href={`mailto:${emailAddress}`}
+                href="mailto:naukamotion@gmail.com"
                 style={{ color: '#B0B8C1', transition: 'color 250ms var(--ease-out)' }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent-soft)')}
                 onMouseLeave={(e) => (e.currentTarget.style.color = '#B0B8C1')}
               >
-                {emailAddress}
+                naukamotion@gmail.com
               </a>
             </div>
           </div>
 
           {/* Nav columns */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: '32px',
-            }}
-          >
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '32px' }}>
             {footerNavSections.map((section) => (
               <div key={section.title}>
                 <h4
@@ -201,7 +144,7 @@ export function Footer() {
             letterSpacing: '-0.005em',
           }}
         >
-          <span>© 2026 {siteName}. Didirikan oleh {founder}.</span>
+          <span>© 2026 Abu Aufa. Dibangun dengan Next.js dari Jakarta.</span>
           <div style={{ display: 'flex', gap: '20px' }}>
             <Link
               href="/legal/privacy"
@@ -223,7 +166,6 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Mobile responsive grid fix */}
       <style jsx>{`
         @media (min-width: 900px) {
           footer > div > div:first-child {

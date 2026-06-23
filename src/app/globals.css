@@ -718,6 +718,77 @@ body.inner-page .nauka-header.scrolled {
 .nauka-header-cta:hover .nauka-header-cta-arrow { transform: translate(3px, -3px); }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   WORDMARK — "Abu Aufa." (replaces image logo)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.wordmark {
+  font-family: var(--font-clash);
+  font-weight: 600;
+  font-size: 1.0625rem;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  transition: opacity 300ms var(--ease-out);
+  display: inline-flex;
+  align-items: center;
+}
+.wordmark:hover { opacity: 0.7; }
+.wordmark-dot {
+  color: var(--accent);
+  margin-left: 1px;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   TECH MARQUEE — infinite horizontal scroll
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.tech-marquee {
+  overflow: hidden;
+  position: relative;
+  mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%);
+}
+.tech-marquee-track {
+  display: flex;
+  gap: 32px;
+  width: max-content;
+  animation: tech-scroll 32s linear infinite;
+}
+.tech-marquee:hover .tech-marquee-track {
+  animation-play-state: paused;
+}
+@keyframes tech-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.tech-marquee-item {
+  font-family: var(--font-jetbrains);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+  letter-spacing: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
+}
+.tech-marquee-item::after {
+  content: '✦';
+  color: var(--ink-faint);
+  font-size: 0.625rem;
+  margin-left: 16px;
+}
+.tech-marquee-item:last-child::after { content: ''; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tech-marquee-track {
+    animation: none !important;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    SECTION HEADER (shared)
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 

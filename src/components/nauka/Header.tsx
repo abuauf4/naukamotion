@@ -3,24 +3,23 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import Image from 'next/image';
 import { useTheme } from '@/hooks/useTheme';
 
 /**
- * Header — Nauka Motion (Developer Theme)
+ * Header — Abu Aufa Personal Portfolio
  *
- * - Logo image only (no wordmark)
- * - Theme toggle button
- * - Desktop nav with underline hover
- * - "Mulai Proyek" pill CTA
- * - Mobile hamburger menu
+ * - Wordmark: "Abu Aufa." (Clash Display, dot accent)
+ * - Theme toggle
+ * - Desktop nav: Karya, Ventures, Stack, Arsip
+ * - "Kontak" pill CTA
+ * - Mobile hamburger
  */
 
 const navItems = [
-  { label: 'Karya', href: '/work' },
-  { label: 'Cara Berpikir', href: '/about' },
-  { label: 'Layanan', href: '/services' },
-  { label: 'Wawasan', href: '/insights' },
+  { label: 'Karya', href: '/#projects' },
+  { label: 'Ventures', href: '/#ventures' },
+  { label: 'Stack', href: '/#stack' },
+  { label: 'Arsip', href: '/#archive' },
 ];
 
 export function Header() {
@@ -29,8 +28,6 @@ export function Header() {
   const pathname = usePathname();
   const { theme, toggle, mounted } = useTheme();
 
-  // Only homepage hero overlaps navbar (transparent hero behind frosted glass).
-  // All other pages get body padding-top so content starts below navbar.
   const isHome = pathname === '/';
 
   useEffect(() => {
@@ -53,7 +50,6 @@ export function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
@@ -62,38 +58,18 @@ export function Header() {
   return (
     <header className={`nauka-header ${scrolled ? 'scrolled' : ''}`}>
       <div className="container-wide" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px' }}>
-        <Link href="/" className="nauka-logo" aria-label="Nauka Motion">
-          <Image
-            src="/nauka-motion.webp"
-            alt="Nauka Motion"
-            width={120}
-            height={34}
-            className="nauka-logo-img"
-            priority
-          />
+        <Link href="/" className="wordmark" aria-label="Abu Aufa — home">
+          Abu Aufa<span className="wordmark-dot">.</span>
         </Link>
 
         <nav className="nauka-nav" aria-label="Primary Navigation">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                style={isActive ? { color: 'var(--ink)' } : undefined}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
+          {navItems.map((item) => (
+            <Link key={item.href} href={item.href}>{item.label}</Link>
+          ))}
         </nav>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <button
-            className="theme-toggle"
-            onClick={toggle}
-            aria-label="Toggle theme"
-          >
+          <button className="theme-toggle" onClick={toggle} aria-label="Toggle theme">
             {mounted && theme === 'dark' ? (
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="4" />
@@ -106,8 +82,8 @@ export function Header() {
             )}
           </button>
 
-          <Link href="/contact" className="nauka-header-cta">
-            Mulai Proyek
+          <Link href="/#contact" className="nauka-header-cta">
+            Kontak
             <svg className="nauka-header-cta-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
               <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
@@ -126,26 +102,18 @@ export function Header() {
       {mobileOpen && (
         <nav className="nauka-mobile-nav" aria-label="Mobile Navigation">
           <div className="container-wide">
-            {navItems.map((item) => {
-              const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  style={isActive ? { color: 'var(--accent)' } : undefined}
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
+            {navItems.map((item) => (
+              <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)}>
+                {item.label}
+              </Link>
+            ))}
             <Link
-              href="/contact"
+              href="/#contact"
               className="nauka-header-cta"
               style={{ marginTop: '16px', display: 'inline-flex' }}
               onClick={() => setMobileOpen(false)}
             >
-              Mulai Proyek
+              Kontak
               <svg className="nauka-header-cta-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
                 <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
               </svg>

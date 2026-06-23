@@ -33,9 +33,9 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "Nauka Motion — Produk Digital Dengan Arah Yang Jelas",
+  title: "Abu Aufa — Fullstack Developer & Digital Product Builder",
   description:
-    "Dari website bisnis, sistem operasional, hingga pengalaman digital yang membantu bisnis bertumbuh.",
+    "Building websites, business systems, marketplaces, and digital products across multiple industries. 15+ products built, 8+ industries, multiple active ventures.",
 };
 
 export default function RootLayout({
