@@ -43,21 +43,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Inline scripts run BEFORE React hydration, so the .js class is set
+  // before any CSS hides content via .js .fade-up { opacity: 0 }
+  const setJsClass = `document.documentElement.classList.add('js');`;
+  const applyTheme = `try{var t=localStorage.getItem('nauka-theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.setAttribute('data-theme','dark');}}catch(e){}`;
+  // Global safety net: force-reveal anything still hidden after 2.5s
+  // (covers edge cases where useReveal hook doesn't run for some sections)
+  const globalFallback = `setTimeout(function(){try{document.querySelectorAll('.fade-up:not(.is-visible), .stagger:not(.is-visible), .line-mask:not(.is-visible)').forEach(function(el){el.classList.add('is-visible');});document.querySelectorAll('h1:not(.is-visible), h2:not(.is-visible), h3:not(.is-visible), blockquote:not(.is-visible)').forEach(function(el){if(el.querySelector('.line-mask')){el.classList.add('is-visible');}});}catch(e){}},2500);`;
+
   return (
     <html lang="id" suppressHydrationWarning>
       <head>
-        {/* Set JS class ASAP for motion-only styles. If JS fails, content stays visible. */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `document.documentElement.classList.add('js');`,
-          }}
-        />
-        {/* Apply persisted theme before paint to prevent FOUC */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `try{var t=localStorage.getItem('nauka-theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.setAttribute('data-theme','dark');}}catch(e){}`,
-          }}
-        />
         {/* Clash Display from Fontshare (free, not on Google Fonts) */}
         <link rel="preconnect" href="https://api.fontshare.com" crossOrigin="anonymous" />
         <link
@@ -68,6 +64,8 @@ export default function RootLayout({
       <body
         className={`${bodyFont.variable} ${monoFont.variable} ${instrumentSerif.variable} antialiased bg-background text-foreground`}
       >
+        {/* Inline scripts at body start — runs before paint, after CSS loads */}
+        <script dangerouslySetInnerHTML={{ __html: setJsClass + applyTheme + globalFallback }} />
         {children}
         <Toaster />
       </body>
