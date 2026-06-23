@@ -536,8 +536,11 @@
 @media (min-width: 768px) {
   .nauka-logo-img { height: 34px; }
 }
-[data-theme="dark"] .nauka-logo-img {
-  filter: invert(1) brightness(1.1);
+/* Logo is light text on transparent bg — designed for dark backgrounds.
+   In light mode (default), invert so it shows as dark text on light bg.
+   In dark mode, show as-is. */
+:root:not([data-theme="dark"]) .nauka-logo-img {
+  filter: invert(1) brightness(0.85);
 }
 
 .nauka-nav {
