@@ -214,7 +214,7 @@ export default function PrivacyPolicyPage() {
                     Nauka Motion
                   </p>
                   <p className="text-body-sm text-[var(--nauka-text-secondary)]">
-                    Email: halo@naukamotion.id
+                    Email: naukamotion@gmail.com
                   </p>
                   <p className="text-body-sm text-[var(--nauka-text-secondary)]">
                     Lokasi: Jakarta, Indonesia

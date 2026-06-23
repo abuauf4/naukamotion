@@ -58,8 +58,8 @@ export function Footer() {
   }, []);
 
   const siteName = settings.site_name || 'Nauka Motion';
-  const whatsappNumber = settings.whatsapp || '6281234567890';
-  const emailAddress = settings.email || 'halo@naukamotion.id';
+  const whatsappNumber = settings.whatsapp || '6289662524542';
+  const emailAddress = settings.email || 'naukamotion@gmail.com';
   const founder = settings.founder || 'Abu Aufa';
 
   return (
@@ -128,7 +128,7 @@ export function Footer() {
                 onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent-soft)')}
                 onMouseLeave={(e) => (e.currentTarget.style.color = '#B0B8C1')}
               >
-                WhatsApp · +62 812 3456 7890
+                WhatsApp · 0896 6252 4542
               </a>
               <a
                 href={`mailto:${emailAddress}`}

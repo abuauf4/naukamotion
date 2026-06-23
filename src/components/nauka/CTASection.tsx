@@ -68,8 +68,8 @@ export function CTASection() {
               <path d="M3 11L11 3M11 3H5M11 3V9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </Link>
-          <a href="mailto:halo@naukamotion.id" className="btn-ghost">
-            <span className="underline">halo@naukamotion.id</span>
+          <a href="mailto:naukamotion@gmail.com" className="btn-ghost">
+            <span className="underline">naukamotion@gmail.com</span>
           </a>
         </div>
       </div>
