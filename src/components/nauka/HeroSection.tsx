@@ -1,169 +1,194 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { useEffect, useState, useRef } from 'react';
 import { useReveal } from '@/hooks/useReveal';
 
 /**
- * HeroSection — Abu Aufa Personal Portfolio
+ * HeroSection — Ink & Code concept
  *
- * Layout:
- *   Status badge · "Tersedia untuk proyek baru"
- *   Name (display): Abu Aufa
- *   Title (h2): Fullstack Developer & Digital Product Builder
- *   Sub: Building websites, business systems, marketplaces...
- *   Stats inline: 15+ products · 8+ industries · Multiple ventures
- *   Actions: Kontak (primary) · Lihat Karya (ghost)
- *   Tech marquee at bottom
+ * Phase 1 (0-1.5s): "Saya menulis cerita" appears typed letter-by-letter
+ *   in Fraunces italic (ink mode), with red blinking cursor.
+ * Phase 2 (1.5-2.2s): Pause, then fade out ink phrase.
+ * Phase 3 (2.2s+): Swap to JetBrains Mono code syntax:
+ *   function tellStory() {
+ *     return system;
+ *   }
+ *   Cursor continues to blink briefly after morph, then fades.
  *
- * Clean, text-first, developer aesthetic. No wireframe.
+ * Identity bar: serif name + monospace role (two identities, one gesture).
  */
 
-const techList = [
-  'Next.js', 'React', 'TypeScript', 'Tailwind CSS',
-  'PostgreSQL', 'Supabase', 'Node.js', 'Prisma',
-  'SEO', 'Google Ads', 'Vercel',
-];
-
-const stats = [
-  { value: '15+', label: 'Digital Products' },
-  { value: '8+', label: 'Industries' },
-  { value: 'Multi', label: 'Active Ventures' },
-];
+const INK_PHRASE = 'Saya menulis cerita';
+const CODE_HTML = `<span class="code-text">function </span><span class="code-text code-name">tellStory</span><span class="code-text">() {<br>&nbsp;&nbsp;return </span><span class="code-text code-name">system</span><span class="code-text">;<br>}</span>`;
 
 export function HeroSection() {
   const containerRef = useReveal<HTMLDivElement>();
+  const [inkChars, setInkChars] = useState(0);
+  const [phase, setPhase] = useState<'typing' | 'pause' | 'fadeout' | 'code'>('typing');
+  const [cursorVisible, setCursorVisible] = useState(true);
+  const morphRef = useRef<HTMLDivElement | null>(null);
+
+  // Phase 1: type ink phrase letter by letter (55ms per char)
+  useEffect(() => {
+    if (phase !== 'typing') return;
+    if (inkChars >= INK_PHRASE.length) {
+      const t = setTimeout(() => setPhase('pause'), 700);
+      return () => clearTimeout(t);
+    }
+    const t = setTimeout(() => setInkChars((c) => c + 1), 55);
+    return () => clearTimeout(t);
+  }, [phase, inkChars]);
+
+  // Phase 2: pause → fadeout → code
+  useEffect(() => {
+    if (phase !== 'pause') return;
+    const t1 = setTimeout(() => setPhase('fadeout'), 700);
+    return () => clearTimeout(t1);
+  }, [phase]);
+
+  useEffect(() => {
+    if (phase !== 'fadeout') return;
+    const t = setTimeout(() => setPhase('code'), 500);
+    return () => clearTimeout(t);
+  }, [phase]);
+
+  // Cursor blink stop 1.5s after morph to code
+  useEffect(() => {
+    if (phase !== 'code') return;
+    const t = setTimeout(() => setCursorVisible(false), 1500);
+    return () => clearTimeout(t);
+  }, [phase]);
 
   return (
     <section ref={containerRef} className="hero-section">
       <div className="hero-grid-bg" />
 
       <div className="container-wide" style={{ position: 'relative', zIndex: 1 }}>
-        {/* Status badge */}
+        {/* Eyebrow */}
         <div
           className="fade-up"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '10px',
-            marginBottom: '32px',
+            gap: '8px',
+            marginBottom: '2rem',
+            fontFamily: 'var(--font-jetbrains)',
+            fontSize: '0.75rem',
+            letterSpacing: '0.12em',
+            color: 'var(--accent)',
+            textTransform: 'uppercase',
+            fontWeight: 500,
+          }}
+        >
+          <span style={{ opacity: 0.6 }}>//</span>
+          <span>abuaufa.com — nauka motion</span>
+        </div>
+
+        {/* Morph line — the core gesture */}
+        <div
+          ref={morphRef}
+          className={`morph-line ${phase === 'fadeout' ? 'fading' : ''} ${phase === 'code' ? 'is-code' : ''}`}
+          style={{
+            fontSize: 'clamp(2rem, 5.5vw, 4.2rem)',
+            lineHeight: 1.25,
+            maxWidth: '18ch',
+            transition: 'opacity 0.5s ease',
+            opacity: phase === 'fadeout' ? 0 : 1,
+          }}
+        >
+          {phase === 'code' ? (
+            <span dangerouslySetInnerHTML={{ __html: CODE_HTML }} />
+          ) : (
+            <>
+              <span
+                style={{
+                  fontFamily: 'var(--font-fraunces), serif',
+                  fontStyle: 'italic',
+                  fontWeight: 400,
+                  color: 'var(--ink)',
+                }}
+              >
+                {INK_PHRASE.slice(0, inkChars)}
+              </span>
+            </>
+          )}
+          {cursorVisible && <span className="hero-cursor" />}
+        </div>
+
+        {/* Sub */}
+        <p
+          className="fade-up delay-4"
+          style={{
+            marginTop: '2.5rem',
+            fontSize: '1.05rem',
+            color: 'var(--ink-soft)',
+            maxWidth: '34ch',
+            lineHeight: 1.6,
+            fontFamily: 'var(--font-body)',
+          }}
+        >
+          Saya membangun sistem digital yang punya struktur kuat dan makna yang jelas — dari narasi sejarah hingga platform enterprise.
+        </p>
+
+        {/* Identity bar */}
+        <div
+          className="fade-up delay-5"
+          style={{
+            marginTop: '3rem',
+            display: 'flex',
+            alignItems: 'baseline',
+            gap: '1rem',
+            flexWrap: 'wrap',
           }}
         >
           <span
             style={{
-              width: '6px',
-              height: '6px',
-              background: 'var(--green)',
-              borderRadius: '50%',
-              boxShadow: '0 0 0 3px color-mix(in srgb, var(--green) 20%, transparent)',
+              fontFamily: 'var(--font-fraunces), serif',
+              fontSize: '1.15rem',
+              fontWeight: 500,
+              color: 'var(--ink)',
+            }}
+          >
+            Abu Aufa
+          </span>
+          <span
+            style={{
+              width: '48px',
+              height: '1px',
+              background: 'var(--line)',
               display: 'inline-block',
             }}
           />
-          <span className="t-caption">Tersedia untuk proyek baru</span>
-        </div>
-
-        {/* Name — display */}
-        <h1
-          className="t-display"
-          style={{
-            margin: '0 0 16px',
-            maxWidth: '14ch',
-          }}
-        >
-          <span className="line-mask">
-            <span className="line-inner">Abu Aufa</span>
+          <span
+            style={{
+              fontFamily: 'var(--font-jetbrains)',
+              fontSize: '0.78rem',
+              color: 'var(--ink-faint)',
+              letterSpacing: '0.02em',
+            }}
+          >
+            Product Systems Architect &amp; Creative Director
           </span>
-        </h1>
-
-        {/* Title */}
-        <h2
-          className="t-h1 fade-up delay-1"
-          style={{
-            margin: '0 0 32px',
-            maxWidth: '24ch',
-            color: 'var(--ink-soft)',
-            fontWeight: 500,
-          }}
-        >
-          Fullstack Developer <span style={{ color: 'var(--accent)' }}>&amp;</span> Digital Product Builder
-        </h2>
-
-        {/* Sub */}
-        <p className="t-body-lg fade-up delay-2" style={{ maxWidth: '54ch', margin: '0 0 40px' }}>
-          Building websites, business systems, marketplaces, and digital products across multiple industries.
-        </p>
-
-        {/* Stats inline */}
-        <div
-          className="fade-up delay-3 hero-stats"
-          style={{
-            display: 'flex',
-            gap: '48px',
-            marginBottom: '40px',
-            flexWrap: 'wrap',
-          }}
-        >
-          {stats.map((stat) => (
-            <div key={stat.label}>
-              <div
-                style={{
-                  fontFamily: 'var(--font-clash)',
-                  fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-                  fontWeight: 600,
-                  color: 'var(--ink)',
-                  letterSpacing: '-0.025em',
-                  lineHeight: 1,
-                  marginBottom: '6px',
-                }}
-              >
-                {stat.value}
-              </div>
-              <div
-                style={{
-                  fontFamily: 'var(--font-jetbrains)',
-                  fontSize: '0.6875rem',
-                  color: 'var(--ink-faint)',
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  fontWeight: 500,
-                }}
-              >
-                {stat.label}
-              </div>
-            </div>
-          ))}
         </div>
+      </div>
 
-        {/* Actions */}
-        <div
-          className="fade-up delay-4"
-          style={{
-            display: 'flex',
-            gap: '14px',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            marginBottom: '64px',
-          }}
-        >
-          <Link href="/#contact" className="btn-primary">
-            <span>Kontak</span>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M3 11L11 3M11 3H5M11 3V9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </Link>
-          <Link href="/#projects" className="btn-ghost">
-            <span className="underline">Lihat Karya</span>
-          </Link>
-        </div>
-
-        {/* Tech marquee */}
-        <div className="fade-up delay-5 tech-marquee" style={{ marginTop: '16px' }}>
-          <div className="tech-marquee-track">
-            {[...techList, ...techList].map((tech, idx) => (
-              <span key={idx} className="tech-marquee-item">{tech}</span>
-            ))}
-          </div>
-        </div>
+      {/* Scroll hint */}
+      <div
+        className="fade-up delay-6"
+        style={{
+          position: 'absolute',
+          bottom: '6vh',
+          left: '8vw',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          fontFamily: 'var(--font-jetbrains)',
+          fontSize: '0.7rem',
+          color: 'var(--ink-faint)',
+        }}
+      >
+        <span style={{ width: '24px', height: '1px', background: 'var(--ink-faint)' }} />
+        <span>scroll</span>
       </div>
 
       <style jsx>{`
@@ -173,33 +198,46 @@ export function HeroSection() {
           flex-direction: column;
           justify-content: center;
           position: relative;
-          padding: 110px 0 60px;
+          padding: 110px 8vw 60px;
         }
         @media (min-width: 768px) {
-          .hero-section { padding: 130px 0 80px; }
+          .hero-section { padding: 130px 8vw 80px; }
         }
-        @media (min-width: 1024px) {
-          .hero-section { padding: 140px 0 100px; }
+        .hero-cursor {
+          display: inline-block;
+          width: 2px;
+          height: 1em;
+          background: var(--accent);
+          margin-left: 4px;
+          vertical-align: text-bottom;
+          animation: blink 1s step-end infinite;
         }
-        /* Mobile: stats gap smaller */
+        @keyframes blink {
+          50% { opacity: 0; }
+        }
+        .morph-line :global(.code-text) {
+          font-family: var(--font-jetbrains);
+          font-weight: 400;
+          color: var(--code-gray);
+          font-size: 0.62em;
+          letter-spacing: -0.01em;
+        }
         @media (max-width: 640px) {
-          .hero-stats {
-            gap: 24px !important;
-            margin-bottom: 32px !important;
-          }
-          .hero-stats > div > div:first-child {
-            font-size: 1.25rem !important;
-          }
-          .hero-stats > div > div:last-child {
-            font-size: 0.625rem !important;
+          .morph-line :global(.code-text) {
+            font-size: 0.72em;
           }
         }
-        /* Mobile: smaller headline */
+        .morph-line :global(.code-name) {
+          color: var(--accent);
+        }
         @media (max-width: 640px) {
-          :global(h1.t-display) {
-            font-size: clamp(2.25rem, 11vw, 3.25rem) !important;
-            margin-bottom: 12px !important;
+          :global(.hero-section) {
+            padding-left: 24px !important;
+            padding-right: 24px !important;
           }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .hero-cursor { animation: none !important; }
         }
       `}</style>
     </section>

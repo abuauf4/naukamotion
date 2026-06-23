@@ -16,10 +16,10 @@ import { useTheme } from '@/hooks/useTheme';
  */
 
 const navItems = [
+  { label: 'Pillars', href: '/#pillars' },
   { label: 'Karya', href: '/#projects' },
-  { label: 'Ventures', href: '/#ventures' },
-  { label: 'Stack', href: '/#stack' },
-  { label: 'Arsip', href: '/#archive' },
+  { label: 'Proses', href: '/#process' },
+  { label: 'Kontak', href: '/#contact' },
 ];
 
 export function Header() {
@@ -107,17 +107,6 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
-            <Link
-              href="/#contact"
-              className="nauka-header-cta"
-              style={{ marginTop: '16px', display: 'inline-flex' }}
-              onClick={() => setMobileOpen(false)}
-            >
-              Kontak
-              <svg className="nauka-header-cta-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </Link>
           </div>
         </nav>
       )}

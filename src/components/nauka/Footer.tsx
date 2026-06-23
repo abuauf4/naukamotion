@@ -3,27 +3,25 @@
 import Link from 'next/link';
 
 /**
- * Footer — Abu Aufa Personal Portfolio
- * Always dark. 4-column: brand + 3 nav.
+ * Footer — Abu Aufa Personal Portfolio v2 (Ink & Code concept)
+ * Dark canvas, warm-toned. 4-column: brand + 3 nav.
  */
 
 const footerNavSections = [
   {
-    title: '// Navigasi',
+    title: '// Site',
     links: [
+      { label: 'Pillars', href: '/#pillars' },
       { label: 'Karya', href: '/#projects' },
-      { label: 'Ventures', href: '/#ventures' },
-      { label: 'Tech Stack', href: '/#stack' },
-      { label: 'Arsip', href: '/#archive' },
+      { label: 'Proses', href: '/#process' },
+      { label: 'Kontak', href: '/#contact' },
     ],
   },
   {
-    title: '// Ventures',
+    title: '// Studios',
     links: [
       { label: 'Nauka Motion', href: 'https://naukamotion.id' },
-      { label: 'Jakarta Laptops', href: '#' },
-      { label: 'Ghazy Computer', href: 'https://ghazycomputer.com' },
-      { label: 'Tumbuh.id', href: '#' },
+      { label: 'Jejak Cahaya', href: 'https://jejakcahaya.vercel.app' },
     ],
   },
   {
@@ -38,89 +36,42 @@ const footerNavSections = [
 
 export function Footer() {
   return (
-    <footer style={{ background: '#0D1117', color: '#B0B8C1', padding: '80px 0 40px' }}>
+    <footer className="footer-root">
       <div className="container-wide">
         {/* Top */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr',
-            gap: '48px',
-            paddingBottom: '64px',
-            borderBottom: '1px solid #21262D',
-            marginBottom: '32px',
-          }}
-        >
+        <div className="footer-top">
           {/* Brand */}
-          <div style={{ maxWidth: '320px' }}>
-            <h3
-              style={{
-                fontFamily: 'var(--font-clash)',
-                fontWeight: 600,
-                fontSize: '1.5rem',
-                color: '#fff',
-                margin: '0 0 16px',
-                letterSpacing: '-0.025em',
-              }}
-            >
-              Abu Aufa<span style={{ color: 'var(--accent-soft)' }}>.</span>
+          <div className="footer-brand">
+            <h3 className="footer-logo">
+              Abu Aufa
+              <span style={{ color: 'var(--accent-soft)' }}>.</span>
             </h3>
-            <p style={{ fontSize: '0.9375rem', lineHeight: 1.6, color: '#7D8590', margin: '0 0 24px', letterSpacing: '-0.005em' }}>
-              Fullstack Developer &amp; Digital Product Builder. Membangun produk digital lintas industri dari Jakarta.
+            <p className="footer-tagline">
+              Product Systems Architect &amp; Creative Director. Membangun sistem digital yang punya struktur kuat dan makna yang jelas.
             </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.875rem', letterSpacing: '-0.005em' }}>
+            <div className="footer-contact">
               <a
                 href="https://wa.me/6289662524542"
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ color: '#B0B8C1', transition: 'color 250ms var(--ease-out)' }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent-soft)')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = '#B0B8C1')}
               >
                 WhatsApp · 0896 6252 4542
               </a>
-              <a
-                href="mailto:naukamotion@gmail.com"
-                style={{ color: '#B0B8C1', transition: 'color 250ms var(--ease-out)' }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent-soft)')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = '#B0B8C1')}
-              >
+              <a href="mailto:naukamotion@gmail.com">
                 naukamotion@gmail.com
               </a>
             </div>
           </div>
 
           {/* Nav columns */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '32px' }}>
+          <div className="footer-nav-grid">
             {footerNavSections.map((section) => (
-              <div key={section.title}>
-                <h4
-                  style={{
-                    fontFamily: 'var(--font-jetbrains)',
-                    fontSize: '0.6875rem',
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    fontWeight: 500,
-                    color: '#6E7681',
-                    margin: '0 0 20px',
-                  }}
-                >
-                  {section.title}
-                </h4>
-                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div key={section.title} className="footer-col">
+                <h4 className="footer-col-title">{section.title}</h4>
+                <ul className="footer-col-list">
                   {section.links.map((link) => (
                     <li key={link.label}>
-                      <Link
-                        href={link.href}
-                        style={{
-                          fontSize: '0.875rem',
-                          color: '#B0B8C1',
-                          transition: 'color 250ms var(--ease-out)',
-                          letterSpacing: '-0.005em',
-                        }}
-                        onMouseEnter={(e) => (e.currentTarget.style.color = '#fff')}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = '#B0B8C1')}
-                      >
+                      <Link href={link.href} className="footer-col-link">
                         {link.label}
                       </Link>
                     </li>
@@ -132,50 +83,119 @@ export function Footer() {
         </div>
 
         {/* Bottom */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: '16px',
-            flexWrap: 'wrap',
-            fontSize: '0.75rem',
-            color: '#6E7681',
-            letterSpacing: '-0.005em',
-          }}
-        >
+        <div className="footer-bottom">
           <span>© 2026 Abu Aufa. Dibangun dengan Next.js dari Jakarta.</span>
-          <div style={{ display: 'flex', gap: '20px' }}>
-            <Link
-              href="/legal/privacy"
-              style={{ color: '#6E7681', transition: 'color 250ms var(--ease-out)' }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#B0B8C1')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#6E7681')}
-            >
-              Privasi
-            </Link>
-            <Link
-              href="/legal/terms"
-              style={{ color: '#6E7681', transition: 'color 250ms var(--ease-out)' }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#B0B8C1')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#6E7681')}
-            >
-              Syarat
-            </Link>
+          <div className="footer-bottom-links">
+            <Link href="/legal/privacy" className="footer-bottom-link">Privasi</Link>
+            <Link href="/legal/terms" className="footer-bottom-link">Syarat</Link>
           </div>
         </div>
       </div>
 
       <style jsx>{`
+        .footer-root {
+          background: #1A1A1A;
+          color: #B5B0A8;
+          padding: 80px 0 40px;
+        }
+        .footer-top {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 48px;
+          padding-bottom: 64px;
+          border-bottom: 1px solid #2D2925;
+          margin-bottom: 32px;
+        }
+        .footer-brand { max-width: 360px; }
+        .footer-logo {
+          font-family: var(--font-fraunces), serif;
+          font-weight: 500;
+          font-size: 1.625rem;
+          color: #F0EDE7;
+          margin: 0 0 16px;
+          letter-spacing: -0.025em;
+          font-variation-settings: 'opsz' 40, 'wght' 500, 'SOFT' 60;
+        }
+        .footer-tagline {
+          font-size: 0.9375rem;
+          line-height: 1.6;
+          color: #8A857B;
+          margin: 0 0 24px;
+          letter-spacing: -0.005em;
+        }
+        .footer-contact {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          font-size: 0.875rem;
+        }
+        .footer-contact a {
+          color: #B5B0A8;
+          transition: color 250ms var(--ease-out);
+          letter-spacing: -0.005em;
+        }
+        .footer-contact a:hover { color: #C75050; }
+        .footer-nav-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 32px;
+        }
+        .footer-col-title {
+          font-family: var(--font-jetbrains);
+          font-size: 0.6875rem;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          font-weight: 500;
+          color: #6B6660;
+          margin: 0 0 20px;
+        }
+        .footer-col-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+        .footer-col-link {
+          font-size: 0.875rem;
+          color: #B5B0A8;
+          transition: color 250ms var(--ease-out);
+          letter-spacing: -0.005em;
+        }
+        .footer-col-link:hover { color: #F0EDE7; }
+        .footer-bottom {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 16px;
+          flex-wrap: wrap;
+          font-size: 0.75rem;
+          color: #6B6660;
+          letter-spacing: -0.005em;
+        }
+        .footer-bottom-links {
+          display: flex;
+          gap: 20px;
+        }
+        .footer-bottom-link {
+          color: #6B6660;
+          transition: color 250ms var(--ease-out);
+        }
+        .footer-bottom-link:hover { color: #B5B0A8; }
+
         @media (min-width: 900px) {
-          footer > div > div:first-child {
-            grid-template-columns: 2fr 3fr !important;
-            gap: 56px !important;
+          .footer-top {
+            grid-template-columns: 2fr 3fr;
+            gap: 56px;
           }
-          footer > div > div:first-child > div:last-child {
-            grid-template-columns: repeat(3, 1fr) !important;
-            gap: 32px !important;
+          .footer-nav-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
           }
+        }
+        @media (max-width: 480px) {
+          .footer-nav-grid { grid-template-columns: 1fr; }
         }
       `}</style>
     </footer>
