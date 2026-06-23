@@ -26,10 +26,10 @@ export function ArchiveSection() {
   const containerRef = useReveal<HTMLDivElement>();
 
   return (
-    <section ref={containerRef} id="archive" style={{ padding: '100px 0', background: 'var(--bg)' }}>
+    <section ref={containerRef} id="archive" className="archive-section">
       <div className="container-wide">
         {/* Header — compact */}
-        <div style={{ marginBottom: '48px' }}>
+        <div style={{ marginBottom: '40px' }}>
           <span className="sec-head-num fade-up">// Archive</span>
           <h2 className="t-h2 fade-up delay-1" style={{ margin: '16px 0 0', maxWidth: '20ch' }}>
             Project lain yang pernah dikerjakan.
@@ -44,53 +44,84 @@ export function ArchiveSection() {
           {archiveProjects.map((project) => (
             <li
               key={project.name}
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr auto auto',
-                gap: '24px',
-                alignItems: 'baseline',
-                padding: '20px 0',
-                borderBottom: '1px solid var(--line-soft)',
-                transition: 'padding 300ms var(--ease-out)',
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.paddingLeft = '12px')}
-              onMouseLeave={(e) => (e.currentTarget.style.paddingLeft = '0')}
+              className="archive-item"
             >
-              <span
-                style={{
-                  fontFamily: 'var(--font-clash)',
-                  fontSize: '1.0625rem',
-                  fontWeight: 500,
-                  color: 'var(--ink)',
-                  letterSpacing: '-0.015em',
-                }}
-              >
-                {project.name}
-              </span>
-              <span
-                style={{
-                  fontFamily: 'var(--font-jetbrains)',
-                  fontSize: '0.75rem',
-                  color: 'var(--ink-faint)',
-                  letterSpacing: '0',
-                }}
-              >
-                {project.industry}
-              </span>
-              <span
-                style={{
-                  fontFamily: 'var(--font-jetbrains)',
-                  fontSize: '0.75rem',
-                  color: 'var(--ink-faint)',
-                  fontVariantNumeric: 'tabular-nums',
-                }}
-              >
-                {project.year}
-              </span>
+              <span className="archive-name">{project.name}</span>
+              <span className="archive-meta">{project.industry}</span>
+              <span className="archive-year">{project.year}</span>
             </li>
           ))}
         </ul>
       </div>
+
+      <style jsx>{`
+        .archive-section {
+          padding: 70px 0;
+          background: var(--bg);
+        }
+        @media (min-width: 768px) {
+          .archive-section { padding: 90px 0; }
+        }
+        @media (min-width: 1024px) {
+          .archive-section { padding: 100px 0; }
+        }
+        .archive-item {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 12px;
+          align-items: baseline;
+          padding: 16px 0;
+          border-bottom: 1px solid var(--line-soft);
+          transition: padding 300ms var(--ease-out);
+        }
+        @media (min-width: 640px) {
+          .archive-item {
+            grid-template-columns: 1fr auto auto;
+            gap: 24px;
+            padding: 20px 0;
+          }
+        }
+        .archive-item:hover {
+          padding-left: 12px;
+        }
+        .archive-name {
+          font-family: var(--font-clash);
+          font-size: 1rem;
+          font-weight: 500;
+          color: var(--ink);
+          letter-spacing: -0.015em;
+        }
+        @media (min-width: 640px) {
+          .archive-name { font-size: 1.0625rem; }
+        }
+        .archive-meta {
+          font-family: var(--font-jetbrains);
+          font-size: 0.6875rem;
+          color: var(--ink-faint);
+          letter-spacing: 0;
+          grid-column: 2;
+        }
+        @media (min-width: 640px) {
+          .archive-meta { font-size: 0.75rem; grid-column: auto; }
+        }
+        .archive-year {
+          font-family: var(--font-jetbrains);
+          font-size: 0.6875rem;
+          color: var(--ink-faint);
+          font-variant-numeric: tabular-nums;
+          grid-column: 2;
+          grid-row: 1;
+          display: none;
+        }
+        @media (min-width: 640px) {
+          .archive-year {
+            display: block;
+            grid-column: auto;
+            grid-row: auto;
+            font-size: 0.75rem;
+          }
+        }
+      `}</style>
     </section>
   );
 }

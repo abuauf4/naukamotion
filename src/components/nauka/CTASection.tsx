@@ -16,13 +16,7 @@ export function CTASection() {
     <section
       ref={containerRef}
       id="contact"
-      style={{
-        padding: '160px 0',
-        textAlign: 'center',
-        background: 'var(--bg)',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
+      className="cta-section"
     >
       <div className="container-narrow">
         {/* Eyebrow */}
@@ -45,7 +39,7 @@ export function CTASection() {
           <span className="line-mask"><span className="line-inner">Mari bicara.</span></span>
         </h2>
 
-        <p className="t-body-lg fade-up delay-2" style={{ maxWidth: '48ch', margin: '0 auto 48px' }}>
+        <p className="t-body-lg fade-up delay-2" style={{ maxWidth: '48ch', margin: '0 auto 40px' }}>
           Punya proyek, ide, atau venture yang mau dibangun? Langsung kontak — biasanya balas dalam 24 jam.
         </p>
 
@@ -76,6 +70,27 @@ export function CTASection() {
           </a>
         </div>
       </div>
+
+      <style jsx>{`
+        .cta-section {
+          padding: 100px 0;
+          text-align: center;
+          background: var(--bg);
+          position: relative;
+          overflow: hidden;
+        }
+        @media (min-width: 768px) {
+          .cta-section { padding: 140px 0; }
+        }
+        @media (min-width: 1024px) {
+          .cta-section { padding: 160px 0; }
+        }
+        @media (max-width: 640px) {
+          :global(h2.t-display) {
+            font-size: clamp(2rem, 9vw, 2.75rem) !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }
