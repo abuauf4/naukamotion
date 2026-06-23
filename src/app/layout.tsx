@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
@@ -36,6 +36,18 @@ export const metadata: Metadata = {
   title: "Abu Aufa — Fullstack Developer & Digital Product Builder",
   description:
     "Building websites, business systems, marketplaces, and digital products across multiple industries. 15+ products built, 8+ industries, multiple active ventures.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#F6F8FA" },
+    { media: "(prefers-color-scheme: dark)", color: "#0D1117" },
+  ],
 };
 
 export default function RootLayout({
