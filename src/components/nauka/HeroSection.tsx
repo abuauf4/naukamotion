@@ -7,12 +7,13 @@ import { useReveal } from '@/hooks/useReveal';
 /**
  * HeroSection — Nauka Motion (Developer Theme)
  *
- * Two-column hero (desktop):
- *   Left:  eyebrow + headline (word-reveal 3D) + sub + actions
- *   Right: SVG wireframe browser mockup — paths drawn one by one
- *          (stroke-dashoffset animation, staggered)
+ * Layouts:
+ *   Mobile  (<768px):  single column — text → small wireframe (280px)
+ *   Tablet  (768-1023): single column — text → medium wireframe (380px)
+ *   Desktop (≥1024px): 2-column 7fr/5fr — text left, wireframe right (480px)
  *
- * Mobile: single column, wireframe hidden (would be too cramped).
+ * Wireframe: 16 SVG paths drawn sequentially via stroke-dashoffset.
+ * Headline: per-word 3D entrance (translateY + rotateX + blur).
  */
 
 interface SiteSettings {
@@ -21,8 +22,7 @@ interface SiteSettings {
   subtitle?: string;
 }
 
-// Wireframe paths — each path has its length precomputed.
-// Path order = draw order. Stagger ~150ms between paths.
+// Each path has its length precomputed for stroke-dashoffset animation.
 const wireframePaths = [
   // Outer browser frame
   { d: 'M4 4 H396 V276 H4 Z', len: 1344, cls: '', delay: 0 },
@@ -70,7 +70,6 @@ export function HeroSection() {
   // Trigger word-reveal after a short delay so initial state renders first
   useEffect(() => {
     const t1 = setTimeout(() => setWordsRevealed(true), 200);
-    // Wireframe starts drawing slightly after headline begins
     const t2 = setTimeout(() => setWireframeDrawing(true), 600);
     return () => {
       clearTimeout(t1);
@@ -86,33 +85,12 @@ export function HeroSection() {
   const plainCount = headlineWords.length - accentCount;
 
   return (
-    <section
-      ref={containerRef}
-      style={{
-        minHeight: '100svh',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        padding: '140px 0 80px',
-        position: 'relative',
-        perspective: '600px',
-      }}
-    >
+    <section ref={containerRef} className="hero-section">
       <div className="hero-grid-bg" />
 
-      <div
-        className="container-wide"
-        style={{
-          position: 'relative',
-          zIndex: 1,
-          display: 'grid',
-          gridTemplateColumns: '1fr',
-          gap: '48px',
-          alignItems: 'center',
-        }}
-      >
-        {/* Left: Text content */}
-        <div>
+      <div className="container-wide hero-grid">
+        {/* ━━━ Left: Text content ━━━ */}
+        <div className="hero-text">
           {/* Eyebrow */}
           <div
             className="fade-up"
@@ -120,7 +98,7 @@ export function HeroSection() {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '14px',
-              marginBottom: '36px',
+              marginBottom: '28px',
             }}
           >
             <span
@@ -145,10 +123,7 @@ export function HeroSection() {
           </div>
 
           {/* Headline — word-reveal animation */}
-          <h1
-            className="t-display"
-            style={{ maxWidth: '16ch', margin: '0 0 40px' }}
-          >
+          <h1 className="t-display hero-headline">
             {headlineWords.map((word, idx) => {
               const isAccent = idx >= plainCount;
               const startAccentLine = idx === plainCount;
@@ -159,24 +134,29 @@ export function HeroSection() {
                   style={{ transitionDelay: `${300 + idx * 90}ms` }}
                 >
                   {startAccentLine && <span style={{ display: 'block' }} />}
-                  {isAccent ? (
-                    <span className="accent">{word}</span>
-                  ) : (
-                    word
-                  )}
+                  {isAccent ? <span className="accent">{word}</span> : word}
                 </span>
               );
             })}
           </h1>
 
           {/* Sub */}
-          <p className="t-body-lg fade-up delay-3" style={{ maxWidth: '50ch', margin: '0 0 48px' }}>
+          <p className="t-body-lg fade-up delay-3 hero-sub">
             {settings.subtitle ||
               'Dari website bisnis, sistem operasional, hingga pengalaman digital yang membantu bisnis bertumbuh — dikerjakan dengan tenang, tepat, dan terarah.'}
           </p>
 
           {/* Actions */}
-          <div className="fade-up delay-4" style={{ display: 'flex', gap: '14px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div
+            className="fade-up delay-4"
+            style={{
+              display: 'flex',
+              gap: '14px',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              marginTop: '36px',
+            }}
+          >
             <Link href="/contact" className="btn-primary">
               <span>Mulai Proyek</span>
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -189,7 +169,7 @@ export function HeroSection() {
           </div>
         </div>
 
-        {/* Right: Wireframe SVG (desktop only) */}
+        {/* ━━━ Right: Wireframe SVG ━━━ */}
         <div className="hero-wireframe-wrap" aria-hidden="true">
           <svg
             className="hero-wireframe"
@@ -208,7 +188,7 @@ export function HeroSection() {
                 }}
               />
             ))}
-            {/* Accent dot at top-right corner of hero block — appears after block is drawn */}
+            {/* Accent dot at top-right corner of hero block */}
             <circle
               cx="232"
               cy="60"
@@ -221,81 +201,187 @@ export function HeroSection() {
       </div>
 
       {/* Hero meta — bottom */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '32px',
-          left: 0,
-          right: 0,
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'end',
-          padding: '0 24px',
-        }}
-      >
-        <span
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '12px',
-            color: 'var(--ink-faint)',
-            fontFamily: 'var(--font-jetbrains)',
-            fontSize: '0.6875rem',
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            fontWeight: 500,
-          }}
-        >
+      <div className="hero-meta">
+        <span className="hero-scroll">
           Scroll
-          <span
-            style={{
-              width: '40px',
-              height: '1px',
-              background: 'var(--ink-faint)',
-              position: 'relative',
-              overflow: 'hidden',
-              display: 'inline-block',
-            }}
-          >
-            <span
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: 'var(--accent)',
-                transform: 'translateX(-100%)',
-                animation: 'scrollHint 2.8s cubic-bezier(0.4,0,0.2,1) infinite',
-              }}
-            />
+          <span className="hero-scroll-line">
+            <span className="hero-scroll-fill" />
           </span>
         </span>
-        <div style={{ textAlign: 'right', color: 'var(--ink-faint)', fontSize: '0.75rem', lineHeight: 1.5 }}>
-          <strong style={{ color: 'var(--ink-soft)', fontWeight: 500 }}>Abu Aufa</strong> — Founder<br />
-          <span style={{ fontFamily: 'var(--font-jetbrains)', color: 'var(--accent)', fontSize: '0.6875rem' }}>
-            halo@naukamotion.id
-          </span>
+        <div className="hero-credit">
+          <strong>Abu Aufa</strong> — Founder<br />
+          <span className="hero-credit-email">halo@naukamotion.id</span>
         </div>
       </div>
 
       <style jsx>{`
+        .hero-section {
+          min-height: 100svh;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          position: relative;
+          perspective: 600px;
+          /* Mobile: smaller padding so content fits */
+          padding: 110px 0 60px;
+        }
+
+        /* Tablet */
+        @media (min-width: 768px) {
+          .hero-section {
+            padding: 130px 0 70px;
+          }
+        }
+        /* Desktop */
+        @media (min-width: 1024px) {
+          .hero-section {
+            padding: 140px 0 80px;
+          }
+        }
+
+        .hero-grid {
+          position: relative;
+          z-index: 1;
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 40px;
+          align-items: center;
+        }
+        /* Tablet: still single column but more space */
+        @media (min-width: 768px) {
+          .hero-grid {
+            gap: 48px;
+            max-width: 640px;
+            margin: 0 auto;
+          }
+        }
+        /* Desktop: 2-column 7fr/5fr */
+        @media (min-width: 1024px) {
+          .hero-grid {
+            grid-template-columns: 7fr 5fr;
+            gap: 64px;
+            max-width: none;
+          }
+        }
+        @media (min-width: 1280px) {
+          .hero-grid { gap: 80px; }
+        }
+
+        .hero-headline {
+          margin: 0 0 28px;
+          max-width: 16ch;
+        }
+        /* Mobile: tighten headline size */
+        @media (max-width: 767px) {
+          .hero-headline {
+            font-size: clamp(2rem, 9vw, 2.75rem);
+            line-height: 1.05;
+            margin-bottom: 24px;
+          }
+        }
+
+        .hero-sub {
+          margin: 0;
+          max-width: 50ch;
+        }
+        @media (max-width: 767px) {
+          .hero-sub {
+            font-size: 1rem;
+            line-height: 1.6;
+          }
+        }
+        @media (min-width: 1024px) {
+          .hero-sub { margin-bottom: 0; }
+        }
+
+        /* Wireframe — visible on all sizes, sizing adapts */
+        .hero-wireframe-wrap {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 4 / 3;
+          max-width: 280px;
+          margin: 0 auto;
+        }
+        @media (min-width: 768px) {
+          .hero-wireframe-wrap {
+            max-width: 380px;
+          }
+        }
+        @media (min-width: 1024px) {
+          .hero-wireframe-wrap {
+            max-width: 480px;
+            margin: 0 0 0 auto;
+          }
+        }
+
+        /* Hero meta */
+        .hero-meta {
+          position: absolute;
+          bottom: 24px;
+          left: 0;
+          right: 0;
+          display: flex;
+          justify-content: space-between;
+          align-items: end;
+          padding: 0 24px;
+        }
+        @media (min-width: 768px) {
+          .hero-meta { bottom: 32px; padding: 0 40px; }
+        }
+        @media (min-width: 1024px) {
+          .hero-meta { padding: 0 56px; }
+        }
+        .hero-scroll {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          color: var(--ink-faint);
+          font-family: var(--font-jetbrains);
+          font-size: 0.6875rem;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+        .hero-scroll-line {
+          width: 40px;
+          height: 1px;
+          background: var(--ink-faint);
+          position: relative;
+          overflow: hidden;
+          display: inline-block;
+        }
+        .hero-scroll-fill {
+          position: absolute;
+          inset: 0;
+          background: var(--accent);
+          transform: translateX(-100%);
+          animation: scrollHint 2.8s cubic-bezier(0.4,0,0.2,1) infinite;
+        }
+        .hero-credit {
+          text-align: right;
+          color: var(--ink-faint);
+          font-size: 0.75rem;
+          line-height: 1.5;
+        }
+        .hero-credit strong {
+          color: var(--ink-soft);
+          font-weight: 500;
+        }
+        .hero-credit-email {
+          font-family: var(--font-jetbrains);
+          color: var(--accent);
+          font-size: 0.6875rem;
+        }
+        @media (max-width: 640px) {
+          .hero-credit { display: none; }
+        }
+
         @keyframes scrollHint {
           0% { transform: translateX(-100%); }
           50% { transform: translateX(0%); }
           100% { transform: translateX(100%); }
         }
-        @media (max-width: 640px) {
-          section > div:last-child > div:last-child { display: none; }
-        }
-        /* Desktop: 2-column layout (text + wireframe) */
-        @media (min-width: 1024px) {
-          section > div:first-child {
-            grid-template-columns: 7fr 5fr !important;
-            gap: 64px !important;
-          }
-        }
-        /* Mobile: hide wireframe (too cramped) */
-        @media (max-width: 1023px) {
-          .hero-wireframe-wrap { display: none; }
-        }
+
         @media (prefers-reduced-motion: reduce) {
           .word-reveal {
             opacity: 1 !important;
@@ -303,6 +389,7 @@ export function HeroSection() {
             filter: none !important;
             transition: none !important;
           }
+          .hero-scroll-fill { animation: none !important; }
         }
       `}</style>
     </section>
