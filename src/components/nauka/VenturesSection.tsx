@@ -51,7 +51,7 @@ export function VenturesSection() {
   const containerRef = useReveal<HTMLDivElement>();
 
   return (
-    <section ref={containerRef} id="ventures" style={{ padding: '120px 0', background: 'var(--bg)' }}>
+    <section ref={containerRef} id="ventures" className="ventures-section">
       <div className="container-wide">
         {/* Header */}
         <div className="sec-head">
@@ -68,81 +68,109 @@ export function VenturesSection() {
         </div>
 
         {/* Ventures grid */}
-        <div
-          className="stagger"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr',
-            gap: '16px',
-          }}
-        >
+        <div className="stagger ventures-grid">
           {ventures.map((venture) => (
             <a
               key={venture.name}
               href={venture.url}
               target={venture.url.startsWith('http') ? '_blank' : undefined}
               rel={venture.url.startsWith('http') ? 'noopener noreferrer' : undefined}
-              style={{
-                display: 'block',
-                padding: '28px 0',
-                borderBottom: '1px solid var(--line-soft)',
-                transition: 'padding 400ms var(--ease-out)',
-                textDecoration: 'none',
-                color: 'inherit',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.paddingLeft = '16px';
-                e.currentTarget.style.paddingRight = '16px';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.paddingLeft = '0';
-                e.currentTarget.style.paddingRight = '0';
-              }}
+              className="venture-item"
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '24px', marginBottom: '8px' }}>
-                <h3
-                  style={{
-                    fontFamily: 'var(--font-clash)',
-                    fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)',
-                    fontWeight: 600,
-                    color: 'var(--ink)',
-                    letterSpacing: '-0.025em',
-                    margin: 0,
-                    transition: 'color 300ms var(--ease-out)',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--ink)')}
-                >
-                  {venture.name}
-                </h3>
-                <span
-                  style={{
-                    fontFamily: 'var(--font-jetbrains)',
-                    fontSize: '0.6875rem',
-                    color: 'var(--ink-faint)',
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    fontWeight: 500,
-                    flexShrink: 0,
-                  }}
-                >
-                  {venture.badge}
-                </span>
+              <div className="venture-header">
+                <h3 className="venture-name">{venture.name}</h3>
+                <span className="venture-badge">{venture.badge}</span>
               </div>
-              <p style={{ fontSize: '0.9375rem', color: 'var(--ink-soft)', lineHeight: 1.6, margin: 0, maxWidth: '60ch' }}>
-                {venture.description}
-              </p>
+              <p className="venture-desc">{venture.description}</p>
             </a>
           ))}
         </div>
       </div>
 
       <style jsx>{`
+        .ventures-section {
+          padding: 80px 0;
+          background: var(--bg);
+        }
         @media (min-width: 768px) {
-          div[style*='grid-template-columns: 1fr'][class*='stagger'] {
-            grid-template-columns: repeat(2, 1fr) !important;
-            gap: '0 48px' !important;
+          .ventures-section { padding: 100px 0; }
+        }
+        @media (min-width: 1024px) {
+          .ventures-section { padding: 120px 0; }
+        }
+        .ventures-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 0;
+        }
+        @media (min-width: 768px) {
+          .ventures-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0 48px;
           }
+        }
+        .venture-item {
+          display: block;
+          padding: 20px 0;
+          border-bottom: 1px solid var(--line-soft);
+          transition: padding 400ms var(--ease-out);
+          text-decoration: none;
+          color: inherit;
+        }
+        @media (min-width: 768px) {
+          .venture-item { padding: 24px 0; }
+        }
+        .venture-item:hover {
+          padding-left: 16px;
+          padding-right: 16px;
+        }
+        .venture-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          gap: 16px;
+          margin-bottom: 8px;
+        }
+        @media (max-width: 480px) {
+          .venture-header {
+            flex-direction: column;
+            gap: 4px;
+          }
+        }
+        .venture-name {
+          font-family: var(--font-clash);
+          font-size: 1.25rem;
+          font-weight: 600;
+          color: var(--ink);
+          letter-spacing: -0.025em;
+          margin: 0;
+          transition: color 300ms var(--ease-out);
+        }
+        @media (min-width: 768px) {
+          .venture-name { font-size: 1.5rem; }
+        }
+        .venture-item:hover .venture-name { color: var(--accent); }
+        .venture-badge {
+          font-family: var(--font-jetbrains);
+          font-size: 0.625rem;
+          color: var(--ink-faint);
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          font-weight: 500;
+          flex-shrink: 0;
+        }
+        @media (min-width: 768px) {
+          .venture-badge { font-size: 0.6875rem; }
+        }
+        .venture-desc {
+          font-size: 0.875rem;
+          color: var(--ink-soft);
+          line-height: 1.55;
+          margin: 0;
+          max-width: 60ch;
+        }
+        @media (min-width: 768px) {
+          .venture-desc { font-size: 0.9375rem; line-height: 1.6; }
         }
       `}</style>
     </section>

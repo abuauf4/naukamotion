@@ -76,7 +76,7 @@ export function FeaturedProjectsSection() {
   const containerRef = useReveal<HTMLDivElement>();
 
   return (
-    <section ref={containerRef} id="projects" style={{ padding: '120px 0', background: 'var(--bg)' }}>
+    <section ref={containerRef} id="projects" className="featured-projects-section">
       <div className="container-wide">
         {/* Section header */}
         <div className="sec-head">
@@ -105,7 +105,7 @@ export function FeaturedProjectsSection() {
                   <h3 className="work-client">{project.client}</h3>
                   <p className="work-cat">{project.industry}</p>
                 </div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', alignContent: 'flex-start' }}>
+                <div className="work-tags-row">
                   {project.tech.map((t) => (
                     <span key={t} className="work-tag">{t}</span>
                   ))}
@@ -123,14 +123,16 @@ export function FeaturedProjectsSection() {
 
         {/* Footer link to archive */}
         <div
-          className="fade-up"
+          className="fade-up projects-footer"
           style={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginTop: '56px',
-            paddingTop: '32px',
+            marginTop: '40px',
+            paddingTop: '24px',
             borderTop: '1px solid var(--line-soft)',
+            gap: '16px',
+            flexWrap: 'wrap',
           }}
         >
           <span className="t-small">Menampilkan 6 dari 12+ proyek</span>
@@ -155,6 +157,26 @@ export function FeaturedProjectsSection() {
           </Link>
         </div>
       </div>
+
+      <style jsx>{`
+        .featured-projects-section {
+          padding: 80px 0;
+          background: var(--bg);
+        }
+        @media (min-width: 768px) {
+          .featured-projects-section { padding: 100px 0; }
+        }
+        @media (min-width: 1024px) {
+          .featured-projects-section { padding: 120px 0; }
+        }
+        @media (max-width: 640px) {
+          .projects-footer {
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 12px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

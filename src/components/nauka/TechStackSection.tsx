@@ -25,7 +25,7 @@ export function TechStackSection() {
   const containerRef = useReveal<HTMLDivElement>();
 
   return (
-    <section ref={containerRef} id="stack" style={{ padding: '120px 0', background: 'var(--bg-soft)', transition: 'background 500ms var(--ease-soft)' }}>
+    <section ref={containerRef} id="stack" className="tech-stack-section">
       <div className="container-wide">
         {/* Header */}
         <div className="sec-head">
@@ -43,67 +43,81 @@ export function TechStackSection() {
 
         {/* Stack grid */}
         <div
-          className="stagger"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
-            gap: '0',
-            borderTop: '1px solid var(--line)',
-            borderLeft: '1px solid var(--line)',
-          }}
+          className="stagger tech-stack-grid"
         >
           {stack.map((tech) => (
             <div
               key={tech.name}
-              style={{
-                padding: '24px',
-                borderBottom: '1px solid var(--line)',
-                borderRight: '1px solid var(--line)',
-                transition: 'background 300ms var(--ease-out)',
-                cursor: 'default',
-              }}
+              className="tech-stack-cell"
               onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--bg)')}
               onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
             >
-              <div
-                style={{
-                  fontFamily: 'var(--font-jetbrains)',
-                  fontSize: '0.6875rem',
-                  color: 'var(--ink-faint)',
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  fontWeight: 500,
-                  marginBottom: '8px',
-                }}
-              >
-                {tech.category}
-              </div>
-              <div
-                style={{
-                  fontFamily: 'var(--font-clash)',
-                  fontSize: '1.25rem',
-                  fontWeight: 500,
-                  color: 'var(--ink)',
-                  letterSpacing: '-0.02em',
-                }}
-              >
-                {tech.name}
-              </div>
+              <div className="tech-stack-category">{tech.category}</div>
+              <div className="tech-stack-name">{tech.name}</div>
             </div>
           ))}
         </div>
       </div>
 
       <style jsx>{`
+        .tech-stack-section {
+          padding: 80px 0;
+          background: var(--bg-soft);
+          transition: background 500ms var(--ease-soft);
+        }
         @media (min-width: 768px) {
-          div[style*='grid-template-columns: repeat(2, 1fr)'] {
-            grid-template-columns: repeat(3, 1fr) !important;
-          }
+          .tech-stack-section { padding: 100px 0; }
         }
         @media (min-width: 1024px) {
-          div[style*='grid-template-columns: repeat(2, 1fr)'] {
-            grid-template-columns: repeat(4, 1fr) !important;
-          }
+          .tech-stack-section { padding: 120px 0; }
+        }
+        .tech-stack-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 0;
+          border-top: 1px solid var(--line);
+          border-left: 1px solid var(--line);
+        }
+        @media (min-width: 768px) {
+          .tech-stack-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (min-width: 1024px) {
+          .tech-stack-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+        .tech-stack-cell {
+          padding: 16px;
+          border-bottom: 1px solid var(--line);
+          border-right: 1px solid var(--line);
+          transition: background 300ms var(--ease-out);
+          cursor: default;
+        }
+        @media (min-width: 768px) {
+          .tech-stack-cell { padding: 20px; }
+        }
+        @media (min-width: 1024px) {
+          .tech-stack-cell { padding: 24px; }
+        }
+        .tech-stack-category {
+          font-family: var(--font-jetbrains);
+          font-size: 0.625rem;
+          color: var(--ink-faint);
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          font-weight: 500;
+          margin-bottom: 6px;
+        }
+        @media (min-width: 768px) {
+          .tech-stack-category { font-size: 0.6875rem; margin-bottom: 8px; }
+        }
+        .tech-stack-name {
+          font-family: var(--font-clash);
+          font-size: 1.0625rem;
+          font-weight: 500;
+          color: var(--ink);
+          letter-spacing: -0.02em;
+        }
+        @media (min-width: 768px) {
+          .tech-stack-name { font-size: 1.25rem; }
         }
       `}</style>
     </section>

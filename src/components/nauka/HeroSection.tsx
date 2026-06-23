@@ -95,7 +95,7 @@ export function HeroSection() {
 
         {/* Stats inline */}
         <div
-          className="fade-up delay-3"
+          className="fade-up delay-3 hero-stats"
           style={{
             display: 'flex',
             gap: '48px',
@@ -181,9 +181,24 @@ export function HeroSection() {
         @media (min-width: 1024px) {
           .hero-section { padding: 140px 0 100px; }
         }
-        @media (max-width: 767px) {
+        /* Mobile: stats gap smaller */
+        @media (max-width: 640px) {
+          .hero-stats {
+            gap: 24px !important;
+            margin-bottom: 32px !important;
+          }
+          .hero-stats > div > div:first-child {
+            font-size: 1.25rem !important;
+          }
+          .hero-stats > div > div:last-child {
+            font-size: 0.625rem !important;
+          }
+        }
+        /* Mobile: smaller headline */
+        @media (max-width: 640px) {
           :global(h1.t-display) {
-            font-size: clamp(2.5rem, 11vw, 3.5rem) !important;
+            font-size: clamp(2.25rem, 11vw, 3.25rem) !important;
+            margin-bottom: 12px !important;
           }
         }
       `}</style>
