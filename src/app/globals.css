@@ -427,6 +427,38 @@
 .js .stagger.is-visible > *:nth-child(6) { transition-delay: 400ms; }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   WORD REVEAL — 3D per-word entrance (hero headline)
+   Each word starts blurred + rotated, then resolves.
+   Staggered via inline transitionDelay on each .word-reveal span.
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.word-reveal {
+  display: inline-block;
+  opacity: 1;
+  transform: none;
+  filter: none;
+  margin-right: 0.28em;
+  transform-origin: bottom center;
+}
+.js .word-reveal {
+  opacity: 0;
+  transform: translateY(40%) rotateX(-15deg);
+  filter: blur(4px);
+  transition: opacity 600ms var(--ease-out),
+              transform 600ms var(--ease-out),
+              filter 600ms var(--ease-out);
+  will-change: opacity, transform, filter;
+}
+.js .word-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0) rotateX(0deg);
+  filter: blur(0);
+}
+.word-reveal .accent {
+  display: inline;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    THEME TOGGLE
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 

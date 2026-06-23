@@ -7,8 +7,9 @@ import { useReveal } from '@/hooks/useReveal';
 /**
  * HeroSection — Nauka Motion (Developer Theme)
  *
- * Editorial layout: eyebrow + display headline (line-mask reveal) + sub + actions
- * No rotating image carousel. Calm, confident, single-screen.
+ * Editorial layout with **word-reveal animation** on the headline:
+ * Each word enters with 3D rotateX + blur, staggered ~90ms.
+ * Plus line-mask reveal on subtitle and fade-up on actions.
  *
  * Fetches tagline/headline/subtitle from /api/public/settings.
  */
@@ -23,6 +24,7 @@ export function HeroSection() {
   const containerRef = useReveal<HTMLDivElement>();
   const [settings, setSettings] = useState<SiteSettings>({});
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [wordsRevealed, setWordsRevealed] = useState(false);
 
   useEffect(() => {
     fetch('/api/public/settings')
@@ -34,16 +36,18 @@ export function HeroSection() {
       .catch(() => setDataLoaded(true));
   }, []);
 
+  // Trigger word-reveal after a short delay so the initial state renders first
+  useEffect(() => {
+    const timer = setTimeout(() => setWordsRevealed(true), 200);
+    return () => clearTimeout(timer);
+  }, []);
+
   const headline = settings.headline || 'Membangun produk digital dengan arah yang jelas.';
-  // Split headline into 2 lines for line-mask reveal
-  const words = headline.split(' ');
-  const midPoint = Math.ceil(words.length / 2);
-  const line1 = words.slice(0, midPoint).join(' ');
-  const line2Words = words.slice(midPoint);
-  // Last 2-3 words of line 2 become accent (italic Instrument Serif)
-  const accentCount = Math.min(3, Math.max(2, Math.ceil(line2Words.length / 2)));
-  const line2Plain = line2Words.slice(0, line2Words.length - accentCount).join(' ');
-  const line2Accent = line2Words.slice(line2Words.length - accentCount).join(' ');
+  const headlineWords = headline.split(' ');
+
+  // Last 2-3 words become accent (Instrument Serif italic)
+  const accentCount = Math.min(3, Math.max(2, Math.ceil(headlineWords.length / 4)));
+  const plainCount = headlineWords.length - accentCount;
 
   return (
     <section
@@ -55,6 +59,7 @@ export function HeroSection() {
         justifyContent: 'center',
         padding: '140px 0 80px',
         position: 'relative',
+        perspective: '600px',
       }}
     >
       <div className="hero-grid-bg" />
@@ -91,17 +96,30 @@ export function HeroSection() {
           <span className="t-caption">Available for projects · Jakarta, ID</span>
         </div>
 
-        {/* Headline */}
-        <h1 className="t-display" style={{ maxWidth: '16ch', margin: '0 0 40px' }}>
-          <span className="line-mask">
-            <span className="line-inner">{line1}</span>
-          </span>
-          <span className="line-mask delay-1">
-            <span className="line-inner">
-              {line2Plain}{' '}
-              <span className="accent">{line2Accent}</span>
-            </span>
-          </span>
+        {/* Headline — word-reveal animation */}
+        <h1
+          className="t-display"
+          style={{ maxWidth: '16ch', margin: '0 0 40px' }}
+        >
+          {headlineWords.map((word, idx) => {
+            const isAccent = idx >= plainCount;
+            // First word of accent group gets margin-left to break onto new line
+            const startAccentLine = idx === plainCount;
+            return (
+              <span
+                key={word + idx}
+                className={`word-reveal ${wordsRevealed ? 'revealed' : ''}`}
+                style={{ transitionDelay: `${300 + idx * 90}ms` }}
+              >
+                {startAccentLine && <span style={{ display: 'block' }} />}
+                {isAccent ? (
+                  <span className="accent">{word}</span>
+                ) : (
+                  word
+                )}
+              </span>
+            );
+          })}
         </h1>
 
         {/* Sub */}
@@ -188,6 +206,14 @@ export function HeroSection() {
         }
         @media (max-width: 640px) {
           section > div:last-child > div:last-child { display: none; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .word-reveal {
+            opacity: 1 !important;
+            transform: none !important;
+            filter: none !important;
+            transition: none !important;
+          }
         }
       `}</style>
     </section>
