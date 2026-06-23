@@ -1,86 +1,113 @@
 'use client';
 
-import { useScrollReveal } from '@/hooks/useScrollReveal';
+import { useReveal } from '@/hooks/useReveal';
 
 /**
- * PhilosophySection — Cara Berpikir
+ * PhilosophySection — Cara Berpikir (Developer Theme)
  *
- * Replaces "About" concept with three guiding principles.
- * Clean, minimalist layout on light background.
- * Each principle gets a number in accent color.
- * Scroll-reveal animation.
+ * Three principles in a 3-column grid. Minimal — no cards, just top border,
+ * italic numbering, title, description. Generous whitespace.
  */
 
 const principles = [
   {
-    number: '01',
-    title: 'Small Movement',
-    description: 'Perubahan kecil yang tepat lebih berharga daripada perubahan besar yang tidak terarah.',
+    num: '01 — Small Movement',
+    title: 'Perubahan kecil yang tepat.',
+    desc: 'Lebih berharga daripada perubahan besar yang tidak terarah. Kami memulai dari hal yang paling penting, lalu memperhalus sedikit demi sedikit.',
   },
   {
-    number: '02',
-    title: 'Real Impact',
-    description: 'Kami fokus pada hasil yang benar-benar digunakan, bukan sekadar terlihat menarik.',
+    num: '02 — Real Impact',
+    title: 'Hasil yang benar-benar digunakan.',
+    desc: 'Bukan sekadar terlihat menarik. Setiap keputusan desain dan teknologi diuji dengan satu pertanyaan: apakah ini membantu pengguna?',
   },
   {
-    number: '03',
-    title: 'Build With Purpose',
-    description: 'Setiap halaman, fitur, dan interaksi memiliki alasan untuk ada.',
+    num: '03 — Build With Purpose',
+    title: 'Setiap detail memiliki alasan.',
+    desc: 'Tidak ada elemen yang ada kebetulan. Setiap halaman, fitur, dan interaksi memiliki tujuan yang jelas — atau kami hapus.',
   },
 ];
 
 export function PhilosophySection() {
-  const headerRef = useScrollReveal();
-  const card1Ref = useScrollReveal();
-  const card2Ref = useScrollReveal();
-  const card3Ref = useScrollReveal();
-  const cardRefs = [card1Ref, card2Ref, card3Ref];
+  const containerRef = useReveal<HTMLDivElement>();
 
   return (
-    <section className="py-14 sm:py-20 lg:py-28 bg-texture-primary">
+    <section
+      ref={containerRef}
+      id="philosophy"
+      style={{
+        padding: '160px 0',
+        background: 'var(--bg-soft)',
+        position: 'relative',
+        transition: 'background 500ms var(--ease-soft)',
+      }}
+    >
       <div className="container-wide">
-        {/* Section header */}
-        <div ref={headerRef} className="max-w-[600px] mb-10 sm:mb-14 lg:mb-20 scroll-reveal">
-          <p className="text-caption text-[var(--nauka-accent)] uppercase tracking-[0.2em] mb-3 sm:mb-4 font-medium">
-            CARA BERPIKIR
-          </p>
-          <h2 className="text-h2 font-heading text-[var(--nauka-text-primary)]">
-            Prinsip yang membimbing setiap keputusan kami.
+        {/* Intro */}
+        <div style={{ maxWidth: '560px', marginBottom: '96px' }}>
+          <span className="sec-head-num fade-up">// Cara Berpikir</span>
+          <h2 className="t-h1" style={{ margin: '24px 0 0' }}>
+            <span className="line-mask"><span className="line-inner">Tiga prinsip yang</span></span>
+            <span className="line-mask delay-1"><span className="line-inner">membimbing keputusan.</span></span>
           </h2>
+          <p className="t-body-lg fade-up delay-2" style={{ margin: '24px 0 0' }}>
+            Kami percaya bahwa produk digital yang baik lahir dari keputusan-keputusan kecil yang tepat — bukan dari fitur yang banyak atau visual yang ramai.
+          </p>
         </div>
 
-        {/* Principles grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
-          {principles.map((principle, idx) => (
+        {/* List */}
+        <div
+          className="stagger"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr',
+            gap: 0,
+          }}
+        >
+          {principles.map((p) => (
             <div
-              key={principle.number}
-              ref={cardRefs[idx]}
-              className={`philosophy-card scroll-reveal scroll-reveal-delay-${idx + 1}`}
+              key={p.num}
+              style={{
+                padding: '32px 0 0',
+                borderTop: '1px solid var(--line)',
+                position: 'relative',
+              }}
             >
-              {/* Number */}
-              <div className="text-signature text-[var(--nauka-accent)] mb-4 sm:mb-6">
-                {principle.number}
-              </div>
-
-              {/* Title */}
-              <h3 className="text-h3 font-heading text-[var(--nauka-text-primary)] mb-3 sm:mb-4">
-                {principle.title}
+              <span
+                style={{
+                  fontFamily: 'var(--font-jetbrains)',
+                  fontSize: '0.6875rem',
+                  color: 'var(--accent)',
+                  fontWeight: 500,
+                  marginBottom: '28px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                <span style={{ width: '20px', height: '1px', background: 'var(--accent)' }} />
+                {p.num}
+              </span>
+              <h3 className="philosophy-title" style={{ margin: '0 0 20px', fontFamily: 'var(--font-clash)', fontSize: '1.5rem', fontWeight: 600, color: 'var(--ink)', lineHeight: 1.15, letterSpacing: '-0.025em' }}>
+                {p.title}
               </h3>
-
-              {/* Description */}
-              <p className="text-body text-[var(--nauka-text-secondary)] leading-relaxed">
-                {principle.description}
+              <p style={{ fontSize: '0.9375rem', lineHeight: 1.7, color: 'var(--ink-soft)', margin: 0, letterSpacing: '-0.005em' }}>
+                {p.desc}
               </p>
-
-              {/* Subtle bottom accent line */}
-              <div
-                className="mt-6 sm:mt-8 w-12 h-px transition-all duration-500 group-hover:w-20"
-                style={{ backgroundColor: 'var(--nauka-accent)', opacity: 0.3 }}
-              />
             </div>
           ))}
         </div>
       </div>
+
+      <style jsx>{`
+        @media (min-width: 900px) {
+          div[style*='grid-template-columns: 1fr'][class*='stagger'] {
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 56px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

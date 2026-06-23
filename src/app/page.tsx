@@ -6,20 +6,26 @@ import { TrustBarSection } from '@/components/nauka/TrustBarSection';
 import { TestimonialSection } from '@/components/nauka/TestimonialSection';
 import { CTASection } from '@/components/nauka/CTASection';
 import { Footer } from '@/components/nauka/Footer';
+import { ScrollProgress } from '@/components/nauka/ScrollProgress';
 
 /**
- * Nauka Motion — Homepage (Redesign)
+ * Nauka Motion — Homepage (Developer Theme)
  *
- * Section flow: Hero → Karya Pilihan → Cara Berpikir → Yang Kami Bangun → Testimonial → CTA/Contact
- * Design: Tenang, percaya diri, work-first
+ * Section flow:
+ *   Hero → Karya Pilihan → Cara Berpikir → Yang Kami Bangun → Testimoni → CTA
+ *
+ * Design: Clash Display 700 + Instrument Serif italic accent + Inter body
+ * Palette: GitHub-inspired light + dark theme toggle
+ * Motion: line-mask reveal on headlines, fade-up on body, stagger on lists
  */
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <ScrollProgress />
       <Header />
 
-      <main className="flex-1">
+      <main style={{ flex: 1 }}>
         <HeroSection />
         <CaseStudySection />
         <PhilosophySection />

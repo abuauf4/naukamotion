@@ -1,36 +1,20 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import { Button } from '@/components/ui/button';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { useReveal } from '@/hooks/useReveal';
 
 /**
- * HeroSection — Nauka Motion Redesign
+ * HeroSection — Nauka Motion (Developer Theme)
  *
- * Desktop: Text left + single crossfade image right (only 2 images rendered at a time)
- * Mobile: Horizontal scroll carousel below text
- * Word-reveal animation for headline
- * Fetches projects from /api/public/projects
+ * Layouts:
+ *   Mobile  (<768px):  single column — text → small wireframe (280px)
+ *   Tablet  (768-1023): single column — text → medium wireframe (380px)
+ *   Desktop (≥1024px): 2-column 7fr/5fr — text left, wireframe right (480px)
+ *
+ * Wireframe: 16 SVG paths drawn sequentially via stroke-dashoffset.
+ * Headline: per-word 3D entrance (translateY + rotateX + blur).
  */
-
-interface HeroProject {
-  id: string;
-  slug: string;
-  client: string;
-  image: string | null;
-  color: string;
-}
-
-const defaultHeroProjects: HeroProject[] = [
-  { id: 'mitsubishi', slug: 'mitsubishi', client: 'Mitsubishi', image: '/portfolio/mitsubishi.png', color: '#0d9488' },
-  { id: 'geely', slug: 'geely-pluit', client: 'Geely', image: '/portfolio/geely-pluit.png', color: '#2563eb' },
-  { id: 'jasaprotect', slug: 'jasaprotect', client: 'JasaProtect', image: '/portfolio/jasaprotect.png', color: '#6366f1' },
-  { id: 'naukagadget', slug: 'nauka-gadget', client: 'Nauka Gadget', image: '/portfolio/nauka-gadget.png', color: '#8b5cf6' },
-  { id: 'naukakostay', slug: 'nauka-kostay', client: 'Nauka Kostay', image: '/portfolio/nauka-kostay.png', color: '#d97706' },
-  { id: 'ghazy', slug: 'ghazy', client: 'Ghazy Computer', image: '/portfolio/ghazy-computer.png', color: '#e11d48' },
-];
 
 interface SiteSettings {
   tagline?: string;
@@ -38,439 +22,376 @@ interface SiteSettings {
   subtitle?: string;
 }
 
+// Each path has its length precomputed for stroke-dashoffset animation.
+const wireframePaths = [
+  // Outer browser frame
+  { d: 'M4 4 H396 V276 H4 Z', len: 1344, cls: '', delay: 0 },
+  // Top bar separator
+  { d: 'M4 36 H396', len: 392, cls: '', delay: 200 },
+  // 3 traffic-light dots
+  { d: 'M18 20 m-4 0 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0', len: 25, cls: '', delay: 350 },
+  { d: 'M32 20 m-4 0 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0', len: 25, cls: '', delay: 400 },
+  { d: 'M46 20 m-4 0 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0', len: 25, cls: '', delay: 450 },
+  // URL bar
+  { d: 'M70 12 H310 V28 H70 Z', len: 488, cls: '', delay: 550 },
+  // Hero block (accent color — main visual element)
+  { d: 'M24 60 H232 V160 H24 Z', len: 616, cls: 'wf-accent', delay: 750 },
+  // Content lines under hero block
+  { d: 'M24 180 H200', len: 176, cls: 'wf-soft', delay: 1000 },
+  { d: 'M24 196 H180', len: 156, cls: 'wf-soft', delay: 1100 },
+  { d: 'M24 212 H160', len: 136, cls: 'wf-soft', delay: 1200 },
+  // Sidebar
+  { d: 'M256 60 H376 V220 H256 Z', len: 568, cls: '', delay: 1400 },
+  // Sidebar lines
+  { d: 'M272 80 H360', len: 88, cls: 'wf-soft', delay: 1600 },
+  { d: 'M272 100 H336', len: 64, cls: 'wf-soft', delay: 1680 },
+  { d: 'M272 120 H352', len: 80, cls: 'wf-soft', delay: 1760 },
+  { d: 'M272 140 H344', len: 72, cls: 'wf-soft', delay: 1840 },
+  { d: 'M272 160 H360', len: 88, cls: 'wf-soft', delay: 1920 },
+];
+
 export function HeroSection() {
-  const heroRef = useRef<HTMLElement>(null);
-  const [wordsRevealed, setWordsRevealed] = useState(false);
-  const [activeProject, setActiveProject] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
-  const [carouselScroll, setCarouselScroll] = useState(0);
-  const [heroProjects, setHeroProjects] = useState<HeroProject[]>([]);
+  const containerRef = useReveal<HTMLDivElement>();
   const [settings, setSettings] = useState<SiteSettings>({});
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [wordsRevealed, setWordsRevealed] = useState(false);
+  const [wireframeDrawing, setWireframeDrawing] = useState(false);
 
-  // Fetch projects and settings from API
   useEffect(() => {
-    Promise.all([
-      fetch('/api/public/projects').then(r => r.json()).catch(() => []),
-      fetch('/api/public/settings').then(r => r.json()).catch(() => ({})),
-    ]).then(([projectsData, settingsData]) => {
-      if (Array.isArray(projectsData) && projectsData.length > 0) {
-        setHeroProjects(projectsData.map((p: Record<string, unknown>) => ({
-          id: p.id as string,
-          slug: p.slug as string,
-          client: p.client as string,
-          image: p.image as string | null,
-          color: p.color as string,
-        })));
-      }
-      if (settingsData && typeof settingsData === 'object') {
-        setSettings(settingsData);
-      }
-      setDataLoaded(true);
-    });
+    fetch('/api/public/settings')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data && typeof data === 'object') setSettings(data);
+        setDataLoaded(true);
+      })
+      .catch(() => setDataLoaded(true));
   }, []);
 
-  // Word reveal on mount
+  // Trigger word-reveal after a short delay so initial state renders first
   useEffect(() => {
-    const timer = setTimeout(() => setWordsRevealed(true), 300);
-    return () => clearTimeout(timer);
+    const t1 = setTimeout(() => setWordsRevealed(true), 200);
+    const t2 = setTimeout(() => setWireframeDrawing(true), 600);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
   }, []);
 
-  // Auto-rotate — slow and calm, 6 seconds
-  useEffect(() => {
-    if (!dataLoaded || heroProjects.length === 0) return;
-    if (isHovered) return;
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
+  const headline = settings.headline || 'Membangun produk digital dengan arah yang jelas.';
+  const headlineWords = headline.split(' ');
 
-    const interval = setInterval(() => {
-      setActiveProject((prev) => (prev + 1) % heroProjects.length);
-    }, 6000);
-
-    return () => clearInterval(interval);
-  }, [isHovered, heroProjects.length, dataLoaded]);
-
-  const headlineText = settings.headline || 'Membangun Produk Digital Dengan Arah Yang Jelas';
-  const headlineWords = headlineText.split(' ');
-  const midPoint = Math.ceil(headlineWords.length / 2);
-  let wordIndex = 0;
-
-  // Mobile carousel drag
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragStartX, setDragStartX] = useState(0);
-
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    setIsDragging(true);
-    setDragStartX(e.touches[0].clientX);
-  }, []);
-
-  const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (!isDragging || !carouselRef.current) return;
-    const delta = e.touches[0].clientX - dragStartX;
-    carouselRef.current.scrollLeft = carouselScroll - delta;
-  }, [isDragging, dragStartX, carouselScroll]);
-
-  const handleTouchEnd = useCallback(() => {
-    if (!carouselRef.current) return;
-    setCarouselScroll(carouselRef.current.scrollLeft);
-    setIsDragging(false);
-  }, []);
-
-  // Only render current + previous for smooth crossfade (no jarring stack)
-  const visibleIndices = heroProjects.length > 0 ? [activeProject, (activeProject - 1 + heroProjects.length) % heroProjects.length] : [];
-
-  // Don't render images until data is loaded — prevents flash of old/fallback images
-  if (!dataLoaded) {
-    return (
-      <section ref={heroRef} className="relative min-h-[100dvh] sm:min-h-[90vh] lg:min-h-[100vh] flex items-center bg-black pt-14 sm:pt-16 lg:pt-20">
-        <div className="absolute inset-0 z-0">
-          <div
-            className="absolute inset-0 opacity-30"
-            style={{
-              backgroundImage: `
-              linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px)
-            `,
-              backgroundSize: '60px 60px',
-            }}
-          />
-        </div>
-        <div className="relative z-10 container-wide w-full py-8 sm:py-24 lg:py-0">
-          <div className="hidden lg:grid lg:grid-cols-12 gap-6 items-center">
-            <div className="lg:col-span-7 max-w-[700px]">
-              <div className="h-6 w-48 bg-white/5 rounded animate-pulse mb-5 sm:mb-7" />
-              <div className="h-14 w-full bg-white/5 rounded animate-pulse mb-6 sm:mb-8" />
-              <div className="h-6 w-96 bg-white/5 rounded animate-pulse mb-8 sm:mb-10" />
-              <div className="flex gap-4">
-                <div className="h-12 w-36 bg-white/5 rounded-lg animate-pulse" />
-                <div className="h-12 w-32 bg-white/5 rounded-lg animate-pulse" />
-              </div>
-            </div>
-            <div className="lg:col-span-5 flex items-center justify-center">
-              <div className="w-full max-w-[420px] aspect-[16/9] bg-white/5 rounded-xl animate-pulse" />
-            </div>
-          </div>
-          <div className="lg:hidden">
-            <div className="max-w-[700px] mb-6">
-              <div className="h-5 w-36 bg-white/5 rounded animate-pulse mb-2" />
-              <div className="h-10 w-full bg-white/5 rounded animate-pulse mb-3" />
-              <div className="h-5 w-72 bg-white/5 rounded animate-pulse mb-4" />
-              <div className="flex gap-3">
-                <div className="h-10 w-28 bg-white/5 rounded-lg animate-pulse" />
-                <div className="h-10 w-24 bg-white/5 rounded-lg animate-pulse" />
-              </div>
-            </div>
-            <div className="flex gap-3 overflow-x-auto pb-4" style={{ scrollbarWidth: 'none' }}>
-              {[1,2,3].map(i => (
-                <div key={i} className="flex-shrink-0 w-[260px] aspect-[16/9] bg-white/5 rounded-xl animate-pulse" />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  if (heroProjects.length === 0) return null;
+  // Last 2-3 words become accent (Instrument Serif italic)
+  const accentCount = Math.min(3, Math.max(2, Math.ceil(headlineWords.length / 4)));
+  const plainCount = headlineWords.length - accentCount;
 
   return (
-    <section ref={heroRef} className="relative min-h-[100dvh] sm:min-h-[90vh] lg:min-h-[100vh] flex items-center bg-black pt-14 sm:pt-16 lg:pt-20">
-      {/* Background — solid black + cinematic layers */}
-      <div className="absolute inset-0 z-0">
-        <div
-          className="absolute inset-0 opacity-30"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px)
-            `,
-            backgroundSize: '60px 60px',
-          }}
-        />
-        <div
-          className="absolute inset-0 hidden lg:block"
-          style={{
-            background: 'radial-gradient(ellipse 35% 50% at 72% 50%, rgba(217, 164, 65, 0.04) 0%, rgba(217, 164, 65, 0.01) 50%, transparent 100%)',
-          }}
-        />
-        <div
-          className="absolute inset-0 lg:hidden"
-          style={{
-            background: 'radial-gradient(ellipse 40% 35% at 50% 65%, rgba(217, 164, 65, 0.03) 0%, rgba(217, 164, 65, 0.008) 50%, transparent 100%)',
-          }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background: 'radial-gradient(ellipse 70% 65% at 50% 50%, transparent 0%, rgba(0,0,0,0.35) 100%)',
-          }}
-        />
-      </div>
+    <section ref={containerRef} className="hero-section">
+      <div className="hero-grid-bg" />
 
-      <div className="relative z-10 container-wide w-full py-8 sm:py-24 lg:py-0">
-        {/* Desktop layout */}
-        <div className="hidden lg:grid lg:grid-cols-12 gap-6 items-center">
-          {/* Text side — 7 columns */}
-          <div className="lg:col-span-7 max-w-[700px]">
-            <p
-              className={`text-caption font-medium uppercase tracking-[0.3em] text-[var(--nauka-accent-light)] mb-5 sm:mb-7 transition-all duration-700 ${wordsRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-              style={{ transitionDelay: '100ms' }}
-            >
-              {settings.tagline || 'Small Movement. Real Impact.'}
-            </p>
-
-            <h1 className="text-display font-heading text-white mb-6 sm:mb-8" style={{ perspective: '600px' }}>
-              <span className="block">
-                {headlineWords.slice(0, midPoint).map((word) => {
-                  const idx = wordIndex++;
-                  return (
-                    <span
-                      key={word + idx}
-                      className={`word-reveal ${wordsRevealed ? 'revealed' : ''}`}
-                      style={{ transitionDelay: `${300 + idx * 120}ms` }}
-                    >
-                      {word}{' '}
-                    </span>
-                  );
-                })}
-              </span>
-              <span className="block">
-                {headlineWords.slice(midPoint).map((word) => {
-                  const idx = wordIndex++;
-                  return (
-                    <span
-                      key={word + idx}
-                      className={`word-reveal ${wordsRevealed ? 'revealed' : ''}`}
-                      style={{ transitionDelay: `${300 + idx * 120}ms` }}
-                    >
-                      {word}{' '}
-                    </span>
-                  );
-                })}
-              </span>
-            </h1>
-
-            <p
-              className={`text-body-lg text-white/70 sm:text-white/75 mb-8 sm:mb-10 max-w-[520px] leading-relaxed transition-all duration-700 ${wordsRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-              style={{ transitionDelay: '1100ms' }}
-            >
-              {settings.subtitle || 'Dari website bisnis, sistem operasional, hingga pengalaman digital yang membantu bisnis bertumbuh.'}
-            </p>
-
-            <div
-              className={`flex flex-row gap-4 transition-all duration-700 ${wordsRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-              style={{ transitionDelay: '1300ms' }}
-            >
-              <Button
-                asChild
-                size="lg"
-                className="magnetic-button bg-[var(--nauka-accent)] hover:bg-[var(--nauka-accent-dark)] text-white rounded-lg px-7 sm:px-8 py-3.5 sm:py-4 text-body font-medium h-auto"
-              >
-                <Link href="/contact">
-                  Mulai Proyek
-                  <ArrowRight className="ml-2 w-4 h-4" />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="border-white/15 text-white/80 hover:bg-white/6 hover:text-white rounded-lg px-7 sm:px-8 py-3.5 sm:py-4 text-body font-medium backdrop-blur-sm h-auto"
-              >
-                <Link href="/work">
-                  Lihat Karya
-                  <ArrowUpRight className="ml-2 w-3.5 h-3.5" />
-                </Link>
-              </Button>
-            </div>
+      <div className="container-wide hero-grid">
+        {/* ━━━ Left: Text content ━━━ */}
+        <div className="hero-text">
+          {/* Eyebrow */}
+          <div
+            className="fade-up"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '14px',
+              marginBottom: '28px',
+            }}
+          >
+            <span
+              style={{
+                width: '6px',
+                height: '6px',
+                background: 'var(--green)',
+                borderRadius: '50%',
+                boxShadow: '0 0 0 3px color-mix(in srgb, var(--green) 20%, transparent)',
+                display: 'inline-block',
+              }}
+            />
+            <span
+              style={{
+                width: '32px',
+                height: '1px',
+                background: 'var(--accent)',
+                display: 'inline-block',
+              }}
+            />
+            <span className="t-caption">Available for projects · Jakarta, ID</span>
           </div>
 
-          {/* Project preview — 5 columns, desktop */}
-          <div
-            className="lg:col-span-5 flex items-center justify-center relative"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-          >
-            <div className="project-preview-card relative w-full max-w-[420px] aspect-[16/9] overflow-hidden">
-              {/* Only render current + previous slide for smooth crossfade */}
-              {visibleIndices.map((idx) => (
-                <div
-                  key={heroProjects[idx]?.id || idx}
-                  className="absolute inset-0"
-                  style={{
-                    opacity: activeProject === idx ? 1 : 0,
-                    transition: 'opacity 2s ease-in-out',
-                    zIndex: activeProject === idx ? 1 : 0,
-                  }}
-                >
-                  {heroProjects[idx]?.image && (
-                    <Image
-                      src={heroProjects[idx].image}
-                      alt={`${heroProjects[idx].client} — by Nauka Motion`}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 42vw"
-                      className="object-cover object-top rounded-xl"
-                      priority={idx < 2}
-                    />
-                  )}
-                </div>
-              ))}
-
-              {/* Project name overlay on hover */}
-              <div
-                className={`absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 via-black/30 to-transparent rounded-b-xl transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'}`}
-              >
+          {/* Headline — word-reveal animation */}
+          <h1 className="t-display hero-headline">
+            {headlineWords.map((word, idx) => {
+              const isAccent = idx >= plainCount;
+              const startAccentLine = idx === plainCount;
+              return (
                 <span
-                  className="text-caption font-medium uppercase tracking-[0.15em] px-2.5 py-1 rounded-md"
-                  style={{
-                    backgroundColor: `${heroProjects[activeProject]?.color}30`,
-                    color: heroProjects[activeProject]?.color,
-                  }}
+                  key={word + idx}
+                  className={`word-reveal ${wordsRevealed ? 'revealed' : ''}`}
+                  style={{ transitionDelay: `${300 + idx * 90}ms` }}
                 >
-                  {heroProjects[activeProject]?.client}
+                  {startAccentLine && <span style={{ display: 'block' }} />}
+                  {isAccent ? <span className="accent">{word}</span> : word}
                 </span>
-              </div>
+              );
+            })}
+          </h1>
 
-              {/* Subtle border glow */}
-              <div className="absolute inset-0 rounded-xl border border-white/[0.06] pointer-events-none" />
-            </div>
+          {/* Sub */}
+          <p className="t-body-lg fade-up delay-3 hero-sub">
+            {settings.subtitle ||
+              'Dari website bisnis, sistem operasional, hingga pengalaman digital yang membantu bisnis bertumbuh — dikerjakan dengan tenang, tepat, dan terarah.'}
+          </p>
 
-            {/* Navigation dots */}
-            <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2">
-              {heroProjects.map((project, i) => (
-                <button
-                  key={project.id}
-                  onClick={() => setActiveProject(i)}
-                  className={`w-2 h-2 rounded-full transition-all duration-500 ${
-                    i === activeProject
-                      ? 'w-6 bg-[var(--nauka-accent-light)]'
-                      : 'bg-white/20 hover:bg-white/40'
-                  }`}
-                  aria-label={`Preview ${project.client}`}
-                />
-              ))}
-            </div>
+          {/* Actions */}
+          <div
+            className="fade-up delay-4"
+            style={{
+              display: 'flex',
+              gap: '14px',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              marginTop: '36px',
+            }}
+          >
+            <Link href="/contact" className="btn-primary">
+              <span>Mulai Proyek</span>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M3 11L11 3M11 3H5M11 3V9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </Link>
+            <Link href="/work" className="btn-ghost">
+              <span className="underline">Lihat Karya</span>
+            </Link>
           </div>
         </div>
 
-        {/* Mobile layout: stacked, carousel below text */}
-        <div className="lg:hidden">
-          {/* Text */}
-          <div className="max-w-[700px] mb-6">
-            <p
-              className={`text-caption font-medium uppercase tracking-[0.3em] text-[var(--nauka-accent-light)] mb-2 transition-all duration-700 ${wordsRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-              style={{ transitionDelay: '100ms' }}
-            >
-              {settings.tagline || 'Small Movement. Real Impact.'}
-            </p>
-
-            <h1 className="text-display font-heading text-white mb-3" style={{ perspective: '600px' }}>
-              <span className="block">
-                {headlineWords.slice(0, midPoint).map((word) => {
-                  const idx = wordIndex++;
-                  return (
-                    <span
-                      key={word + idx}
-                      className={`word-reveal ${wordsRevealed ? 'revealed' : ''}`}
-                      style={{ transitionDelay: `${300 + idx * 120}ms` }}
-                    >
-                      {word}{' '}
-                    </span>
-                  );
-                })}
-              </span>
-              <span className="block">
-                {headlineWords.slice(midPoint).map((word) => {
-                  const idx = wordIndex++;
-                  return (
-                    <span
-                      key={word + idx}
-                      className={`word-reveal ${wordsRevealed ? 'revealed' : ''}`}
-                      style={{ transitionDelay: `${300 + idx * 120}ms` }}
-                    >
-                      {word}{' '}
-                    </span>
-                  );
-                })}
-              </span>
-            </h1>
-
-            <p
-              className={`text-body-lg text-white/70 mb-4 leading-relaxed transition-all duration-700 ${wordsRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-              style={{ transitionDelay: '1100ms' }}
-            >
-              {settings.subtitle || 'Dari website bisnis, sistem operasional, hingga pengalaman digital yang membantu bisnis bertumbuh.'}
-            </p>
-
-            <div
-              className={`flex flex-row gap-3 transition-all duration-700 ${wordsRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-              style={{ transitionDelay: '1300ms' }}
-            >
-              <Button
-                asChild
-                size="lg"
-                className="magnetic-button bg-[var(--nauka-accent)] hover:bg-[var(--nauka-accent-dark)] text-white rounded-lg px-5 py-3 text-body-sm font-medium h-auto"
-              >
-                <Link href="/contact">
-                  Mulai Proyek
-                  <ArrowRight className="ml-2 w-4 h-4" />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="border-white/15 text-white/80 hover:bg-white/6 hover:text-white rounded-lg px-5 py-3 text-body-sm font-medium backdrop-blur-sm h-auto"
-              >
-                <Link href="/work">
-                  Lihat Karya
-                  <ArrowUpRight className="ml-2 w-3.5 h-3.5" />
-                </Link>
-              </Button>
-            </div>
-          </div>
-
-          {/* Horizontal scroll carousel — mobile */}
-          <div
-            ref={carouselRef}
-            className="flex gap-3 overflow-x-auto pb-4 -mx-5 px-5 snap-x snap-mandatory scrollbar-hide"
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        {/* ━━━ Right: Wireframe SVG ━━━ */}
+        <div className="hero-wireframe-wrap" aria-hidden="true">
+          <svg
+            className="hero-wireframe"
+            viewBox="0 0 400 280"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            {heroProjects.map((project) => (
-              <div
-                key={project.id}
-                className="flex-shrink-0 w-[260px] aspect-[16/9] rounded-xl overflow-hidden relative snap-start"
-              >
-                {project.image && (
-                  <Image
-                    src={project.image}
-                    alt={`${project.client} — by Nauka Motion`}
-                    fill
-                    sizes="260px"
-                    className="object-cover object-top"
-                  />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-3">
-                  <span
-                    className="text-caption font-medium uppercase tracking-[0.15em] px-2 py-0.5 rounded-md backdrop-blur-sm"
-                    style={{
-                      backgroundColor: `${project.color}30`,
-                      color: project.color,
-                    }}
-                  >
-                    {project.client}
-                  </span>
-                </div>
-              </div>
+            {wireframePaths.map((p, idx) => (
+              <path
+                key={idx}
+                d={p.d}
+                className={`wf-path ${p.cls} ${wireframeDrawing ? 'revealed' : ''}`}
+                style={{
+                  // @ts-expect-error custom property
+                  '--wf-length': p.len,
+                  transitionDelay: `${p.delay}ms`,
+                }}
+              />
             ))}
-          </div>
+            {/* Accent dot at top-right corner of hero block */}
+            <circle
+              cx="232"
+              cy="60"
+              r="3"
+              className={`wf-glow-dot ${wireframeDrawing ? 'revealed' : ''}`}
+              style={{ transitionDelay: '1800ms' }}
+            />
+          </svg>
         </div>
       </div>
+
+      {/* Hero meta — bottom */}
+      <div className="hero-meta">
+        <span className="hero-scroll">
+          Scroll
+          <span className="hero-scroll-line">
+            <span className="hero-scroll-fill" />
+          </span>
+        </span>
+        <div className="hero-credit">
+          <strong>Abu Aufa</strong> — Founder<br />
+          <span className="hero-credit-email">halo@naukamotion.id</span>
+        </div>
+      </div>
+
+      <style jsx>{`
+        .hero-section {
+          min-height: 100svh;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          position: relative;
+          perspective: 600px;
+          /* Mobile: smaller padding so content fits */
+          padding: 110px 0 60px;
+        }
+
+        /* Tablet */
+        @media (min-width: 768px) {
+          .hero-section {
+            padding: 130px 0 70px;
+          }
+        }
+        /* Desktop */
+        @media (min-width: 1024px) {
+          .hero-section {
+            padding: 140px 0 80px;
+          }
+        }
+
+        .hero-grid {
+          position: relative;
+          z-index: 1;
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 40px;
+          align-items: center;
+        }
+        /* Tablet: still single column but more space */
+        @media (min-width: 768px) {
+          .hero-grid {
+            gap: 48px;
+            max-width: 640px;
+            margin: 0 auto;
+          }
+        }
+        /* Desktop: 2-column 7fr/5fr */
+        @media (min-width: 1024px) {
+          .hero-grid {
+            grid-template-columns: 7fr 5fr;
+            gap: 64px;
+            max-width: none;
+          }
+        }
+        @media (min-width: 1280px) {
+          .hero-grid { gap: 80px; }
+        }
+
+        .hero-headline {
+          margin: 0 0 28px;
+          max-width: 16ch;
+        }
+        /* Mobile: tighten headline size */
+        @media (max-width: 767px) {
+          .hero-headline {
+            font-size: clamp(2rem, 9vw, 2.75rem);
+            line-height: 1.05;
+            margin-bottom: 24px;
+          }
+        }
+
+        .hero-sub {
+          margin: 0;
+          max-width: 50ch;
+        }
+        @media (max-width: 767px) {
+          .hero-sub {
+            font-size: 1rem;
+            line-height: 1.6;
+          }
+        }
+        @media (min-width: 1024px) {
+          .hero-sub { margin-bottom: 0; }
+        }
+
+        /* Wireframe — visible on all sizes, sizing adapts */
+        .hero-wireframe-wrap {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 4 / 3;
+          max-width: 280px;
+          margin: 0 auto;
+        }
+        @media (min-width: 768px) {
+          .hero-wireframe-wrap {
+            max-width: 380px;
+          }
+        }
+        @media (min-width: 1024px) {
+          .hero-wireframe-wrap {
+            max-width: 480px;
+            margin: 0 0 0 auto;
+          }
+        }
+
+        /* Hero meta */
+        .hero-meta {
+          position: absolute;
+          bottom: 24px;
+          left: 0;
+          right: 0;
+          display: flex;
+          justify-content: space-between;
+          align-items: end;
+          padding: 0 24px;
+        }
+        @media (min-width: 768px) {
+          .hero-meta { bottom: 32px; padding: 0 40px; }
+        }
+        @media (min-width: 1024px) {
+          .hero-meta { padding: 0 56px; }
+        }
+        .hero-scroll {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          color: var(--ink-faint);
+          font-family: var(--font-jetbrains);
+          font-size: 0.6875rem;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+        .hero-scroll-line {
+          width: 40px;
+          height: 1px;
+          background: var(--ink-faint);
+          position: relative;
+          overflow: hidden;
+          display: inline-block;
+        }
+        .hero-scroll-fill {
+          position: absolute;
+          inset: 0;
+          background: var(--accent);
+          transform: translateX(-100%);
+          animation: scrollHint 2.8s cubic-bezier(0.4,0,0.2,1) infinite;
+        }
+        .hero-credit {
+          text-align: right;
+          color: var(--ink-faint);
+          font-size: 0.75rem;
+          line-height: 1.5;
+        }
+        .hero-credit strong {
+          color: var(--ink-soft);
+          font-weight: 500;
+        }
+        .hero-credit-email {
+          font-family: var(--font-jetbrains);
+          color: var(--accent);
+          font-size: 0.6875rem;
+        }
+        @media (max-width: 640px) {
+          .hero-credit { display: none; }
+        }
+
+        @keyframes scrollHint {
+          0% { transform: translateX(-100%); }
+          50% { transform: translateX(0%); }
+          100% { transform: translateX(100%); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .word-reveal {
+            opacity: 1 !important;
+            transform: none !important;
+            filter: none !important;
+            transition: none !important;
+          }
+          .hero-scroll-fill { animation: none !important; }
+        }
+      `}</style>
     </section>
   );
 }

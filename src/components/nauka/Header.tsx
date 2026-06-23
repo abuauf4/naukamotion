@@ -3,23 +3,23 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import Image from 'next/image';
+import { useTheme } from '@/hooks/useTheme';
 
 /**
- * Header — Nauka Motion Redesign
- * - "Nauka Motion" wordmark
- * - Transparent → solid with blur
- * - Clean navigation with active state
- * - CTA: "Mulai Proyek"
- * - Mobile: animated slide-down menu
+ * Header — Nauka Motion (Developer Theme)
+ *
+ * - Logo image only (no wordmark)
+ * - Theme toggle button
+ * - Desktop nav with underline hover
+ * - "Mulai Proyek" pill CTA
+ * - Mobile hamburger menu
  */
 
 const navItems = [
+  { label: 'Karya', href: '/work' },
   { label: 'Cara Berpikir', href: '/about' },
   { label: 'Layanan', href: '/services' },
-  { label: 'Karya', href: '/work' },
   { label: 'Wawasan', href: '/insights' },
 ];
 
@@ -27,12 +27,27 @@ export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const { theme, toggle, mounted } = useTheme();
+
+  // Only homepage hero overlaps navbar (transparent hero behind frosted glass).
+  // All other pages get body padding-top so content starts below navbar.
+  const isHome = pathname === '/';
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 60);
+    if (isHome) {
+      document.body.classList.add('home-page');
+      document.body.classList.remove('inner-page');
+    } else {
+      document.body.classList.add('inner-page');
+      document.body.classList.remove('home-page');
+    }
+    return () => {
+      document.body.classList.remove('home-page', 'inner-page');
     };
+  }, [isHome]);
 
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 40);
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -40,111 +55,104 @@ export function Header() {
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
+    document.body.style.overflow = mobileOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
   }, [mobileOpen]);
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 ${
-        scrolled ? 'nauka-header-solid' : 'nauka-header-transparent'
-      }`}
-    >
-      <div className="container-wide relative">
-        <div className="flex items-center justify-between h-14 sm:h-16 lg:h-20">
-          {/* Subtle bottom separator */}
-          <div className={`absolute bottom-0 left-[5%] right-[5%] h-px transition-colors duration-400 ${
-            scrolled ? 'bg-white/10' : 'bg-white/[0.06]'
-          }`} />
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5">
-            <span className="text-h4 font-heading nauka-logo-text tracking-tight">
-              Nauka Motion
-            </span>
+    <header className={`nauka-header ${scrolled ? 'scrolled' : ''}`}>
+      <div className="container-wide" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px' }}>
+        <Link href="/" className="nauka-logo" aria-label="Nauka Motion">
+          <Image
+            src="/nauka-motion.webp"
+            alt="Nauka Motion"
+            width={120}
+            height={34}
+            className="nauka-logo-img"
+            priority
+          />
+        </Link>
+
+        <nav className="nauka-nav" aria-label="Primary Navigation">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                style={isActive ? { color: 'var(--ink)' } : undefined}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <button
+            className="theme-toggle"
+            onClick={toggle}
+            aria-label="Toggle theme"
+          >
+            {mounted && theme === 'dark' ? (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="4" />
+                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+              </svg>
+            )}
+          </button>
+
+          <Link href="/contact" className="nauka-header-cta">
+            Mulai Proyek
+            <svg className="nauka-header-cta-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </Link>
 
-          {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-10" aria-label="Primary Navigation">
+          <button
+            className="nauka-mobile-toggle"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+          >
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+
+      {mobileOpen && (
+        <nav className="nauka-mobile-nav" aria-label="Mobile Navigation">
+          <div className="container-wide">
             {navItems.map((item) => {
               const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={cn(
-                    'text-body-sm font-medium nauka-nav-link transition-colors duration-300 relative',
-                    isActive && scrolled && 'text-[var(--nauka-accent)]',
-                  )}
+                  style={isActive ? { color: 'var(--accent)' } : undefined}
+                  onClick={() => setMobileOpen(false)}
                 >
                   {item.label}
-                  {isActive && (
-                    <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[var(--nauka-accent)] rounded-full" />
-                  )}
                 </Link>
               );
             })}
-          </nav>
-
-          {/* Desktop CTA */}
-          <div className="hidden lg:flex items-center">
-            <Button
-              asChild
-              className="magnetic-button bg-[var(--nauka-accent)] hover:bg-[var(--nauka-accent-dark)] text-white rounded-lg px-6 py-2.5 text-body-sm font-medium"
+            <Link
+              href="/contact"
+              className="nauka-header-cta"
+              style={{ marginTop: '16px', display: 'inline-flex' }}
+              onClick={() => setMobileOpen(false)}
             >
-              <Link href="/contact">Mulai Proyek</Link>
-            </Button>
+              Mulai Proyek
+              <svg className="nauka-header-cta-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </Link>
           </div>
-
-          {/* Mobile toggle */}
-          <button
-            className="lg:hidden p-2 -mr-2 nauka-mobile-toggle"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-          >
-            {mobileOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6" />}
-          </button>
-        </div>
-
-        {/* Mobile Nav */}
-        {mobileOpen && (
-          <nav className="lg:hidden nauka-mobile-nav pb-8 pt-2" aria-label="Mobile Navigation">
-            <div className="flex flex-col gap-0.5">
-              {navItems.map((item) => {
-                const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={cn(
-                      'text-body py-3 px-2 rounded-lg transition-colors duration-200',
-                      isActive && 'text-[var(--nauka-accent)]',
-                    )}
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    {item.label}
-                  </Link>
-                );
-              })}
-              <div className="mt-4 pt-4">
-                <Button
-                  asChild
-                  className="w-full bg-[var(--nauka-accent)] hover:bg-[var(--nauka-accent-dark)] text-white rounded-lg py-3 text-body-sm font-medium"
-                >
-                  <Link href="/contact" onClick={() => setMobileOpen(false)}>
-                    Mulai Proyek
-                  </Link>
-                </Button>
-              </div>
-            </div>
-          </nav>
-        )}
-      </div>
+        </nav>
+      )}
     </header>
   );
 }
