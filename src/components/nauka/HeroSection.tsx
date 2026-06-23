@@ -53,7 +53,7 @@ export function HeroSection() {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        padding: '120px 0 80px',
+        padding: '140px 0 80px',
         position: 'relative',
       }}
     >

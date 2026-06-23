@@ -510,7 +510,7 @@
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 100;
-  padding: 20px 0;
+  padding: 24px 0;
   transition: padding 500ms var(--ease-out), background 500ms var(--ease-out), border-color 500ms var(--ease-out);
   border-bottom: 1px solid transparent;
 }
@@ -528,13 +528,13 @@
 }
 .nauka-logo:hover { opacity: 0.7; }
 .nauka-logo-img {
-  height: 30px;
+  height: 44px;
   width: auto;
   display: block;
   transition: filter 300ms var(--ease-out);
 }
 @media (min-width: 768px) {
-  .nauka-logo-img { height: 34px; }
+  .nauka-logo-img { height: 52px; }
 }
 /* Logo is light text on transparent bg — designed for dark backgrounds.
    In light mode (default), invert so it shows as dark text on light bg.
@@ -571,11 +571,11 @@
 .nauka-header-cta {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: 0.875rem;
+  gap: 5px;
+  font-size: 0.8125rem;
   font-weight: 500;
   color: var(--ink);
-  padding: 9px 18px;
+  padding: 7px 14px;
   border: 1px solid var(--line);
   border-radius: 999px;
   transition: all 300ms var(--ease-out);
