@@ -205,7 +205,7 @@ export function HeroSection() {
         </span>
         <div className="hero-credit">
           <strong>Abu Aufa</strong> — Founder<br />
-          <span className="hero-credit-email">halo@naukamotion.id</span>
+          <span className="hero-credit-email">naukamotion@gmail.com</span>
         </div>
       </div>
 

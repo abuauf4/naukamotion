@@ -234,7 +234,7 @@ export default function TermsAndConditionsPage() {
                   Syarat &amp; Ketentuan ini berlaku sejak tanggal yang tercantum
                   di atas dan tunduk pada hukum Republik Indonesia. Jika Anda
                   memiliki pertanyaan, silakan hubungi kami melalui
-                  halo@naukamotion.id.
+                  naukamotion@gmail.com.
                 </p>
               </div>
 
