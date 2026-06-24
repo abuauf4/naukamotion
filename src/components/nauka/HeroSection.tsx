@@ -61,7 +61,20 @@ export function HeroSection() {
 
   return (
     <section ref={containerRef} className="hero-section">
-      <div className="hero-grid-bg" />
+      {/* Background pattern: ink stains + scattered code fragments */}
+      <div className="hero-pattern" aria-hidden="true">
+        <div className="hero-ink-stains" />
+        <div className="hero-code-snippets">
+          <span style={{ top: '14%', left: '6%', fontSize: '0.78rem', transform: 'rotate(-3deg)' }}>function tellStory()</span>
+          <span style={{ top: '72%', left: '10%', fontSize: '0.7rem', transform: 'rotate(2deg)' }}>return system;</span>
+          <span style={{ top: '22%', right: '8%', fontSize: '0.8rem', transform: 'rotate(4deg)' }}>const architect = true</span>
+          <span style={{ top: '82%', right: '12%', fontSize: '0.65rem', transform: 'rotate(-2deg)' }}>await ship()</span>
+          <span style={{ top: '46%', left: '4%', fontSize: '0.62rem', transform: 'rotate(-1deg)' }}>// ink &amp; code</span>
+          <span style={{ top: '56%', right: '6%', fontSize: '0.72rem', transform: 'rotate(3deg)' }}>import {`{ story }`}</span>
+          <span style={{ top: '38%', right: '4%', fontSize: '0.58rem', transform: 'rotate(-4deg)' }}>type Identity = Architect</span>
+          <span style={{ top: '88%', left: '42%', fontSize: '0.6rem', transform: 'rotate(1deg)' }}>export default Abu</span>
+        </div>
+      </div>
 
       <div className="container-wide" style={{ position: 'relative', zIndex: 1 }}>
         {/* Eyebrow */}
@@ -203,6 +216,72 @@ export function HeroSection() {
         @media (min-width: 768px) {
           .hero-section { padding: 130px 8vw 80px; }
         }
+
+        /* ━━ Background pattern: ink stains + code fragments ━━ */
+        .hero-pattern {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          overflow: hidden;
+          z-index: 0;
+        }
+        .hero-ink-stains {
+          position: absolute;
+          inset: 0;
+          background:
+            /* Warm red ink stain — top left */
+            radial-gradient(ellipse 600px 400px at 12% 18%, var(--accent) 0%, transparent 65%),
+            /* Warm gray ink stain — bottom right */
+            radial-gradient(ellipse 700px 480px at 88% 82%, var(--ink-ghost) 0%, transparent 70%),
+            /* Ink color stain — center, very subtle */
+            radial-gradient(ellipse 800px 600px at 50% 50%, var(--ink) 0%, transparent 75%),
+            /* Accent stain — bottom left, smaller */
+            radial-gradient(ellipse 400px 300px at 8% 88%, var(--accent-soft) 0%, transparent 60%),
+            /* Warm gray stain — top right, smaller */
+            radial-gradient(ellipse 350px 280px at 92% 12%, var(--ink-faint) 0%, transparent 65%);
+          opacity: 0.08;
+          filter: blur(50px);
+          -webkit-filter: blur(50px);
+        }
+        @media (min-width: 768px) {
+          .hero-ink-stains { opacity: 0.1; }
+        }
+        :global([data-theme="dark"]) .hero-ink-stains {
+          opacity: 0.15;
+        }
+
+        .hero-code-snippets {
+          position: absolute;
+          inset: 0;
+        }
+        .hero-code-snippets span {
+          position: absolute;
+          font-family: var(--font-jetbrains);
+          color: var(--ink);
+          opacity: 0.08;
+          font-weight: 400;
+          letter-spacing: -0.01em;
+          white-space: nowrap;
+          user-select: none;
+          transition: opacity 800ms ease;
+        }
+        :global([data-theme="dark"]) .hero-code-snippets span {
+          opacity: 0.12;
+          color: var(--ink);
+        }
+        /* Mobile: hide some fragments to reduce clutter */
+        @media (max-width: 767px) {
+          .hero-code-snippets span:nth-child(4),
+          .hero-code-snippets span:nth-child(7),
+          .hero-code-snippets span:nth-child(8) {
+            display: none;
+          }
+          .hero-code-snippets span {
+            opacity: 0.06;
+            font-size: 0.6rem !important;
+          }
+        }
+
         .hero-cursor {
           display: inline-block;
           width: 2px;
