@@ -239,19 +239,19 @@ export function HeroSection() {
           position: absolute;
           font-family: var(--font-jetbrains);
           color: var(--ink);
-          opacity: 0.06;
+          opacity: 0.14;
           font-weight: 400;
           letter-spacing: -0.01em;
           white-space: nowrap;
           user-select: none;
         }
         :global([data-theme="dark"]) .hero-code-words span {
-          opacity: 0.09;
+          opacity: 0.1;
         }
         /* Mobile: reduce count + opacity to keep clean */
         @media (max-width: 767px) {
           .hero-code-words span {
-            opacity: 0.04;
+            opacity: 0.1;
             font-size: 0.55rem !important;
           }
           .hero-code-words span:nth-child(n+9) {
