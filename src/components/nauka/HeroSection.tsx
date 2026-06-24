@@ -61,19 +61,29 @@ export function HeroSection() {
 
   return (
     <section ref={containerRef} className="hero-section">
-      {/* Background pattern: ink stains + scattered code fragments */}
-      <div className="hero-pattern" aria-hidden="true">
-        <div className="hero-ink-stains" />
-        <div className="hero-code-snippets">
-          <span style={{ top: '14%', left: '6%', fontSize: '0.78rem', transform: 'rotate(-3deg)' }}>function tellStory()</span>
-          <span style={{ top: '72%', left: '10%', fontSize: '0.7rem', transform: 'rotate(2deg)' }}>return system;</span>
-          <span style={{ top: '22%', right: '8%', fontSize: '0.8rem', transform: 'rotate(4deg)' }}>const architect = true</span>
-          <span style={{ top: '82%', right: '12%', fontSize: '0.65rem', transform: 'rotate(-2deg)' }}>await ship()</span>
-          <span style={{ top: '46%', left: '4%', fontSize: '0.62rem', transform: 'rotate(-1deg)' }}>// ink &amp; code</span>
-          <span style={{ top: '56%', right: '6%', fontSize: '0.72rem', transform: 'rotate(3deg)' }}>import {`{ story }`}</span>
-          <span style={{ top: '38%', right: '4%', fontSize: '0.58rem', transform: 'rotate(-4deg)' }}>type Identity = Architect</span>
-          <span style={{ top: '88%', left: '42%', fontSize: '0.6rem', transform: 'rotate(1deg)' }}>export default Abu</span>
-        </div>
+      {/* Background pattern: scattered code words, no glow/lighting */}
+      <div className="hero-code-words" aria-hidden="true">
+        <span style={{ top: '12%', left: '5%', fontSize: '0.78rem', transform: 'rotate(-3deg)' }}>function</span>
+        <span style={{ top: '20%', left: '15%', fontSize: '0.7rem', transform: 'rotate(2deg)' }}>tellStory</span>
+        <span style={{ top: '28%', left: '7%', fontSize: '0.65rem', transform: 'rotate(-1deg)' }}>return</span>
+        <span style={{ top: '68%', left: '8%', fontSize: '0.72rem', transform: 'rotate(1deg)' }}>system</span>
+        <span style={{ top: '76%', left: '18%', fontSize: '0.6rem', transform: 'rotate(-2deg)' }}>const</span>
+        <span style={{ top: '84%', left: '6%', fontSize: '0.68rem', transform: 'rotate(3deg)' }}>architect</span>
+        <span style={{ top: '40%', left: '4%', fontSize: '0.58rem', transform: 'rotate(-4deg)' }}>import</span>
+        <span style={{ top: '48%', left: '12%', fontSize: '0.62rem', transform: 'rotate(2deg)' }}>export</span>
+        <span style={{ top: '56%', left: '5%', fontSize: '0.55rem', transform: 'rotate(-2deg)' }}>await</span>
+        <span style={{ top: '88%', left: '32%', fontSize: '0.6rem', transform: 'rotate(1deg)' }}>default</span>
+
+        <span style={{ top: '14%', right: '6%', fontSize: '0.8rem', transform: 'rotate(4deg)' }}>system</span>
+        <span style={{ top: '22%', right: '14%', fontSize: '0.66rem', transform: 'rotate(-2deg)' }}>function</span>
+        <span style={{ top: '30%', right: '8%', fontSize: '0.72rem', transform: 'rotate(3deg)' }}>story</span>
+        <span style={{ top: '70%', right: '7%', fontSize: '0.6rem', transform: 'rotate(-3deg)' }}>return</span>
+        <span style={{ top: '78%', right: '16%', fontSize: '0.68rem', transform: 'rotate(1deg)' }}>const</span>
+        <span style={{ top: '86%', right: '8%', fontSize: '0.62rem', transform: 'rotate(-1deg)' }}>architect</span>
+        <span style={{ top: '42%', right: '4%', fontSize: '0.58rem', transform: 'rotate(4deg)' }}>import</span>
+        <span style={{ top: '50%', right: '10%', fontSize: '0.55rem', transform: 'rotate(-3deg)' }}>export</span>
+        <span style={{ top: '58%', right: '5%', fontSize: '0.65rem', transform: 'rotate(2deg)' }}>await</span>
+        <span style={{ top: '90%', right: '32%', fontSize: '0.6rem', transform: 'rotate(-1deg)' }}>default</span>
       </div>
 
       <div className="container-wide" style={{ position: 'relative', zIndex: 1 }}>
@@ -217,68 +227,35 @@ export function HeroSection() {
           .hero-section { padding: 130px 8vw 80px; }
         }
 
-        /* ━━ Background pattern: ink stains + code fragments ━━ */
-        .hero-pattern {
+        /* ━━ Background: scattered code words (no glow, no blobs) ━━ */
+        .hero-code-words {
           position: absolute;
           inset: 0;
           pointer-events: none;
           overflow: hidden;
           z-index: 0;
         }
-        .hero-ink-stains {
-          position: absolute;
-          inset: 0;
-          background:
-            /* Warm red ink stain — top left */
-            radial-gradient(ellipse 600px 400px at 12% 18%, var(--accent) 0%, transparent 65%),
-            /* Warm gray ink stain — bottom right */
-            radial-gradient(ellipse 700px 480px at 88% 82%, var(--ink-ghost) 0%, transparent 70%),
-            /* Ink color stain — center, very subtle */
-            radial-gradient(ellipse 800px 600px at 50% 50%, var(--ink) 0%, transparent 75%),
-            /* Accent stain — bottom left, smaller */
-            radial-gradient(ellipse 400px 300px at 8% 88%, var(--accent-soft) 0%, transparent 60%),
-            /* Warm gray stain — top right, smaller */
-            radial-gradient(ellipse 350px 280px at 92% 12%, var(--ink-faint) 0%, transparent 65%);
-          opacity: 0.08;
-          filter: blur(50px);
-          -webkit-filter: blur(50px);
-        }
-        @media (min-width: 768px) {
-          .hero-ink-stains { opacity: 0.1; }
-        }
-        :global([data-theme="dark"]) .hero-ink-stains {
-          opacity: 0.15;
-        }
-
-        .hero-code-snippets {
-          position: absolute;
-          inset: 0;
-        }
-        .hero-code-snippets span {
+        .hero-code-words span {
           position: absolute;
           font-family: var(--font-jetbrains);
           color: var(--ink);
-          opacity: 0.08;
+          opacity: 0.06;
           font-weight: 400;
           letter-spacing: -0.01em;
           white-space: nowrap;
           user-select: none;
-          transition: opacity 800ms ease;
         }
-        :global([data-theme="dark"]) .hero-code-snippets span {
-          opacity: 0.12;
-          color: var(--ink);
+        :global([data-theme="dark"]) .hero-code-words span {
+          opacity: 0.09;
         }
-        /* Mobile: hide some fragments to reduce clutter */
+        /* Mobile: reduce count + opacity to keep clean */
         @media (max-width: 767px) {
-          .hero-code-snippets span:nth-child(4),
-          .hero-code-snippets span:nth-child(7),
-          .hero-code-snippets span:nth-child(8) {
-            display: none;
+          .hero-code-words span {
+            opacity: 0.04;
+            font-size: 0.55rem !important;
           }
-          .hero-code-snippets span {
-            opacity: 0.06;
-            font-size: 0.6rem !important;
+          .hero-code-words span:nth-child(n+9) {
+            display: none;
           }
         }
 
