@@ -1,201 +1,314 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
+import Link from "next/link";
 
 /**
- * Footer — Abu Aufa Personal Portfolio v2 (Ink & Code concept)
- * Dark canvas, warm-toned. 4-column: brand + 3 nav.
+ * Footer — Nauka Motion Studio
+ *
+ * Brand: NAUKA MOTION (large wordmark)
+ * Sub: Independent Digital Product & Creative Technology Studio
+ *
+ * Columns:
+ *   - Studio (About, Process, Insights, Contact)
+ *   - Work (Selected Work, All Work, Case Studies)
+ *   - Connect (Email, WhatsApp, LinkedIn, Instagram)
+ *
+ * Bottom: © year, location, "Small movement. Real Impact."
  */
 
-const footerNavSections = [
-  {
-    title: '// Site',
-    links: [
-      { label: 'Pillars', href: '/#pillars' },
-      { label: 'Karya', href: '/#projects' },
-      { label: 'Proses', href: '/#process' },
-      { label: 'Kontak', href: '/#contact' },
-    ],
-  },
-  {
-    title: '// Studios',
-    links: [
-      { label: 'Nauka Motion', href: 'https://naukamotion.id' },
-      { label: 'Jejak Cahaya', href: 'https://jejakcahaya.vercel.app' },
-    ],
-  },
-  {
-    title: '// Lainnya',
-    links: [
-      { label: 'FAQ', href: '/faq' },
-      { label: 'Kebijakan Privasi', href: '/legal/privacy' },
-      { label: 'Syarat & Ketentuan', href: '/legal/terms' },
-    ],
-  },
+const studioLinks = [
+  { label: "About", href: "/#studio" },
+  { label: "Process", href: "/#process" },
+  { label: "Insights", href: "/#insights" },
+  { label: "Contact", href: "/#contact" },
+];
+
+const workLinks = [
+  { label: "Selected Work", href: "/#work" },
+  { label: "All Work", href: "/work" },
+  { label: "Jasa Proteksi", href: "/work/jasaprotect" },
+  { label: "Inventra ERP", href: "/work/inventra-erp" },
+  { label: "Anima Companion", href: "/work/anima-companion" },
+];
+
+const connectLinks = [
+  { label: "hello@naukamotion.id", href: "mailto:hello@naukamotion.id" },
+  { label: "WhatsApp", href: "https://wa.me/6281234567890" },
+  { label: "LinkedIn", href: "https://linkedin.com" },
+  { label: "Instagram", href: "https://instagram.com" },
 ];
 
 export function Footer() {
+  const year = new Date().getFullYear();
+
   return (
-    <footer className="footer-root">
-      <div className="container-wide">
-        {/* Top */}
-        <div className="footer-top">
-          {/* Brand */}
-          <div className="footer-brand">
-            <h3 className="footer-logo">
-              Abu Aufa
-              <span style={{ color: 'var(--accent-soft)' }}>.</span>
-            </h3>
-            <p className="footer-tagline">
-              Product Systems Architect &amp; Creative Director. Membangun sistem digital yang punya struktur kuat dan makna yang jelas.
-            </p>
-            <div className="footer-contact">
-              <a
-                href="https://wa.me/6289662524542"
-                target="_blank"
-                rel="noopener noreferrer"
+    <footer
+      style={{
+        background: "var(--paper-warm)",
+        borderTop: "1px solid var(--line)",
+        marginTop: "auto",
+      }}
+    >
+      <div className="container-wide" style={{ paddingTop: "80px", paddingBottom: "40px" }}>
+        {/* Top: brand + columns */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1.4fr) repeat(3, minmax(0, 1fr))",
+            gap: "60px",
+          }}
+          className="nmp-footer-grid"
+        >
+          {/* Brand column */}
+          <div>
+            <Link
+              href="/"
+              aria-label="Nauka Motion — home"
+              style={{
+                display: "inline-flex",
+                alignItems: "baseline",
+                gap: "8px",
+                textDecoration: "none",
+                color: "var(--ink)",
+                marginBottom: "20px",
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "var(--font-body), sans-serif",
+                  fontWeight: 600,
+                  fontSize: "1.5rem",
+                  letterSpacing: "0.01em",
+                }}
               >
-                WhatsApp · 0896 6252 4542
-              </a>
-              <a href="mailto:naukamotion@gmail.com">
-                naukamotion@gmail.com
-              </a>
-            </div>
+                NAUKA
+              </span>
+              <span
+                style={{
+                  fontFamily: "var(--font-fraunces), serif",
+                  fontStyle: "italic",
+                  fontWeight: 400,
+                  fontSize: "1.5rem",
+                  color: "var(--burnt)",
+                }}
+              >
+                motion
+              </span>
+            </Link>
+            <p
+              style={{
+                fontFamily: "var(--font-body), sans-serif",
+                fontSize: "0.92rem",
+                color: "var(--ink-soft)",
+                lineHeight: 1.55,
+                maxWidth: "32ch",
+                marginBottom: "24px",
+              }}
+            >
+              Independent Digital Product &amp; Creative Technology Studio.
+              We design and build digital products that move businesses forward.
+            </p>
+            <p
+              style={{
+                fontFamily: "var(--font-fraunces), serif",
+                fontStyle: "italic",
+                fontSize: "1.05rem",
+                color: "var(--ink)",
+              }}
+            >
+              Small movement. Real Impact.
+            </p>
           </div>
 
-          {/* Nav columns */}
-          <div className="footer-nav-grid">
-            {footerNavSections.map((section) => (
-              <div key={section.title} className="footer-col">
-                <h4 className="footer-col-title">{section.title}</h4>
-                <ul className="footer-col-list">
-                  {section.links.map((link) => (
-                    <li key={link.label}>
-                      <Link href={link.href} className="footer-col-link">
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+          {/* Studio column */}
+          <div>
+            <p className="studio-meta" style={{ marginBottom: "20px" }}>
+              Studio
+            </p>
+            <ul
+              style={{
+                listStyle: "none",
+                padding: 0,
+                margin: 0,
+                display: "flex",
+                flexDirection: "column",
+                gap: "12px",
+              }}
+            >
+              {studioLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    style={{
+                      fontFamily: "var(--font-body), sans-serif",
+                      fontSize: "0.92rem",
+                      color: "var(--ink-soft)",
+                      textDecoration: "none",
+                      transition: "color 0.2s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = "var(--burnt)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = "var(--ink-soft)";
+                    }}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Work column */}
+          <div>
+            <p className="studio-meta" style={{ marginBottom: "20px" }}>
+              Work
+            </p>
+            <ul
+              style={{
+                listStyle: "none",
+                padding: 0,
+                margin: 0,
+                display: "flex",
+                flexDirection: "column",
+                gap: "12px",
+              }}
+            >
+              {workLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    style={{
+                      fontFamily: "var(--font-body), sans-serif",
+                      fontSize: "0.92rem",
+                      color: "var(--ink-soft)",
+                      textDecoration: "none",
+                      transition: "color 0.2s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = "var(--burnt)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = "var(--ink-soft)";
+                    }}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Connect column */}
+          <div>
+            <p className="studio-meta" style={{ marginBottom: "20px" }}>
+              Connect
+            </p>
+            <ul
+              style={{
+                listStyle: "none",
+                padding: 0,
+                margin: 0,
+                display: "flex",
+                flexDirection: "column",
+                gap: "12px",
+              }}
+            >
+              {connectLinks.map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    target={link.href.startsWith("http") ? "_blank" : undefined}
+                    rel={
+                      link.href.startsWith("http")
+                        ? "noopener noreferrer"
+                        : undefined
+                    }
+                    style={{
+                      fontFamily: "var(--font-body), sans-serif",
+                      fontSize: "0.92rem",
+                      color: "var(--ink-soft)",
+                      textDecoration: "none",
+                      transition: "color 0.2s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = "var(--burnt)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = "var(--ink-soft)";
+                    }}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 
-        {/* Bottom */}
-        <div className="footer-bottom">
-          <span>© 2026 Abu Aufa. Dibangun dengan Next.js dari Jakarta.</span>
-          <div className="footer-bottom-links">
-            <Link href="/legal/privacy" className="footer-bottom-link">Privasi</Link>
-            <Link href="/legal/terms" className="footer-bottom-link">Syarat</Link>
-          </div>
+        {/* Divider */}
+        <div
+          style={{
+            height: "1px",
+            background: "var(--line)",
+            margin: "60px 0 28px",
+          }}
+        />
+
+        {/* Bottom: meta row */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "16px",
+          }}
+        >
+          <p
+            className="studio-meta"
+            style={{ margin: 0 }}
+          >
+            © {year} Nauka Motion — Jakarta, ID
+          </p>
+          <p
+            className="studio-meta"
+            style={{ margin: 0, display: "flex", gap: "20px" }}
+          >
+            <Link
+              href="/legal/privacy"
+              style={{
+                color: "var(--ink-soft)",
+                textDecoration: "none",
+              }}
+            >
+              Privacy
+            </Link>
+            <Link
+              href="/legal/terms"
+              style={{
+                color: "var(--ink-soft)",
+                textDecoration: "none",
+              }}
+            >
+              Terms
+            </Link>
+          </p>
         </div>
       </div>
 
       <style jsx>{`
-        .footer-root {
-          background: #1A1A1A;
-          color: #B5B0A8;
-          padding: 80px 0 40px;
-        }
-        .footer-top {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 48px;
-          padding-bottom: 64px;
-          border-bottom: 1px solid #2D2925;
-          margin-bottom: 32px;
-        }
-        .footer-brand { max-width: 360px; }
-        .footer-logo {
-          font-family: var(--font-fraunces), serif;
-          font-weight: 500;
-          font-size: 1.625rem;
-          color: #F0EDE7;
-          margin: 0 0 16px;
-          letter-spacing: -0.025em;
-          font-variation-settings: 'opsz' 40, 'wght' 500, 'SOFT' 60;
-        }
-        .footer-tagline {
-          font-size: 0.9375rem;
-          line-height: 1.6;
-          color: #8A857B;
-          margin: 0 0 24px;
-          letter-spacing: -0.005em;
-        }
-        .footer-contact {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-          font-size: 0.875rem;
-        }
-        .footer-contact a {
-          color: #B5B0A8;
-          transition: color 250ms var(--ease-out);
-          letter-spacing: -0.005em;
-        }
-        .footer-contact a:hover { color: #C75050; }
-        .footer-nav-grid {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 32px;
-        }
-        .footer-col-title {
-          font-family: var(--font-jetbrains);
-          font-size: 0.6875rem;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          font-weight: 500;
-          color: #6B6660;
-          margin: 0 0 20px;
-        }
-        .footer-col-list {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-        }
-        .footer-col-link {
-          font-size: 0.875rem;
-          color: #B5B0A8;
-          transition: color 250ms var(--ease-out);
-          letter-spacing: -0.005em;
-        }
-        .footer-col-link:hover { color: #F0EDE7; }
-        .footer-bottom {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          gap: 16px;
-          flex-wrap: wrap;
-          font-size: 0.75rem;
-          color: #6B6660;
-          letter-spacing: -0.005em;
-        }
-        .footer-bottom-links {
-          display: flex;
-          gap: 20px;
-        }
-        .footer-bottom-link {
-          color: #6B6660;
-          transition: color 250ms var(--ease-out);
-        }
-        .footer-bottom-link:hover { color: #B5B0A8; }
-
-        @media (min-width: 900px) {
-          .footer-top {
-            grid-template-columns: 2fr 3fr;
-            gap: 56px;
-          }
-          .footer-nav-grid {
-            grid-template-columns: repeat(3, 1fr);
-            gap: 32px;
+        @media (max-width: 768px) {
+          :global(.nmp-footer-grid) {
+            grid-template-columns: minmax(0, 1fr) !important;
+            gap: 40px !important;
           }
         }
-        @media (max-width: 480px) {
-          .footer-nav-grid { grid-template-columns: 1fr; }
+        @media (min-width: 769px) and (max-width: 1024px) {
+          :global(.nmp-footer-grid) {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+          }
         }
       `}</style>
     </footer>

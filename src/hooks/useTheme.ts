@@ -1,50 +1,41 @@
-'use client';
+"use client";
 
-import { useEffect, useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from "react";
 
-type Theme = 'light' | 'dark';
+type Theme = "light" | "dark";
 
 /**
- * useTheme — manages light/dark theme via data-theme attribute on <html>.
- * Persists choice to localStorage. Falls back gracefully in sandboxed envs
- * where localStorage may throw.
+ * useTheme — class-based theme toggle.
+ * Stores preference in localStorage under `nauka-theme`.
+ * Falls back to system preference on first visit.
  */
 export function useTheme() {
-  const [theme, setTheme] = useState<Theme>('light');
+  const [theme, setTheme] = useState<Theme>("light");
   const [mounted, setMounted] = useState(false);
 
-  // Initialize from localStorage / system preference on mount
   useEffect(() => {
     setMounted(true);
     try {
-      const stored = localStorage.getItem('nauka-theme') as Theme | null;
-      if (stored === 'dark' || stored === 'light') {
-        setTheme(stored);
-        if (stored === 'dark') {
-          document.documentElement.setAttribute('data-theme', 'dark');
-        }
-      } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        setTheme('dark');
-        document.documentElement.setAttribute('data-theme', 'dark');
-      }
-    } catch {
-      // localStorage not available — stay on light
+      const stored = localStorage.getItem("nauka-theme") as Theme | null;
+      const prefersDark =
+        window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const initial: Theme = stored ?? (prefersDark ? "dark" : "light");
+      setTheme(initial);
+      document.documentElement.classList.toggle("dark", initial === "dark");
+    } catch (e) {
+      // localStorage unavailable — default to light
     }
   }, []);
 
   const toggle = useCallback(() => {
-    setTheme((prev) => {
-      const next: Theme = prev === 'dark' ? 'light' : 'dark';
+    setTheme((current) => {
+      const next: Theme = current === "dark" ? "light" : "dark";
       try {
-        if (next === 'dark') {
-          document.documentElement.setAttribute('data-theme', 'dark');
-          localStorage.setItem('nauka-theme', 'dark');
-        } else {
-          document.documentElement.removeAttribute('data-theme');
-          localStorage.setItem('nauka-theme', 'light');
-        }
-      } catch {
-        // ignore localStorage errors
+        localStorage.setItem("nauka-theme", next);
+        document.documentElement.classList.toggle("dark", next === "dark");
+      } catch (e) {
+        /* ignore */
       }
       return next;
     });

@@ -1,13 +1,20 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono, Fraunces } from "next/font/google";
+import { Instrument_Sans, Fraunces, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 
-/* ━━ Font Pairing Strategy (v2 — Ink & Code concept) ━━
- * Fraunces (variable, opsz + SOFT axis) — display & headings
- * Inter — body text
- * JetBrains Mono — code blocks, technical labels, numerals
+/* ━━ Nauka Motion — Studio Typography ━━
+ * Instrument Sans  — body & interface
+ * Fraunces         — editorial display (variable: opsz + SOFT)
+ * JetBrains Mono   — technical labels, code, indices
  */
+
+const instrumentSans = Instrument_Sans({
+  variable: "--font-body",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -17,35 +24,78 @@ const fraunces = Fraunces({
   axes: ["opsz", "SOFT"],
 });
 
-const bodyFont = Inter({
-  variable: "--font-body",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["300", "400", "500", "600", "700"],
-});
-
-const monoFont = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
   display: "swap",
   weight: ["400", "500", "600"],
 });
 
+const SITE_URL = "https://motion.nauka.id";
+
 export const metadata: Metadata = {
-  title: "Abu Aufa — Product Systems Architect & Creative Director",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Nauka Motion — Independent Digital Product Studio",
+    template: "%s — Nauka Motion",
+  },
   description:
-    "Saya membangun sistem digital yang punya struktur kuat dan makna yang jelas — dari narasi sejarah hingga platform enterprise.",
+    "We design and build digital products that move businesses forward. From business platforms and e-commerce to digital identity and storytelling — Nauka Motion unifies strategy, design, and technology into experiences that work.",
+  keywords: [
+    "Nauka Motion",
+    "digital product studio",
+    "product strategy",
+    "experience design",
+    "platform engineering",
+    "brand experience",
+    "creative technology",
+    "Indonesia studio",
+    "Jakarta",
+  ],
+  authors: [{ name: "Nauka Motion", url: SITE_URL }],
+  creator: "Nauka Motion",
+  publisher: "Nauka Motion",
+  applicationName: "Nauka Motion",
+  icons: {
+    icon: "/logo.svg",
+  },
+  openGraph: {
+    title: "Nauka Motion — Independent Digital Product Studio",
+    description:
+      "We design and build digital products that move businesses forward. Strategy, design, and technology unified into experiences that work.",
+    url: SITE_URL,
+    siteName: "Nauka Motion",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Nauka Motion — Independent Digital Product Studio",
+    description:
+      "We design and build digital products that move businesses forward.",
+  },
+  alternates: {
+    canonical: SITE_URL,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#FAFAF8" },
-    { media: "(prefers-color-scheme: dark)", color: "#14110F" },
+    { media: "(prefers-color-scheme: light)", color: "#F3F0E9" },
+    { media: "(prefers-color-scheme: dark)", color: "#0E0D0C" },
   ],
 };
 
@@ -54,17 +104,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const setJsClass = `document.documentElement.classList.add('js');`;
-  const applyTheme = `try{var t=localStorage.getItem('nauka-theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.setAttribute('data-theme','dark');}}catch(e){}`;
-  const globalFallback = `setTimeout(function(){try{document.querySelectorAll('.fade-up:not(.is-visible), .stagger:not(.is-visible), .line-mask:not(.is-visible)').forEach(function(el){el.classList.add('is-visible');});document.querySelectorAll('h1:not(.is-visible), h2:not(.is-visible), h3:not(.is-visible), blockquote:not(.is-visible)').forEach(function(el){if(el.querySelector('.line-mask')){el.classList.add('is-visible');}});}catch(e){}},2500);`;
+  // Inline theme bootstrap — prevents flash, respects stored preference
+  const themeBootstrap = `try{var t=localStorage.getItem('nauka-theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark');}}catch(e){}`;
 
   return (
-    <html lang="id" suppressHydrationWarning>
-      <head />
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
+      </head>
       <body
-        className={`${fraunces.variable} ${bodyFont.variable} ${monoFont.variable} antialiased bg-background text-foreground`}
+        className={`${instrumentSans.variable} ${fraunces.variable} ${jetbrainsMono.variable} antialiased bg-background text-foreground`}
       >
-        <script dangerouslySetInnerHTML={{ __html: setJsClass + applyTheme + globalFallback }} />
         {children}
         <Toaster />
       </body>

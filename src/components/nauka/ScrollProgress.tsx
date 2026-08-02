@@ -1,30 +1,52 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 /**
- * ScrollProgress — thin top progress bar showing scroll position.
- * Uses transform: scaleX() for GPU-accelerated performance.
+ * ScrollProgress — thin top-of-page progress bar.
+ * Uses burnt orange accent. Width tracks scroll percentage.
  */
 export function ScrollProgress() {
-  const [ratio, setRatio] = useState(0);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const update = () => {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      const r = max > 0 ? window.scrollY / max : 0;
-      setRatio(r);
+    const onScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      setProgress(Math.min(100, Math.max(0, pct)));
     };
-    update();
-    window.addEventListener('scroll', update, { passive: true });
-    return () => window.removeEventListener('scroll', update);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, []);
 
   return (
-    <div className="scroll-progress" aria-hidden="true">
+    <div
+      aria-hidden="true"
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        height: "2px",
+        background: "transparent",
+        zIndex: 100,
+        pointerEvents: "none",
+      }}
+    >
       <div
-        className="scroll-progress-fill"
-        style={{ transform: `scaleX(${ratio})` }}
+        style={{
+          height: "100%",
+          width: `${progress}%`,
+          background: "var(--burnt)",
+          transition: "width 80ms linear",
+        }}
       />
     </div>
   );

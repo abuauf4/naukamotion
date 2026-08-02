@@ -1,35 +1,56 @@
-import { Header } from '@/components/nauka/Header';
-import { HeroSection } from '@/components/nauka/HeroSection';
-import { CapabilityPillarsSection } from '@/components/nauka/CapabilityPillarsSection';
-import { FeaturedProjectsSection } from '@/components/nauka/FeaturedProjectsSection';
-import { ProcessSection } from '@/components/nauka/ProcessSection';
-import { CTASection } from '@/components/nauka/CTASection';
-import { Footer } from '@/components/nauka/Footer';
-import { ScrollProgress } from '@/components/nauka/ScrollProgress';
+import { Header } from "@/components/nauka/Header";
+import { HeroSection } from "@/components/nauka/HeroSection";
+import { SelectedWorkSection } from "@/components/nauka/SelectedWorkSection";
+import { StudioManifestSection } from "@/components/nauka/StudioManifestSection";
+import { CapabilitiesSection } from "@/components/nauka/CapabilitiesSection";
+import { ServicesSection } from "@/components/nauka/ServicesSection";
+import { ProcessSection } from "@/components/nauka/ProcessSection";
+import { InsightsSection } from "@/components/nauka/InsightsSection";
+import { FounderSection } from "@/components/nauka/FounderSection";
+import { ContactCTASection } from "@/components/nauka/ContactCTASection";
+import { Footer } from "@/components/nauka/Footer";
+import { ScrollProgress } from "@/components/nauka/ScrollProgress";
 
 /**
- * Abu Aufa — Personal Portfolio v2 (Ink & Code concept)
+ * Nauka Motion — Independent Digital Product & Creative Technology Studio
  *
- * Section flow:
- *   Hero (morph ink→code animation)
- *   → Capability Pillars (5 strength categories)
- *   → Featured Work (11 projects grouped by industry)
- *   → Process (5-step workflow)
- *   → Contact CTA
+ * Homepage section flow (per brand brief):
+ *   Navbar
+ *   → Hero + Studio Reel
+ *   → Selected Work (6 large case study rows)
+ *   → Studio Statement (manifesto + motion principle)
+ *   → Capabilities (proof strip + domains marquee)
+ *   → Services (5 horizontal accordion modules)
+ *   → Process (Discover → Define → Design → Develop → Evolve)
+ *   → Insights (journal preview)
+ *   → Founder / Studio
+ *   → Start a Project CTA
+ *   → Footer
  */
 
 export default function HomePage() {
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        background: "var(--bg)",
+      }}
+    >
       <ScrollProgress />
       <Header />
 
-      <main style={{ flex: 1 }}>
+      <main style={{ flex: 1, paddingTop: "0" }}>
         <HeroSection />
-        <CapabilityPillarsSection />
-        <FeaturedProjectsSection />
+        <SelectedWorkSection />
+        <StudioManifestSection />
+        <CapabilitiesSection />
+        <ServicesSection />
         <ProcessSection />
-        <CTASection />
+        <InsightsSection />
+        <FounderSection />
+        <ContactCTASection />
       </main>
 
       <Footer />
