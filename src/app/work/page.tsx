@@ -96,24 +96,6 @@ export default function AllWorkPage() {
                 <Link
                   key={project.slug}
                   href={`/work/${project.slug}`}
-                  style={{
-                    textDecoration: "none",
-                    color: "inherit",
-                    display: "grid",
-                    gridTemplateColumns:
-                      "minmax(60px, 80px) minmax(0, 2fr) minmax(0, 3fr) minmax(0, 2fr) 80px",
-                    gap: "24px",
-                    alignItems: "center",
-                    padding: "32px 0",
-                    borderBottom: "1px solid var(--line)",
-                    transition: "background 0.2s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "var(--paper-warm)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "transparent";
-                  }}
                   className="nmp-work-row"
                 >
                   <span className="nmp-index">{project.index}</span>
@@ -264,6 +246,27 @@ export default function AllWorkPage() {
       <Footer />
 
       <style>{`
+        .nmp-work-row {
+          text-decoration: none;
+          color: inherit;
+          display: grid;
+          grid-template-columns: minmax(60px, 80px) minmax(0, 2fr) minmax(0, 3fr) minmax(0, 2fr) 80px;
+          gap: 24px;
+          align-items: center;
+          padding: 32px 0;
+          border-bottom: 1px solid var(--line);
+          transition: background 0.2s ease;
+        }
+        .nmp-work-row:hover {
+          background: var(--paper-warm);
+        }
+        .nmp-work-row:hover .nmp-work-arrow {
+          color: var(--burnt);
+          transform: translateX(2px);
+        }
+        .nmp-work-arrow {
+          transition: transform 0.25s ease, color 0.25s ease;
+        }
         @media (max-width: 1024px) {
           .nmp-work-row {
             grid-template-columns: 60px minmax(0, 1fr) 40px !important;
