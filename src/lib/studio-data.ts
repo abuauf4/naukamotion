@@ -196,15 +196,54 @@ export const studioProjects: StudioProject[] = [
     caseStudy: {
       sections: [
         {
-          heading: { id: "Konteks", en: "Context" },
+          heading: { id: "Awal Kebutuhan", en: "How It Started" },
           body: [
             {
-              id: "Geely BSD adalah salah satu sales mobil Geely yang menggunakan website sebagai salah satu media pemasaran digital. Website ini bukan website resmi dealer — melainkan landing page yang dibuat untuk membantu sales menjangkau calon customer secara online, di luar jam kerja dan di luar showroom fisik.",
-              en: "Geely BSD is a car salesperson using a website as one of their digital marketing channels. This is not an official dealer website — it's a landing page built to help sales reach prospective customers online, outside working hours and beyond the physical showroom.",
+              id: "Seorang sales Geely di area BSD membutuhkan media digital sendiri untuk mendukung aktivitas pemasarannya. Informasi mengenai model kendaraan, harga, promo, dan penawaran sebelumnya banyak bergantung pada komunikasi langsung melalui chat atau media sosial. Cara tersebut tetap menjadi bagian penting dari proses penjualan, tetapi membuat informasi yang sama harus disampaikan berulang kali kepada calon customer.",
+              en: "A Geely salesperson in the BSD area needed their own digital medium to support their marketing activities. Information about vehicle models, pricing, promotions, and offers previously relied heavily on direct communication through chat or social media. That approach remains an important part of the sales process, but it required the same information to be repeated to prospective customers over and over.",
             },
             {
-              id: "Pola yang sama berlaku untuk semua project di kategori Automotive. Sales mobil membutuhkan kehadiran digital yang dapat bekerja tanpa mereka — menampilkan apa yang mereka tawarkan, menjawab pertanyaan dasar, dan mengarahkan calon customer untuk menghubungi mereka ketika siap.",
-              en: "The same pattern applies to all projects in the Automotive category. Car salespeople need a digital presence that can work without them — displaying what they offer, answering basic questions, and directing prospective customers to contact them when ready.",
+              id: "Dari kebutuhan tersebut, kami mulai membangun Geely BSD sebagai pusat informasi sekaligus media pemasaran digital milik sales.",
+              en: "From that need, we began building Geely BSD as an information hub and a digital marketing medium owned by the salesperson.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Masalah yang Ingin Diselesaikan", en: "The Problem to Solve" },
+          body: [
+            {
+              id: "Website ini tidak dibuat untuk menggantikan komunikasi antara sales dan calon customer. Justru tujuannya adalah membuat komunikasi tersebut lebih efisien.",
+              en: "This website was not built to replace communication between the salesperson and prospective customers. The goal was to make that communication more efficient.",
+            },
+            {
+              id: "Sebelum menghubungi sales, calon customer sudah dapat melihat kendaraan yang tersedia, mengetahui kisaran harga, membaca informasi produk, melihat promo, dan memahami pilihan yang ditawarkan. Dengan begitu, ketika percakapan melalui WhatsApp dimulai, calon customer sudah memiliki konteks mengenai kendaraan yang diminati.",
+              en: "Before contacting the salesperson, a prospective customer can already see available vehicles, understand the price range, read product information, view promotions, and understand the options offered. That way, when the WhatsApp conversation begins, the prospective customer already has context about the vehicle they're interested in.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Tantangan", en: "The Challenge" },
+          body: [
+            {
+              id: "Tantangannya adalah membuat website yang cukup lengkap untuk memberikan informasi, tetapi tetap sederhana karena tujuan akhirnya bukan membuat portal otomotif yang kompleks. Website harus tetap berfokus pada satu hal: membantu sales memasarkan kendaraan dan membawa calon customer menuju percakapan langsung.",
+              en: "The challenge was to build a website complete enough to provide information, yet simple enough because the end goal was not to build a complex automotive portal. The website had to stay focused on one thing: helping the salesperson market vehicles and bring prospective customers into direct conversation.",
+            },
+            {
+              id: "Karena itu struktur informasi, navigasi, detail kendaraan, hingga CTA harus dibuat sesingkat mungkin tanpa menghilangkan informasi yang dibutuhkan calon pembeli.",
+              en: "Therefore the information structure, navigation, vehicle details, and CTAs had to be kept as concise as possible without removing information that prospective buyers need.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Pendekatan yang Kami Ambil", en: "The Approach We Took" },
+          body: [
+            {
+              id: "Kami menyusun pengalaman website mengikuti perjalanan sederhana calon pembeli: menemukan kendaraan → melihat pilihan model → memahami harga dan informasi unit → melihat promo → menghubungi sales.",
+              en: "We structured the website experience following a simple buyer journey: find a vehicle → view model options → understand pricing and unit information → view promotions → contact the salesperson.",
+            },
+            {
+              id: "Informasi penting ditempatkan sebelum CTA sehingga WhatsApp bukan sekadar tombol yang muncul di mana-mana, tetapi menjadi langkah berikutnya setelah pengguna memahami produk yang ditawarkan.",
+              en: "Important information was placed before the CTA so that WhatsApp is not just a button appearing everywhere, but the next step after the user understands the product being offered.",
             },
           ],
         },
@@ -212,12 +251,29 @@ export const studioProjects: StudioProject[] = [
           heading: { id: "Yang Dibangun", en: "What Was Built" },
           body: [
             {
-              id: "Website menampilkan model kendaraan Geely yang tersedia, lengkap dengan harga, promo, dan informasi produk. Setiap halaman unit dirancang untuk membantu calon customer memahami opsi yang ada tanpa harus bertanya satu per satu kepada sales.",
-              en: "The website displays available Geely vehicle models, complete with pricing, promotions, and product information. Each unit page is designed to help prospective customers understand available options without having to ask sales one by one.",
+              id: "Dari alur tersebut kami membangun website pemasaran Geely BSD yang terdiri dari katalog kendaraan, halaman detail setiap model, informasi harga dan promo, serta jalur inquiry langsung menuju sales. Penekanan utama ada pada katalog model dan kelengkapan informasi produk — calon customer dapat mempelajari setiap model Geely secara mendalam sebelum memutuskan untuk menghubungi sales.",
+              en: "From that flow we built the Geely BSD marketing website, consisting of a vehicle catalog, detail pages for each model, pricing and promotion information, and a direct inquiry path to the salesperson. The main emphasis is on the model catalog and the completeness of product information — prospective customers can study each Geely model in depth before deciding to contact the salesperson.",
             },
             {
-              id: "Ketika calon customer sudah melihat informasi yang dibutuhkan dan tertarik melanjutkan, website mengarahkan mereka langsung ke sales melalui jalur WhatsApp yang terintegrasi. Tidak ada form panjang yang harus diisi, tidak ada proses yang memperlambat — cukup satu klik dan mereka terhubung dengan sales.",
-              en: "When a prospective customer has seen the information they need and is interested in proceeding, the website directs them straight to sales through an integrated WhatsApp channel. No long forms to fill out, no process that slows things down — just one click and they're connected with sales.",
+              id: "Setiap halaman kendaraan dibuat agar dapat berdiri sebagai sumber informasi tersendiri. Calon customer yang menemukan satu model tertentu dari pencarian atau link yang dibagikan tidak harus kembali ke homepage untuk memahami produk tersebut.",
+              en: "Each vehicle page was built to stand as its own information source. A prospective customer who finds a specific model from search or a shared link doesn't need to return to the homepage to understand that product.",
+            },
+            {
+              id: "Ketika tertarik melanjutkan, pengguna dapat langsung menghubungi sales melalui WhatsApp dari halaman kendaraan yang sedang mereka lihat.",
+              en: "When interested in proceeding, the user can directly contact the salesperson via WhatsApp from the vehicle page they're currently viewing.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Dari Landing Page Menjadi Aset Pemasaran", en: "From Landing Page to Marketing Asset" },
+          body: [
+            {
+              id: "Hasil akhirnya bukan website resmi dealer dan bukan pula marketplace kendaraan. Geely BSD dibuat sebagai aset pemasaran digital milik sales — sebuah tempat yang dapat terus menampilkan produk, harga, promo, dan informasi kendaraan ketika sales sedang tidak berada di showroom atau belum sempat membalas pesan.",
+              en: "The end result is not an official dealer website and not a vehicle marketplace. Geely BSD was built as a digital marketing asset owned by the salesperson — a place that can continuously display products, pricing, promotions, and vehicle information when the salesperson is not at the showroom or hasn't yet replied to a message.",
+            },
+            {
+              id: "Website menjadi penghubung antara aktivitas pemasaran seperti pencarian Google, iklan, media sosial, atau link yang dibagikan dengan percakapan langsung bersama sales.",
+              en: "The website becomes a bridge between marketing activities like Google search, ads, social media, or shared links and the direct conversation with the salesperson.",
             },
           ],
         },
@@ -252,11 +308,50 @@ export const studioProjects: StudioProject[] = [
     caseStudy: {
       sections: [
         {
-          heading: { id: "Konteks", en: "Context" },
+          heading: { id: "Awal Kebutuhan", en: "How It Started" },
           body: [
             {
-              id: "Suzuki Jakarta Barat adalah sales mobil Suzuki yang menggunakan website sebagai salah satu media pemasaran digital. Sama seperti project otomotif lainnya, website ini bukan website resmi dealer — melainkan landing page untuk membantu sales menjangkau calon customer secara online.",
-              en: "Suzuki Jakarta Barat is a Suzuki car salesperson using a website as one of their digital marketing channels. Like other automotive projects, this is not an official dealer website — it's a landing page to help sales reach prospective customers online.",
+              id: "Seorang sales Suzuki di area Jakarta Barat membutuhkan media digital sendiri untuk mendukung aktivitas pemasarannya. Informasi mengenai model kendaraan, harga, promo, dan penawaran sebelumnya banyak bergantung pada komunikasi langsung melalui chat atau media sosial. Cara tersebut tetap menjadi bagian penting dari proses penjualan, tetapi membuat informasi yang sama harus disampaikan berulang kali kepada calon customer.",
+              en: "A Suzuki salesperson in the West Jakarta area needed their own digital medium to support their marketing activities. Information about vehicle models, pricing, promotions, and offers previously relied heavily on direct communication through chat or social media. That approach remains an important part of the sales process, but it required the same information to be repeated to prospective customers over and over.",
+            },
+            {
+              id: "Dari kebutuhan tersebut, kami mulai membangun Suzuki Jakarta Barat sebagai pusat informasi sekaligus media pemasaran digital milik sales.",
+              en: "From that need, we began building Suzuki Jakarta Barat as an information hub and a digital marketing medium owned by the salesperson.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Masalah yang Ingin Diselesaikan", en: "The Problem to Solve" },
+          body: [
+            {
+              id: "Website ini tidak dibuat untuk menggantikan komunikasi antara sales dan calon customer. Justru tujuannya adalah membuat komunikasi tersebut lebih efisien.",
+              en: "This website was not built to replace communication between the salesperson and prospective customers. The goal was to make that communication more efficient.",
+            },
+            {
+              id: "Sebelum menghubungi sales, calon customer sudah dapat melihat kendaraan yang tersedia, mengetahui kisaran harga, membaca informasi produk, melihat promo, dan memahami pilihan yang ditawarkan. Dengan begitu, ketika percakapan melalui WhatsApp dimulai, calon customer sudah memiliki konteks mengenai kendaraan yang diminati.",
+              en: "Before contacting the salesperson, a prospective customer can already see available vehicles, understand the price range, read product information, view promotions, and understand the options offered. That way, when the WhatsApp conversation begins, the prospective customer already has context about the vehicle they're interested in.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Tantangan", en: "The Challenge" },
+          body: [
+            {
+              id: "Tantangannya adalah membuat website yang cukup lengkap untuk memberikan informasi, tetapi tetap sederhana karena tujuan akhirnya bukan membuat portal otomotif yang kompleks. Website harus tetap berfokus pada satu hal: membantu sales memasarkan kendaraan dan membawa calon customer menuju percakapan langsung.",
+              en: "The challenge was to build a website complete enough to provide information, yet simple enough because the end goal was not to build a complex automotive portal. The website had to stay focused on one thing: helping the salesperson market vehicles and bring prospective customers into direct conversation.",
+            },
+            {
+              id: "Karena itu struktur informasi, navigasi, detail kendaraan, hingga CTA harus dibuat sesingkat mungkin tanpa menghilangkan informasi yang dibutuhkan calon pembeli.",
+              en: "Therefore the information structure, navigation, vehicle details, and CTAs had to be kept as concise as possible without removing information that prospective buyers need.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Pendekatan yang Kami Ambil", en: "The Approach We Took" },
+          body: [
+            {
+              id: "Kami menyusun pengalaman website mengikuti perjalanan sederhana calon pembeli: menemukan kendaraan → melihat pilihan model → memahami harga dan informasi unit → melihat promo → menghubungi sales. Informasi penting ditempatkan sebelum CTA sehingga WhatsApp bukan sekadar tombol yang muncul di mana-mana, tetapi menjadi langkah berikutnya setelah pengguna memahami produk yang ditawarkan.",
+              en: "We structured the website experience following a simple buyer journey: find a vehicle → view model options → understand pricing and unit information → view promotions → contact the salesperson. Important information was placed before the CTA so that WhatsApp is not just a button appearing everywhere, but the next step after the user understands the product being offered.",
             },
           ],
         },
@@ -264,8 +359,25 @@ export const studioProjects: StudioProject[] = [
           heading: { id: "Yang Dibangun", en: "What Was Built" },
           body: [
             {
-              id: "Website menampilkan model kendaraan Suzuki, harga, promo, dan informasi produk. Calon customer dapat melihat katalog unit, memahami pilihan yang tersedia, dan ketika siap melanjutkan, langsung terhubung dengan sales melalui WhatsApp.",
-              en: "The website displays Suzuki vehicle models, pricing, promotions, and product information. Prospective customers can view the unit catalog, understand available choices, and when ready to proceed, directly connect with sales through WhatsApp.",
+              id: "Dari alur tersebut kami membangun website pemasaran Suzuki Jakarta Barat yang terdiri dari katalog kendaraan, halaman detail setiap model, informasi harga dan promo, serta jalur inquiry langsung menuju sales. Penekanan utama ada pada alur produk → promo → WhatsApp yang jelas dan mudah diikuti — calon customer dapat berpindah dari melihat model, memahami promo yang berlaku, hingga menghubungi sales dalam alur yang langsung.",
+              en: "From that flow we built the Suzuki Jakarta Barat marketing website, consisting of a vehicle catalog, detail pages for each model, pricing and promotion information, and a direct inquiry path to the salesperson. The main emphasis is on a clear product → promotion → WhatsApp flow that's easy to follow — prospective customers can move from viewing a model, understanding the active promotion, to contacting the salesperson in a direct flow.",
+            },
+            {
+              id: "Setiap halaman kendaraan dibuat agar dapat berdiri sebagai sumber informasi tersendiri. Calon customer yang menemukan satu model tertentu dari pencarian atau link yang dibagikan tidak harus kembali ke homepage untuk memahami produk tersebut. Ketika tertarik melanjutkan, pengguna dapat langsung menghubungi sales melalui WhatsApp dari halaman kendaraan yang sedang mereka lihat.",
+              en: "Each vehicle page was built to stand as its own information source. A prospective customer who finds a specific model from search or a shared link doesn't need to return to the homepage to understand that product. When interested in proceeding, the user can directly contact the salesperson via WhatsApp from the vehicle page they're currently viewing.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Dari Landing Page Menjadi Aset Pemasaran", en: "From Landing Page to Marketing Asset" },
+          body: [
+            {
+              id: "Hasil akhirnya bukan website resmi dealer dan bukan pula marketplace kendaraan. Suzuki Jakarta Barat dibuat sebagai aset pemasaran digital milik sales — sebuah tempat yang dapat terus menampilkan produk, harga, promo, dan informasi kendaraan ketika sales sedang tidak berada di showroom atau belum sempat membalas pesan.",
+              en: "The end result is not an official dealer website and not a vehicle marketplace. Suzuki Jakarta Barat was built as a digital marketing asset owned by the salesperson — a place that can continuously display products, pricing, promotions, and vehicle information when the salesperson is not at the showroom or hasn't yet replied to a message.",
+            },
+            {
+              id: "Website menjadi penghubung antara aktivitas pemasaran seperti pencarian Google, iklan, media sosial, atau link yang dibagikan dengan percakapan langsung bersama sales.",
+              en: "The website becomes a bridge between marketing activities like Google search, ads, social media, or shared links and the direct conversation with the salesperson.",
             },
           ],
         },
@@ -300,11 +412,50 @@ export const studioProjects: StudioProject[] = [
     caseStudy: {
       sections: [
         {
-          heading: { id: "Konteks", en: "Context" },
+          heading: { id: "Awal Kebutuhan", en: "How It Started" },
           body: [
             {
-              id: "Sama dengan project otomotif lainnya, website ini merupakan media pemasaran digital untuk sales Mitsubishi. Bukan website resmi dealer, melainkan landing page yang membantu sales menjangkau calon customer secara online.",
-              en: "Like other automotive projects, this website is a digital marketing medium for Mitsubishi sales. Not an official dealer website, but a landing page that helps sales reach prospective customers online.",
+              id: "Seorang sales Mitsubishi membutuhkan media digital sendiri untuk mendukung aktivitas pemasarannya. Informasi mengenai model kendaraan, harga, promo, dan penawaran sebelumnya banyak bergantung pada komunikasi langsung melalui chat atau media sosial. Cara tersebut tetap menjadi bagian penting dari proses penjualan, tetapi membuat informasi yang sama harus disampaikan berulang kali kepada calon customer.",
+              en: "A Mitsubishi salesperson needed their own digital medium to support their marketing activities. Information about vehicle models, pricing, promotions, and offers previously relied heavily on direct communication through chat or social media. That approach remains an important part of the sales process, but it required the same information to be repeated to prospective customers over and over.",
+            },
+            {
+              id: "Dari kebutuhan tersebut, kami mulai membangun website Mitsubishi sebagai pusat informasi sekaligus media pemasaran digital milik sales.",
+              en: "From that need, we began building the Mitsubishi website as an information hub and a digital marketing medium owned by the salesperson.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Masalah yang Ingin Diselesaikan", en: "The Problem to Solve" },
+          body: [
+            {
+              id: "Website ini tidak dibuat untuk menggantikan komunikasi antara sales dan calon customer. Justru tujuannya adalah membuat komunikasi tersebut lebih efisien.",
+              en: "This website was not built to replace communication between the salesperson and prospective customers. The goal was to make that communication more efficient.",
+            },
+            {
+              id: "Sebelum menghubungi sales, calon customer sudah dapat melihat kendaraan yang tersedia, mengetahui kisaran harga, membaca informasi produk, melihat promo, dan memahami pilihan yang ditawarkan. Dengan begitu, ketika percakapan melalui WhatsApp dimulai, calon customer sudah memiliki konteks mengenai kendaraan yang diminati.",
+              en: "Before contacting the salesperson, a prospective customer can already see available vehicles, understand the price range, read product information, view promotions, and understand the options offered. That way, when the WhatsApp conversation begins, the prospective customer already has context about the vehicle they're interested in.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Tantangan", en: "The Challenge" },
+          body: [
+            {
+              id: "Tantangannya adalah membuat website yang cukup lengkap untuk memberikan informasi, tetapi tetap sederhana karena tujuan akhirnya bukan membuat portal otomotif yang kompleks. Website harus tetap berfokus pada satu hal: membantu sales memasarkan kendaraan dan membawa calon customer menuju percakapan langsung.",
+              en: "The challenge was to build a website complete enough to provide information, yet simple enough because the end goal was not to build a complex automotive portal. The website had to stay focused on one thing: helping the salesperson market vehicles and bring prospective customers into direct conversation.",
+            },
+            {
+              id: "Karena itu struktur informasi, navigasi, detail kendaraan, hingga CTA harus dibuat sesingkat mungkin tanpa menghilangkan informasi yang dibutuhkan calon pembeli.",
+              en: "Therefore the information structure, navigation, vehicle details, and CTAs had to be kept as concise as possible without removing information that prospective buyers need.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Pendekatan yang Kami Ambil", en: "The Approach We Took" },
+          body: [
+            {
+              id: "Kami menyusun pengalaman website mengikuti perjalanan sederhana calon pembeli: menemukan kendaraan → melihat pilihan model → memahami harga dan informasi unit → melihat promo → menghubungi sales. Informasi penting ditempatkan sebelum CTA sehingga WhatsApp bukan sekadar tombol yang muncul di mana-mana, tetapi menjadi langkah berikutnya setelah pengguna memahami produk yang ditawarkan.",
+              en: "We structured the website experience following a simple buyer journey: find a vehicle → view model options → understand pricing and unit information → view promotions → contact the salesperson. Important information was placed before the CTA so that WhatsApp is not just a button appearing everywhere, but the next step after the user understands the product being offered.",
             },
           ],
         },
@@ -312,8 +463,25 @@ export const studioProjects: StudioProject[] = [
           heading: { id: "Yang Dibangun", en: "What Was Built" },
           body: [
             {
-              id: "Website menampilkan model kendaraan Mitsubishi, harga, promo, dan informasi produk. Calon customer dapat menjelajahi katalog, menemukan informasi yang dibutuhkan, dan menghubungi sales melalui jalur WhatsApp yang tersedia.",
-              en: "The website displays Mitsubishi vehicle models, pricing, promotions, and product information. Prospective customers can browse the catalog, find the information they need, and contact sales through the available WhatsApp channel.",
+              id: "Dari alur tersebut kami membangun website pemasaran Mitsubishi yang terdiri dari katalog kendaraan, halaman detail setiap model, informasi harga dan promo, serta jalur inquiry langsung menuju sales. Penekanan utama ada pada cara model dan varian kendaraan disusun — setiap model Mitsubishi dipisahkan dengan jelas, dan varian yang tersedia di dalam model tersebut disusun agar calon customer dapat memahami pilihan tanpa kebingungan.",
+              en: "From that flow we built the Mitsubishi marketing website, consisting of a vehicle catalog, detail pages for each model, pricing and promotion information, and a direct inquiry path to the salesperson. The main emphasis is on how vehicle models and variants are organized — each Mitsubishi model is clearly separated, and the variants available within each model are arranged so prospective customers can understand the options without confusion.",
+            },
+            {
+              id: "Setiap halaman kendaraan dibuat agar dapat berdiri sebagai sumber informasi tersendiri. Calon customer yang menemukan satu model tertentu dari pencarian atau link yang dibagikan tidak harus kembali ke homepage untuk memahami produk tersebut. Ketika tertarik melanjutkan, pengguna dapat langsung menghubungi sales melalui WhatsApp dari halaman kendaraan yang sedang mereka lihat.",
+              en: "Each vehicle page was built to stand as its own information source. A prospective customer who finds a specific model from search or a shared link doesn't need to return to the homepage to understand that product. When interested in proceeding, the user can directly contact the salesperson via WhatsApp from the vehicle page they're currently viewing.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Dari Landing Page Menjadi Aset Pemasaran", en: "From Landing Page to Marketing Asset" },
+          body: [
+            {
+              id: "Hasil akhirnya bukan website resmi dealer dan bukan pula marketplace kendaraan. Website Mitsubishi dibuat sebagai aset pemasaran digital milik sales — sebuah tempat yang dapat terus menampilkan produk, harga, promo, dan informasi kendaraan ketika sales sedang tidak berada di showroom atau belum sempat membalas pesan.",
+              en: "The end result is not an official dealer website and not a vehicle marketplace. The Mitsubishi website was built as a digital marketing asset owned by the salesperson — a place that can continuously display products, pricing, promotions, and vehicle information when the salesperson is not at the showroom or hasn't yet replied to a message.",
+            },
+            {
+              id: "Website menjadi penghubung antara aktivitas pemasaran seperti pencarian Google, iklan, media sosial, atau link yang dibagikan dengan percakapan langsung bersama sales.",
+              en: "The website becomes a bridge between marketing activities like Google search, ads, social media, or shared links and the direct conversation with the salesperson.",
             },
           ],
         },
@@ -348,11 +516,50 @@ export const studioProjects: StudioProject[] = [
     caseStudy: {
       sections: [
         {
-          heading: { id: "Konteks", en: "Context" },
+          heading: { id: "Awal Kebutuhan", en: "How It Started" },
           body: [
             {
-              id: "JAECOO Bintaro adalah sales mobil JAECOO yang menggunakan website sebagai media pemasaran digital. Sama seperti project otomotif lainnya, ini bukan website resmi dealer — melainkan landing page untuk membantu sales menjangkau calon customer secara online.",
-              en: "JAECOO Bintaro is a JAECOO car salesperson using a website as a digital marketing medium. Like other automotive projects, this is not an official dealer website — it's a landing page to help sales reach prospective customers online.",
+              id: "Seorang sales JAECOO di area Bintaro membutuhkan media digital sendiri untuk mendukung aktivitas pemasarannya. Informasi mengenai model kendaraan, harga, promo, dan penawaran sebelumnya banyak bergantung pada komunikasi langsung melalui chat atau media sosial. Cara tersebut tetap menjadi bagian penting dari proses penjualan, tetapi membuat informasi yang sama harus disampaikan berulang kali kepada calon customer.",
+              en: "A JAECOO salesperson in the Bintaro area needed their own digital medium to support their marketing activities. Information about vehicle models, pricing, promotions, and offers previously relied heavily on direct communication through chat or social media. That approach remains an important part of the sales process, but it required the same information to be repeated to prospective customers over and over.",
+            },
+            {
+              id: "Dari kebutuhan tersebut, kami mulai membangun JAECOO Bintaro sebagai pusat informasi sekaligus media pemasaran digital milik sales.",
+              en: "From that need, we began building JAECOO Bintaro as an information hub and a digital marketing medium owned by the salesperson.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Masalah yang Ingin Diselesaikan", en: "The Problem to Solve" },
+          body: [
+            {
+              id: "Website ini tidak dibuat untuk menggantikan komunikasi antara sales dan calon customer. Justru tujuannya adalah membuat komunikasi tersebut lebih efisien.",
+              en: "This website was not built to replace communication between the salesperson and prospective customers. The goal was to make that communication more efficient.",
+            },
+            {
+              id: "Sebelum menghubungi sales, calon customer sudah dapat melihat kendaraan yang tersedia, mengetahui kisaran harga, membaca informasi produk, melihat promo, dan memahami pilihan yang ditawarkan. Dengan begitu, ketika percakapan melalui WhatsApp dimulai, calon customer sudah memiliki konteks mengenai kendaraan yang diminati.",
+              en: "Before contacting the salesperson, a prospective customer can already see available vehicles, understand the price range, read product information, view promotions, and understand the options offered. That way, when the WhatsApp conversation begins, the prospective customer already has context about the vehicle they're interested in.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Tantangan", en: "The Challenge" },
+          body: [
+            {
+              id: "Tantangannya adalah membuat website yang cukup lengkap untuk memberikan informasi, tetapi tetap sederhana karena tujuan akhirnya bukan membuat portal otomotif yang kompleks. Website harus tetap berfokus pada satu hal: membantu sales memasarkan kendaraan dan membawa calon customer menuju percakapan langsung.",
+              en: "The challenge was to build a website complete enough to provide information, yet simple enough because the end goal was not to build a complex automotive portal. The website had to stay focused on one thing: helping the salesperson market vehicles and bring prospective customers into direct conversation.",
+            },
+            {
+              id: "Karena itu struktur informasi, navigasi, detail kendaraan, hingga CTA harus dibuat sesingkat mungkin tanpa menghilangkan informasi yang dibutuhkan calon pembeli.",
+              en: "Therefore the information structure, navigation, vehicle details, and CTAs had to be kept as concise as possible without removing information that prospective buyers need.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Pendekatan yang Kami Ambil", en: "The Approach We Took" },
+          body: [
+            {
+              id: "Kami menyusun pengalaman website mengikuti perjalanan sederhana calon pembeli: menemukan kendaraan → melihat pilihan model → memahami harga dan informasi unit → melihat promo → menghubungi sales. Informasi penting ditempatkan sebelum CTA sehingga WhatsApp bukan sekadar tombol yang muncul di mana-mana, tetapi menjadi langkah berikutnya setelah pengguna memahami produk yang ditawarkan.",
+              en: "We structured the website experience following a simple buyer journey: find a vehicle → view model options → understand pricing and unit information → view promotions → contact the salesperson. Important information was placed before the CTA so that WhatsApp is not just a button appearing everywhere, but the next step after the user understands the product being offered.",
             },
           ],
         },
@@ -360,8 +567,25 @@ export const studioProjects: StudioProject[] = [
           heading: { id: "Yang Dibangun", en: "What Was Built" },
           body: [
             {
-              id: "Website menampilkan model kendaraan JAECOO, harga, promo, dan informasi produk. Calon customer dapat melihat katalog unit, memahami opsi yang tersedia, dan menghubungi sales melalui jalur WhatsApp.",
-              en: "The website displays JAECOO vehicle models, pricing, promotions, and product information. Prospective customers can view the unit catalog, understand available options, and contact sales through the WhatsApp channel.",
+              id: "Dari alur tersebut kami membangun website pemasaran JAECOO Bintaro yang terdiri dari katalog kendaraan, halaman detail setiap model, informasi harga dan promo, serta jalur inquiry langsung menuju sales. Penekanan utama ada pada karakter brand dan presentation — JAECOO sebagai brand yang relatif baru di pasar Indonesia membutuhkan penyajian yang dapat memperkenalkan identitas produknya, bukan sekadar daftar harga.",
+              en: "From that flow we built the JAECOO Bintaro marketing website, consisting of a vehicle catalog, detail pages for each model, pricing and promotion information, and a direct inquiry path to the salesperson. The main emphasis is on brand character and presentation — JAECOO as a relatively new brand in the Indonesian market requires a presentation that can introduce its product identity, not just a price list.",
+            },
+            {
+              id: "Setiap halaman kendaraan dibuat agar dapat berdiri sebagai sumber informasi tersendiri. Calon customer yang menemukan satu model tertentu dari pencarian atau link yang dibagikan tidak harus kembali ke homepage untuk memahami produk tersebut. Ketika tertarik melanjutkan, pengguna dapat langsung menghubungi sales melalui WhatsApp dari halaman kendaraan yang sedang mereka lihat.",
+              en: "Each vehicle page was built to stand as its own information source. A prospective customer who finds a specific model from search or a shared link doesn't need to return to the homepage to understand that product. When interested in proceeding, the user can directly contact the salesperson via WhatsApp from the vehicle page they're currently viewing.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Dari Landing Page Menjadi Aset Pemasaran", en: "From Landing Page to Marketing Asset" },
+          body: [
+            {
+              id: "Hasil akhirnya bukan website resmi dealer dan bukan pula marketplace kendaraan. JAECOO Bintaro dibuat sebagai aset pemasaran digital milik sales — sebuah tempat yang dapat terus menampilkan produk, harga, promo, dan informasi kendaraan ketika sales sedang tidak berada di showroom atau belum sempat membalas pesan.",
+              en: "The end result is not an official dealer website and not a vehicle marketplace. JAECOO Bintaro was built as a digital marketing asset owned by the salesperson — a place that can continuously display products, pricing, promotions, and vehicle information when the salesperson is not at the showroom or hasn't yet replied to a message.",
+            },
+            {
+              id: "Website menjadi penghubung antara aktivitas pemasaran seperti pencarian Google, iklan, media sosial, atau link yang dibagikan dengan percakapan langsung bersama sales.",
+              en: "The website becomes a bridge between marketing activities like Google search, ads, social media, or shared links and the direct conversation with the salesperson.",
             },
           ],
         },
