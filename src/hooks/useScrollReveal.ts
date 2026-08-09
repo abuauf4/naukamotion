@@ -34,8 +34,9 @@ export function useScrollReveal(options: ScrollRevealOptions = {}) {
   const callbackRef = useCallback(
     (node: HTMLElement | null) => {
       // Cleanup previous observer if element changes
-      if (elementRef.current && elementRef.current._scrollRevealObserver) {
-        elementRef.current._scrollRevealObserver.disconnect();
+      const prevNode = elementRef.current as (HTMLElement & { _scrollRevealObserver?: IntersectionObserver }) | null;
+      if (prevNode && prevNode._scrollRevealObserver) {
+        prevNode._scrollRevealObserver.disconnect();
       }
 
       elementRef.current = node;

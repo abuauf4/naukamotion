@@ -2,11 +2,13 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
-  /* config options here */
+  // Type errors now block the build — keeps the codebase honest.
+  // All previous TS errors have been resolved (Stage 7 + 8 cleanup).
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
-  reactStrictMode: false,
+  // Strict mode helps catch issues early in development.
+  reactStrictMode: true,
   images: {
     remotePatterns: [
       {

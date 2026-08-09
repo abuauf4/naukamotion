@@ -1,259 +1,173 @@
-'use client';
+import type { Metadata } from "next";
+import { Header } from "@/components/nauka/Header";
+import { Footer } from "@/components/nauka/Footer";
+import { ScrollProgress } from "@/components/nauka/ScrollProgress";
 
-import { useEffect, useRef } from 'react';
-import Link from 'next/link';
-import { FileText } from 'lucide-react';
-import { Header } from '@/components/nauka/Header';
-import { Footer } from '@/components/nauka/Footer';
+export const metadata: Metadata = {
+  title: "Syarat & Ketentuan",
+  description:
+    "Syarat dan ketentuan penggunaan situs Nauka Motion (motion.nauka.id).",
+  alternates: { canonical: "/legal/terms" },
+};
 
-/**
- * TermsAndConditionsPage — Nauka Motion
- *
- * Syarat & Ketentuan / Terms & Conditions page.
- * Same editorial style as Privacy Policy.
- * Clean, editorial layout using container-editorial.
- * Light background with proper heading hierarchy.
- * All text in Bahasa Indonesia.
- * Scroll reveal via IntersectionObserver.
- */
+const sections = [
+  {
+    heading: "Penerimaan Syarat",
+    body: [
+      "Dengan mengakses dan menggunakan situs motion.nauka.id («Situs»), Anda menyetujui untuk terikat oleh Syarat dan Ketentuan ini. Jika Anda tidak menyetujui salah satu bagian dari ketentuan ini, mohon untuk tidak menggunakan Situs.",
+    ],
+  },
+  {
+    heading: "Lisensi Penggunaan",
+    body: [
+      "Konten di Situs ini (teks, gambar, grafik, logo, desain) adalah milik Nauka Motion dan dilindungi oleh hukum hak cipta. Anda diperbolehkan melihat, mengunduh, dan mencetak konten untuk penggunaan pribadi non-komersial.",
+      "Anda tidak diperbolehkan memodifikasi, mendistribusikan, mempublikasikan ulang, atau menggunakan konten untuk tujuan komersial tanpa izin tertulis dari Nauka Motion.",
+    ],
+  },
+  {
+    heading: "Layanan",
+    body: [
+      "Situs ini menyediakan informasi tentang layanan Nauka Motion serta form kontak untuk pengajuan brief proyek. Pengiriman brief tidak menjamin adanya kerja sama — Nauka Motion berhak menerima atau menolak brief berdasarkan kapasitas dan kecocokan.",
+      "Detail proyek, termasuk scope, timeline, dan biaya, akan dituangkan dalam kesepakatan terpisah setelah diskusi awal.",
+    ],
+  },
+  {
+    heading: "Portofolio dan Referensi",
+    body: [
+      "Project yang ditampilkan di halaman Work adalah project yang telah dikerjakan atau sedang dikerjakan oleh Nauka Motion. Nama klien dan detail tertentu dapat dirahasiakan sesuai kesepakatan.",
+      "Nauka Motion tidak mengklaim angka performa (close rate, conversion rate, revenue impact) yang tidak dapat diverifikasi. Setiap klaim yang ditampilkan adalah berdasarkan fakta yang dapat dibuktikan.",
+    ],
+  },
+  {
+    heading: "Tautan Pihak Ketiga",
+    body: [
+      "Situs ini dapat berisi tautan ke website eksternal (termasuk website klien yang live). Nauka Motion tidak bertanggung jawab atas konten atau praktik privasi situs pihak ketiga tersebut.",
+    ],
+  },
+  {
+    heading: "Batasan Tanggung Jawab",
+    body: [
+      "Informasi di Situs ini disediakan «apa adanya» tanpa jaminan apa pun. Nauka Motion tidak bertanggung jawab atas kerugian yang timbul dari penggunaan atau ketidakmampuan menggunakan Situs.",
+    ],
+  },
+  {
+    heading: "Perubahan Syarat",
+    body: [
+      "Nauka Motion berhak mengubah Syarat dan Ketentuan ini sewaktu-waktu. Perubahan berlaku sejak dipublikasikan di halaman ini. Kami sarankan untuk meninjau halaman ini secara berkala.",
+    ],
+  },
+  {
+    heading: "Hukum yang Berlaku",
+    body: [
+      "Syarat dan Ketentuan ini diatur oleh hukum Republik Indonesia. Setiap sengketa yang timbul akan diselesaikan melalui musyawarah, atau jika tidak tercapai, melalui jalur hukum yang berlaku di Indonesia.",
+    ],
+  },
+  {
+    heading: "Kontak",
+    body: [
+      "Untuk pertanyaan tentang Syarat dan Ketentuan ini, hubungi: naukamotion@gmail.com.",
+    ],
+  },
+];
 
-export default function TermsAndConditionsPage() {
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const prefersReducedMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)'
-    ).matches;
-
-    const revealElements = (root: Element | null, selector: string) => {
-      if (!root) return undefined;
-      const elements = root.querySelectorAll(selector);
-      if (elements.length === 0) return undefined;
-
-      if (prefersReducedMotion) {
-        elements.forEach((el) => el.classList.add('scroll-revealed'));
-        return undefined;
-      }
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('scroll-revealed');
-              observer.unobserve(entry.target);
-            }
-          });
-        },
-        { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
-      );
-
-      elements.forEach((el) => observer.observe(el));
-      return observer;
-    };
-
-    const observer = revealElements(contentRef.current, '.scroll-reveal');
-    return () => observer?.disconnect();
-  }, []);
-
+export default function TermsPage() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        background: "var(--bg)",
+      }}
+    >
+      <ScrollProgress />
       <Header />
 
-      <main className="flex-1 bg-texture-primary">
-        {/* ━━ Page Header ━━ */}
-        <section className="pt-16 sm:pt-20 lg:pt-24 pb-6 sm:pb-8">
-          <div className="container-editorial">
-            {/* Decorative icon */}
-            <div className="scroll-reveal flex items-center gap-3 mb-6 sm:mb-8">
-              <div className="w-10 h-10 rounded-xl bg-[var(--nauka-accent)]/8 flex items-center justify-center">
-                <FileText
-                  className="w-5 h-5 text-[var(--nauka-accent)]"
-                  strokeWidth={1.5}
-                />
-              </div>
-              <span className="text-caption font-medium uppercase tracking-[0.2em] text-[var(--nauka-accent)]">
-                Legal
+      <main style={{ flex: 1, paddingTop: "120px" }}>
+        <section style={{ paddingBottom: "60px" }}>
+          <div className="container-wide">
+            <p className="eyebrow eyebrow-burnt" style={{ marginBottom: "24px" }}>
+              <span style={{ opacity: 0.5 }}>///</span>
+              Legal
+            </p>
+            <h1
+              style={{
+                fontFamily: "var(--font-body), sans-serif",
+                fontWeight: 500,
+                fontSize: "clamp(2.2rem, 5vw, 3.8rem)",
+                lineHeight: 1.05,
+                letterSpacing: "-0.025em",
+                color: "var(--ink)",
+                margin: 0,
+                marginBottom: "16px",
+              }}
+            >
+              Syarat &{" "}
+              <span
+                style={{
+                  fontFamily: "var(--font-fraunces), serif",
+                  fontStyle: "italic",
+                  fontWeight: 400,
+                  color: "var(--burnt)",
+                }}
+              >
+                Ketentuan
               </span>
-            </div>
-
-            <h1 className="scroll-reveal scroll-reveal-delay-1 text-h1 font-heading text-[var(--nauka-text-primary)] mb-4">
-              Syarat &amp; Ketentuan
             </h1>
-            <p className="scroll-reveal scroll-reveal-delay-2 text-body text-[var(--nauka-text-secondary)]">
-              Terakhir diperbarui: 1 Januari 2026
+            <p className="studio-meta" style={{ color: "var(--ink-faint)" }}>
+              Terakhir diperbarui: 2026
             </p>
           </div>
         </section>
 
-        {/* ━━ Content ━━ */}
-        <section className="pb-16 sm:pb-20 lg:pb-28" ref={contentRef}>
-          <div className="container-editorial">
-            <div className="space-y-10 sm:space-y-12">
-              {/* Intro */}
-              <div className="scroll-reveal">
-                <p className="text-body-lg text-[var(--nauka-text-secondary)] leading-relaxed">
-                  Selamat datang di Nauka Motion. Dengan menggunakan layanan kami,
-                  Anda menyetujui syarat dan ketentuan berikut. Harap baca dengan
-                  seksama sebelum menggunakan layanan kami.
-                </p>
-              </div>
-
-              {/* 1. Layanan */}
-              <div className="scroll-reveal">
-                <h2 className="text-h3 font-heading text-[var(--nauka-text-primary)] mb-4">
-                  1. Layanan
-                </h2>
-                <p className="text-body text-[var(--nauka-text-secondary)] leading-relaxed mb-3">
-                  Nauka Motion menyediakan layanan pengembangan website, sistem
-                  bisnis, dan solusi digital lainnya. Ruang lingkup layanan akan
-                  ditentukan dalam proposal atau kontrak yang disepakati bersama
-                  antara Nauka Motion dan klien. Setiap layanan yang tidak
-                  termasuk dalam ruang lingkup yang disepakati akan dikenakan
-                  biaya tambahan sesuai kesepakatan.
-                </p>
-                <p className="text-body text-[var(--nauka-text-secondary)] leading-relaxed">
-                  Kami berhak menolak proyek yang tidak sesuai dengan nilai atau
-                  kapabilitas kami. Setiap proyek dimulai setelah kedua belah
-                  pihak menyetujui proposal dan ketentuan pembayaran.
-                </p>
-              </div>
-
-              {/* 2. Hak & Kewajiban */}
-              <div className="scroll-reveal">
-                <h2 className="text-h3 font-heading text-[var(--nauka-text-primary)] mb-4">
-                  2. Hak &amp; Kewajiban
-                </h2>
-                <p className="text-body text-[var(--nauka-text-secondary)] leading-relaxed mb-3">
-                  <strong className="text-[var(--nauka-text-primary)] font-medium">Kewajiban Nauka Motion:</strong>
-                </p>
-                <ul className="list-disc pl-5 space-y-2 text-body text-[var(--nauka-text-secondary)] mb-4">
-                  <li>Menyediakan layanan sesuai ruang lingkup yang disepakati</li>
-                  <li>Memberikan update progres secara berkala</li>
-                  <li>Menjaga kerahasiaan informasi klien</li>
-                  <li>Memberikan hasil kerja yang memenuhi standar profesional</li>
-                </ul>
-                <p className="text-body text-[var(--nauka-text-secondary)] leading-relaxed mb-3">
-                  <strong className="text-[var(--nauka-text-primary)] font-medium">Kewajiban Klien:</strong>
-                </p>
-                <ul className="list-disc pl-5 space-y-2 text-body text-[var(--nauka-text-secondary)]">
-                  <li>Memberikan informasi dan materi yang diperlukan secara tepat waktu</li>
-                  <li>Memberikan feedback dalam jangka waktu yang disepakati</li>
-                  <li>Melakukan pembayaran sesuai jadwal yang ditentukan</li>
-                  <li>Tidak menggunakan hasil kerja untuk tujuan yang melanggar hukum</li>
-                </ul>
-              </div>
-
-              {/* 3. Pembayaran */}
-              <div className="scroll-reveal">
-                <h2 className="text-h3 font-heading text-[var(--nauka-text-primary)] mb-4">
-                  3. Pembayaran
-                </h2>
-                <p className="text-body text-[var(--nauka-text-secondary)] leading-relaxed mb-3">
-                  Ketentuan pembayaran akan diatur dalam proposal atau kontrak
-                  yang disepakati. Secara umum, struktur pembayaran kami adalah:
-                </p>
-                <ul className="list-disc pl-5 space-y-2 text-body text-[var(--nauka-text-secondary)]">
-                  <li>Down payment sebesar 50% sebelum proyek dimulai</li>
-                  <li>Pelunasan 50% setelah proyek selesai dan disetujui</li>
-                  <li>Untuk proyek besar, pembayaran dapat dilakukan secara bertahap sesuai milestone</li>
-                </ul>
-                <p className="text-body text-[var(--nauka-text-secondary)] leading-relaxed mt-3">
-                  Keterlambatan pembayaran dapat mengakibatkan penundaan pengerjaan
-                  proyek. Pembayaran yang tertunda lebih dari 14 hari dapat
-                  mengakibatkan penghentian sementara layanan.
-                </p>
-              </div>
-
-              {/* 4. Garansi */}
-              <div className="scroll-reveal">
-                <h2 className="text-h3 font-heading text-[var(--nauka-text-primary)] mb-4">
-                  4. Garansi
-                </h2>
-                <p className="text-body text-[var(--nauka-text-secondary)] leading-relaxed">
-                  Kami memberikan garansi atas hasil kerja selama 30 hari setelah
-                  peluncuran proyek. Garansi mencakup perbaikan bug dan masalah
-                  teknis yang terkait dengan ruang lingkup awal proyek. Perubahan
-                  fitur, penambahan fitur baru, atau modifikasi di luar ruang
-                  lingkup awal tidak termasuk dalam garansi dan akan dikenakan
-                  biaya terpisah.
-                </p>
-              </div>
-
-              {/* 5. Hak Kekayaan Intelektual */}
-              <div className="scroll-reveal">
-                <h2 className="text-h3 font-heading text-[var(--nauka-text-primary)] mb-4">
-                  5. Hak Kekayaan Intelektual
-                </h2>
-                <p className="text-body text-[var(--nauka-text-secondary)] leading-relaxed mb-3">
-                  Setelah pembayaran penuh diterima, hak penggunaan atas hasil
-                  kerja akan dialihkan kepada klien. Namun:
-                </p>
-                <ul className="list-disc pl-5 space-y-2 text-body text-[var(--nauka-text-secondary)]">
-                  <li>Nauka Motion berhak menampilkan proyek dalam portofolio kami</li>
-                  <li>Kode, desain, atau komponen generik yang dikembangkan oleh Nauka Motion tetap menjadi milik Nauka Motion</li>
-                  <li>Pihak ketiga (library, plugin, font) tunduk pada lisensi masing-masing</li>
-                  <li>Klien tidak berhak mengklaim kerja Nauka Motion sebagai karya orisinal mereka</li>
-                </ul>
-              </div>
-
-              {/* 6. Batasan Tanggung Jawab */}
-              <div className="scroll-reveal">
-                <h2 className="text-h3 font-heading text-[var(--nauka-text-primary)] mb-4">
-                  6. Batasan Tanggung Jawab
-                </h2>
-                <p className="text-body text-[var(--nauka-text-secondary)] leading-relaxed">
-                  Nauka Motion tidak bertanggung jawab atas kerugian tidak
-                  langsung, insidental, atau konsekuensial yang timbul dari
-                  penggunaan layanan kami. Tanggung jawab maksimal kami terbatas
-                  pada jumlah yang dibayarkan untuk layanan terkait. Kami tidak
-                  bertanggung jawab atas kerusakan atau kehilangan data yang
-                  disebabkan oleh faktor di luar kendali kami, termasuk namun
-                  tidak terbatas pada kegagalan server pihak ketiga, serangan
-                  siber, atau bencana alam.
-                </p>
-              </div>
-
-              {/* 7. Perubahan Ketentuan */}
-              <div className="scroll-reveal">
-                <h2 className="text-h3 font-heading text-[var(--nauka-text-primary)] mb-4">
-                  7. Perubahan Ketentuan
-                </h2>
-                <p className="text-body text-[var(--nauka-text-secondary)] leading-relaxed">
-                  Kami berhak mengubah syarat dan ketentuan ini dari waktu ke
-                  waktu. Perubahan akan berlaku sejak dipublikasikan di website
-                  kami. Untuk proyek yang sedang berjalan, ketentuan yang berlaku
-                  adalah ketentuan yang disepakati pada saat kontrak ditandatangani.
-                  Kami menyarankan Anda untuk meninjau halaman ini secara berkala
-                  untuk mengetahui perubahan terbaru.
-                </p>
-              </div>
-
-              {/* Footer note */}
-              <div className="scroll-reveal pt-6 border-t border-[var(--nauka-border)]">
-                <p className="text-body-sm text-[var(--nauka-text-tertiary)]">
-                  Syarat &amp; Ketentuan ini berlaku sejak tanggal yang tercantum
-                  di atas dan tunduk pada hukum Republik Indonesia. Jika Anda
-                  memiliki pertanyaan, silakan hubungi kami melalui
-                  naukamotion@gmail.com.
-                </p>
-              </div>
-
-              {/* Back links */}
-              <div className="scroll-reveal flex flex-wrap gap-4">
-                <Link
-                  href="/legal/privacy"
-                  className="text-body-sm font-medium text-[var(--nauka-accent)] hover:text-[var(--nauka-accent-dark)] transition-colors duration-300"
+        <section style={{ paddingBottom: "120px" }}>
+          <div
+            style={{
+              maxWidth: "760px",
+              margin: "0 auto",
+              paddingLeft: "clamp(20px, 5vw, 80px)",
+              paddingRight: "clamp(20px, 5vw, 80px)",
+              borderTop: "1px solid var(--line)",
+              paddingTop: "60px",
+            }}
+          >
+            {sections.map((section, i) => (
+              <article
+                key={i}
+                style={{
+                  marginBottom: "48px",
+                }}
+              >
+                <h2
+                  style={{
+                    fontFamily: "var(--font-body), sans-serif",
+                    fontWeight: 500,
+                    fontSize: "1.4rem",
+                    letterSpacing: "-0.015em",
+                    color: "var(--ink)",
+                    margin: 0,
+                    marginBottom: "16px",
+                  }}
                 >
-                  ← Kebijakan Privasi
-                </Link>
-                <Link
-                  href="/contact"
-                  className="text-body-sm font-medium text-[var(--nauka-accent)] hover:text-[var(--nauka-accent-dark)] transition-colors duration-300"
-                >
-                  Hubungi Kami →
-                </Link>
-              </div>
-            </div>
+                  {section.heading}
+                </h2>
+                {section.body.map((para, j) => (
+                  <p
+                    key={j}
+                    style={{
+                      fontFamily: "var(--font-body), sans-serif",
+                      fontSize: "1rem",
+                      color: "var(--ink-soft)",
+                      lineHeight: 1.7,
+                      margin: 0,
+                      marginBottom: "12px",
+                    }}
+                  >
+                    {para}
+                  </p>
+                ))}
+              </article>
+            ))}
           </div>
         </section>
       </main>

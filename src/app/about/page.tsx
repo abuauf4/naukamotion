@@ -1,350 +1,390 @@
-'use client';
+import type { Metadata } from "next";
+import Link from "next/link";
+import { Header } from "@/components/nauka/Header";
+import { Footer } from "@/components/nauka/Footer";
+import { ScrollProgress } from "@/components/nauka/ScrollProgress";
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { ArrowRight, Target, Hammer, Handshake, MapPin, TrendingUp, Briefcase } from 'lucide-react';
-import { Header } from '@/components/nauka/Header';
-import { Footer } from '@/components/nauka/Footer';
-import { useScrollReveal } from '@/hooks/useScrollReveal';
+export const metadata: Metadata = {
+  title: "Tentang Nauka Motion",
+  description:
+    "Nauka Motion adalah studio produk digital yang dibangun dan dipimpin oleh Abu Aufa, berbasis di Jakarta, bekerja lintas industri — otomotif, retail teknologi, asuransi, brand konsumen, pariwisata, dan produk internal Nauka Labs.",
+  alternates: { canonical: "/about" },
+  openGraph: {
+    title: "Tentang Nauka Motion",
+    description:
+      "Studio produk digital yang dibangun dan dipimpin oleh Abu Aufa, berbasis di Jakarta.",
+    type: "website",
+  },
+};
 
-/**
- * About Page — "Tentang Kami"
- *
- * Sections: Hero → Story → Values → By the Numbers → CTA
- * All text in Bahasa Indonesia.
- * Dark hero, light body sections.
- * Scroll reveal via IntersectionObserver.
- */
-
-/* ━━ Values Data ━━ */
 const coreValues = [
   {
-    icon: Target,
-    title: 'Impact-First',
-    body: 'Setiap keputusan diukur dari dampak nyata yang dihasilkan. Bukan sekadar tampilan, tapi hasil yang bisa dirasakan bisnis Anda.',
+    title: "Impact-First",
+    description:
+      "Setiap keputusan diukur dari dampak nyata yang dihasilkan. Bukan sekadar tampilan, tapi hasil yang bisa dirasakan bisnis Anda.",
   },
   {
-    icon: Hammer,
-    title: 'Craft over Speed',
-    body: 'Kami percaya kualitas tidak bisa dipercepat. Setiap baris kode, setiap interaksi, dirancang dengan teliti dan penuh pertimbangan.',
+    title: "Craft over Speed",
+    description:
+      "Kualitas tidak bisa dipercepat. Setiap baris kode, setiap interaksi, dirancang dengan teliti dan penuh pertimbangan.",
   },
   {
-    icon: Handshake,
-    title: 'Partnership',
-    body: 'Kami bukan vendor — kami mitra. Keberhasilan proyek Anda adalah keberhasilan kami. Hubungan jangka panjang, bukan transaksi sekali jalan.',
+    title: "Partnership",
+    description:
+      "Kami bukan vendor — kami mitra. Keberhasilan proyek Anda adalah keberhasilan kami. Hubungan jangka panjang, bukan transaksi sekali jalan.",
   },
-];
-
-/* ━━ Stats Data ━━ */
-const stats = [
-  { value: '6', label: 'Proyek Selesai', icon: Briefcase },
-  { value: '4', label: 'Industri', icon: TrendingUp },
-  { value: 'Jakarta', label: 'Berbasis', icon: MapPin },
 ];
 
 export default function AboutPage() {
-  const [wordsRevealed, setWordsRevealed] = useState(false);
-
-  // Word reveal on mount — same pattern as HeroSection
-  useEffect(() => {
-    const timer = setTimeout(() => setWordsRevealed(true), 300);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const heroHeadline = ['Tentang', 'Nauka', 'Motion'];
-
-  let wordIndex = 0;
-
   return (
-    <div className="min-h-screen flex flex-col">
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        background: "var(--bg)",
+      }}
+    >
+      <ScrollProgress />
       <Header />
 
-      <main className="flex-1">
-        {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            SECTION 1: Hero — Dark, confident
-            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-        <section className="relative min-h-[60vh] sm:min-h-[70vh] lg:min-h-[80vh] flex items-center overflow-hidden bg-texture-deep">
-          {/* Subtle grid overlay */}
-          <div
-            className="absolute inset-0 z-0 opacity-30"
-            style={{
-              backgroundImage: `
-                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px)
-              `,
-              backgroundSize: '60px 60px',
-            }}
-          />
-
-          <div className="relative z-10 container-wide w-full py-16 sm:py-24 lg:py-32">
-            {/* Accent tag */}
-            <p
-              className={`text-caption font-medium uppercase tracking-[0.3em] text-[var(--nauka-accent-light)] mb-5 sm:mb-7 transition-all duration-700 ${
-                wordsRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-              }`}
-              style={{ transitionDelay: '100ms' }}
-            >
-              Small Movement. Real Impact.
+      <main style={{ flex: 1, paddingTop: "120px" }}>
+        {/* Hero */}
+        <section style={{ paddingBottom: "80px" }}>
+          <div className="container-wide">
+            <p className="eyebrow eyebrow-burnt" style={{ marginBottom: "24px" }}>
+              <span style={{ opacity: 0.5 }}>///</span>
+              Tentang Kami
             </p>
-
-            {/* Headline */}
             <h1
-              className="text-display font-heading text-white mb-6 sm:mb-8"
-              style={{ perspective: '600px' }}
+              style={{
+                fontFamily: "var(--font-body), sans-serif",
+                fontWeight: 500,
+                fontSize: "clamp(2.5rem, 7vw, 5rem)",
+                lineHeight: 1.02,
+                letterSpacing: "-0.03em",
+                color: "var(--ink)",
+                margin: 0,
+                marginBottom: "32px",
+                maxWidth: "16ch",
+              }}
             >
-              {heroHeadline.map((word) => {
-                const idx = wordIndex++;
-                return (
-                  <span
-                    key={word}
-                    className={`word-reveal ${wordsRevealed ? 'revealed' : ''}`}
-                    style={{ transitionDelay: `${300 + idx * 140}ms` }}
-                  >
-                    {word}{' '}
-                  </span>
-                );
-              })}
+              Tentang{" "}
+              <span
+                style={{
+                  fontFamily: "var(--font-fraunces), serif",
+                  fontStyle: "italic",
+                  fontWeight: 400,
+                  color: "var(--burnt)",
+                }}
+              >
+                Nauka Motion
+              </span>
             </h1>
-
-            {/* Tagline */}
             <p
-              className={`text-body-lg text-white/50 sm:text-white/55 max-w-[560px] leading-relaxed transition-all duration-700 ${
-                wordsRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-              }`}
-              style={{ transitionDelay: '900ms' }}
+              style={{
+                fontFamily: "var(--font-fraunces), serif",
+                fontStyle: "italic",
+                fontWeight: 400,
+                fontSize: "clamp(1.2rem, 2vw, 1.6rem)",
+                color: "var(--ink-soft)",
+                lineHeight: 1.4,
+                margin: 0,
+                maxWidth: "44ch",
+              }}
             >
-              Kami bukan sekadar studio web. Kami membangun produk digital yang mendorong pertumbuhan bisnis nyata — dari ide kecil, dampak besar.
+              Studio produk digital yang menggabungkan desain, teknologi, dan
+              pemecahan masalah untuk membangun produk yang bekerja.
             </p>
           </div>
         </section>
 
-        {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            SECTION 2: Story — Editorial, personal
-            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-        <StorySection />
+        {/* Story */}
+        <section
+          style={{
+            paddingBottom: "100px",
+            borderTop: "1px solid var(--line)",
+            paddingTop: "80px",
+          }}
+        >
+          <div className="container-wide">
+            <div
+              style={{
+                maxWidth: "60ch",
+              }}
+            >
+              <p className="eyebrow eyebrow-burnt" style={{ marginBottom: "24px" }}>
+                <span style={{ opacity: 0.5 }}>///</span>
+                Cerita Kami
+              </p>
+              <h2
+                style={{
+                  fontFamily: "var(--font-body), sans-serif",
+                  fontWeight: 500,
+                  fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)",
+                  letterSpacing: "-0.02em",
+                  lineHeight: 1.1,
+                  color: "var(--ink)",
+                  margin: 0,
+                  marginBottom: "32px",
+                }}
+              >
+                Dari sebuah ide kecil di Jakarta
+              </h2>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "20px",
+                }}
+              >
+                <p
+                  style={{
+                    fontFamily: "var(--font-body), sans-serif",
+                    fontSize: "1.05rem",
+                    color: "var(--ink-soft)",
+                    lineHeight: 1.7,
+                    margin: 0,
+                  }}
+                >
+                  Nauka Motion dimulai dari satu keyakinan sederhana:{" "}
+                  <strong style={{ color: "var(--ink)", fontWeight: 500 }}>
+                    setiap proyek besar dimulai dari gerakan kecil.
+                  </strong>{" "}
+                  Didirikan oleh Abu Aufa — seorang web developer dan digital
+                  strategist yang berbasis di Jakarta — Nauka lahir dari
+                  pengalaman langsung melihat bagaimana bisnis seringkali
+                  kesulitan mengubah ide menjadi produk digital yang
+                  benar-benar berdampak.
+                </p>
+                <p
+                  style={{
+                    fontFamily: "var(--font-body), sans-serif",
+                    fontSize: "1.05rem",
+                    color: "var(--ink-soft)",
+                    lineHeight: 1.7,
+                    margin: 0,
+                  }}
+                >
+                  Filosofi{" "}
+                  <em
+                    style={{
+                      fontFamily: "var(--font-fraunces), serif",
+                      fontStyle: "italic",
+                      color: "var(--ink)",
+                      fontWeight: 400,
+                    }}
+                  >
+                    &quot;Small Movement. Real Impact.&quot;
+                  </em>{" "}
+                  bukan sekadar tagline. Ini adalah cara kami bekerja. Setiap
+                  proyek dimulai dari pemahaman mendalam tentang masalah yang
+                  ingin diselesaikan — bukan langsung ke desain atau kode.
+                </p>
+                <p
+                  style={{
+                    fontFamily: "var(--font-body), sans-serif",
+                    fontSize: "1.05rem",
+                    color: "var(--ink-soft)",
+                    lineHeight: 1.7,
+                    margin: 0,
+                  }}
+                >
+                  Dari dealer otomotif, bisnis retail teknologi, platform
+                  asuransi, brand konsumen, hingga pariwisata — kami telah
+                  melihat pola yang sama: bisnis tidak butuh sekadar website
+                  yang cantik. Mereka butuh{" "}
+                  <strong style={{ color: "var(--ink)", fontWeight: 500 }}>
+                    produk digital yang mendorong pertumbuhan nyata
+                  </strong>{" "}
+                  — lebih banyak leads, proses lebih efisien, pengalaman
+                  pelanggan yang lebih baik.
+                </p>
+              </div>
+              <div
+                style={{
+                  marginTop: "40px",
+                  paddingTop: "24px",
+                  borderTop: "1px solid var(--line)",
+                }}
+              >
+                <p
+                  style={{
+                    fontFamily: "var(--font-mono), monospace",
+                    fontSize: "0.78rem",
+                    color: "var(--ink-faint)",
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    margin: 0,
+                  }}
+                >
+                  — Abu Aufa, Pendiri Nauka Motion
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
 
-        {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            SECTION 3: Values — 3 core values
-            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-        <ValuesSection values={coreValues} />
+        {/* Values */}
+        <section
+          style={{
+            paddingBottom: "100px",
+            background: "var(--paper-warm)",
+            borderTop: "1px solid var(--line)",
+            paddingTop: "80px",
+          }}
+        >
+          <div className="container-wide">
+            <p
+              className="eyebrow eyebrow-burnt"
+              style={{
+                marginBottom: "20px",
+                textAlign: "center",
+                justifyContent: "center",
+                display: "flex",
+              }}
+            >
+              <span style={{ opacity: 0.5 }}>///</span>
+              Nilai-Nilai Kami
+            </p>
+            <h2
+              className="studio-h2"
+              style={{
+                textAlign: "center",
+                marginBottom: "60px",
+                maxWidth: "32ch",
+                marginLeft: "auto",
+                marginRight: "auto",
+              }}
+            >
+              Prinsip yang membimbing setiap keputusan
+            </h2>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                gap: "32px",
+              }}
+              className="nmp-values-grid"
+            >
+              {coreValues.map((value) => (
+                <div
+                  key={value.title}
+                  style={{
+                    padding: "32px",
+                    background: "var(--bg-card)",
+                    border: "1px solid var(--line)",
+                    borderRadius: "8px",
+                  }}
+                >
+                  <h3
+                    style={{
+                      fontFamily: "var(--font-body), sans-serif",
+                      fontWeight: 500,
+                      fontSize: "1.4rem",
+                      letterSpacing: "-0.015em",
+                      color: "var(--ink)",
+                      margin: 0,
+                      marginBottom: "16px",
+                    }}
+                  >
+                    {value.title}
+                  </h3>
+                  <p
+                    style={{
+                      fontFamily: "var(--font-body), sans-serif",
+                      fontSize: "0.95rem",
+                      color: "var(--ink-soft)",
+                      lineHeight: 1.55,
+                      margin: 0,
+                    }}
+                  >
+                    {value.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <style>{`
+            @media (max-width: 768px) {
+              .nmp-values-grid {
+                grid-template-columns: minmax(0, 1fr) !important;
+              }
+            }
+          `}</style>
+        </section>
 
-        {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            SECTION 4: By the Numbers — Stats
-            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-        <NumbersSection stats={stats} />
-
-        {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            SECTION 5: CTA — Ingin bekerja sama?
-            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-        <AboutCTASection />
+        {/* CTA */}
+        <section
+          style={{
+            paddingTop: "100px",
+            paddingBottom: "100px",
+            background: "var(--bg)",
+            borderTop: "1px solid var(--line)",
+          }}
+        >
+          <div
+            className="container-wide"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              textAlign: "center",
+              gap: "32px",
+            }}
+          >
+            <p className="eyebrow eyebrow-burnt">
+              <span style={{ opacity: 0.5 }}>///</span>
+              Ingin bekerja sama?
+            </p>
+            <h2
+              style={{
+                fontFamily: "var(--font-body), sans-serif",
+                fontWeight: 500,
+                fontSize: "clamp(2rem, 5vw, 3.5rem)",
+                lineHeight: 1.05,
+                letterSpacing: "-0.025em",
+                color: "var(--ink)",
+                margin: 0,
+                maxWidth: "16ch",
+              }}
+            >
+              Mulai{" "}
+              <span
+                style={{
+                  fontFamily: "var(--font-fraunces), serif",
+                  fontStyle: "italic",
+                  fontWeight: 400,
+                  color: "var(--burnt)",
+                }}
+              >
+                proyek
+              </span>{" "}
+              bersama kami.
+            </h2>
+            <Link href="/contact" className="nmp-btn nmp-btn-primary">
+              Hubungi Kami
+              <svg
+                width="11"
+                height="11"
+                viewBox="0 0 12 12"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M2 10L10 2M10 2H4M10 2V8"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </Link>
+          </div>
+        </section>
       </main>
 
       <Footer />
     </div>
-  );
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    Sub-components — each handles its own scroll reveal
-    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-function StorySection() {
-  const ref = useScrollReveal();
-
-  return (
-    <section className="py-14 sm:py-20 lg:py-28 bg-texture-primary">
-      <div ref={ref} className="container-editorial scroll-reveal">
-        {/* Section label */}
-        <p className="text-caption font-medium uppercase tracking-[0.2em] text-[var(--nauka-accent)] mb-6 sm:mb-8">
-          Cerita Kami
-        </p>
-
-        {/* Headline */}
-        <h2 className="text-h1 font-heading text-[var(--nauka-text-primary)] mb-6 sm:mb-8">
-          Dari sebuah ide kecil di Jakarta
-        </h2>
-
-        {/* Body — multi-paragraph editorial style */}
-        <div className="space-y-5 sm:space-y-6">
-          <p className="text-body-lg text-[var(--nauka-text-secondary)] leading-relaxed">
-            Nauka Motion dimulai dari satu keyakinan sederhana: <strong className="text-[var(--nauka-text-primary)] font-medium">setiap proyek besar dimulai dari gerakan kecil.</strong> Didirikan oleh Abu Aufa — seorang web developer dan digital strategist yang berbasis di Jakarta — Nauka lahir dari pengalaman langsung melihat bagaimana bisnis seringkali kesulitan mengubah ide menjadi produk digital yang benar-benar berdampak.
-          </p>
-
-          <p className="text-body-lg text-[var(--nauka-text-secondary)] leading-relaxed">
-            Filosofi <em className="text-[var(--nauka-text-primary)] not-italic font-medium">&quot;Small Movement. Real Impact.&quot;</em> bukan sekadar tagline. Ini adalah cara kami bekerja. Setiap proyek dimulai dari pemahaman mendalam tentang masalah yang ingin diselesaikan — bukan langsung ke desain atau kode. Kami percaya bahwa pergerakan kecil yang tepat sasaran menciptakan perubahan yang jauh lebih bermakna dibandingkan perubahan besar yang tidak terarah.
-          </p>
-
-          <p className="text-body-lg text-[var(--nauka-text-secondary)] leading-relaxed">
-            Dari dealer otomotif, bisnis retail, hingga perusahaan jasa — kami telah melihat pola yang sama: bisnis tidak butuh sekadar website yang cantik. Mereka butuh <strong className="text-[var(--nauka-text-primary)] font-medium">produk digital yang mendorong pertumbuhan nyata</strong> — lebih banyak leads, proses lebih efisien, pengalaman pelanggan yang lebih baik.
-          </p>
-
-          <p className="text-body-lg text-[var(--nauka-text-secondary)] leading-relaxed">
-            Itulah mengapa kami ada. Bukan untuk membangun website — tapi untuk membangun solusi digital yang membuat bisnis Anda bergerak maju.
-          </p>
-        </div>
-
-        {/* Founder attribution */}
-        <div className="mt-8 sm:mt-10 pt-6 sm:pt-8 border-t border-[var(--nauka-border)]">
-          <p className="text-body-sm text-[var(--nauka-text-tertiary)]">
-            — Abu Aufa, Pendiri Nauka Motion
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-interface ValueItem {
-  icon: React.ComponentType<{ className?: string }>;
-  title: string;
-  body: string;
-}
-
-function ValuesSection({ values }: { values: ValueItem[] }) {
-  const sectionRef = useScrollReveal();
-
-  return (
-    <section className="py-14 sm:py-20 lg:py-28 bg-texture-secondary">
-      <div ref={sectionRef} className="container-wide scroll-reveal">
-        {/* Section label */}
-        <p className="text-caption font-medium uppercase tracking-[0.2em] text-[var(--nauka-accent)] mb-4 sm:mb-5 text-center">
-          Nilai-Nilai Kami
-        </p>
-
-        <h2 className="text-h2 font-heading text-[var(--nauka-text-primary)] mb-10 sm:mb-14 lg:mb-16 text-center max-w-[560px] mx-auto">
-          Prinsip yang membimbing setiap keputusan
-        </h2>
-
-        {/* Values grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {values.map((value, idx) => (
-            <ValueCard key={value.title} value={value} delay={idx + 1} />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function ValueCard({ value, delay }: { value: ValueItem; delay: number }) {
-  const ref = useScrollReveal();
-  const Icon = value.icon;
-
-  return (
-    <div
-      ref={ref}
-      className={`scroll-reveal scroll-reveal-delay-${delay} nauka-service-card bg-white/80 border border-[var(--nauka-border)] rounded-xl p-6 sm:p-8`}
-    >
-      {/* Icon */}
-      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-[var(--nauka-accent)]/10 flex items-center justify-center mb-5 sm:mb-6">
-        <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--nauka-accent)]" strokeWidth={1.5} />
-      </div>
-
-      {/* Title */}
-      <h3 className="text-h3 font-heading text-[var(--nauka-text-primary)] mb-3 sm:mb-4">
-        {value.title}
-      </h3>
-
-      {/* Body */}
-      <p className="text-body text-[var(--nauka-text-secondary)] leading-relaxed">
-        {value.body}
-      </p>
-    </div>
-  );
-}
-
-interface StatItem {
-  value: string;
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-}
-
-function NumbersSection({ stats }: { stats: StatItem[] }) {
-  const sectionRef = useScrollReveal();
-
-  return (
-    <section className="py-14 sm:py-20 lg:py-28 bg-texture-primary">
-      <div ref={sectionRef} className="container-wide scroll-reveal">
-        {/* Section label */}
-        <p className="text-caption font-medium uppercase tracking-[0.2em] text-[var(--nauka-accent)] mb-4 sm:mb-5 text-center">
-          Dalam Angka
-        </p>
-
-        <h2 className="text-h2 font-heading text-[var(--nauka-text-primary)] mb-10 sm:mb-14 lg:mb-16 text-center max-w-[480px] mx-auto">
-          Dampak yang bisa diukur
-        </h2>
-
-        {/* Stats grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 max-w-[900px] mx-auto">
-          {stats.map((stat, idx) => (
-            <StatCard key={stat.label} stat={stat} delay={idx + 1} />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function StatCard({ stat, delay }: { stat: StatItem; delay: number }) {
-  const ref = useScrollReveal();
-  const Icon = stat.icon;
-
-  return (
-    <div
-      ref={ref}
-      className={`scroll-reveal scroll-reveal-delay-${delay} text-center py-8 sm:py-10 px-4 rounded-xl bg-white/60 border border-[var(--nauka-border)] nauka-service-card`}
-    >
-      <div className="flex justify-center mb-4 sm:mb-5">
-        <div className="w-10 h-10 rounded-full bg-[var(--nauka-accent)]/10 flex items-center justify-center nauka-stat-icon">
-          <Icon className="w-5 h-5 text-[var(--nauka-accent)]" strokeWidth={1.5} />
-        </div>
-      </div>
-      <div className="text-signature text-[var(--nauka-text-primary)] mb-2 nauka-stat-item group">
-        {stat.value}
-      </div>
-      <div className="text-caption text-[var(--nauka-text-tertiary)] uppercase tracking-wider">
-        {stat.label}
-      </div>
-    </div>
-  );
-}
-
-function AboutCTASection() {
-  const cardRef = useScrollReveal();
-
-  return (
-    <section className="py-14 sm:py-20 lg:py-28 bg-texture-secondary">
-      <div className="container-narrow">
-        <div ref={cardRef} className="bg-[var(--nauka-bg-deep)] rounded-2xl px-6 py-14 sm:px-8 sm:py-20 lg:px-16 lg:py-24 text-center scroll-reveal-scale relative overflow-hidden">
-          {/* Subtle glow effect */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 sm:w-64 h-48 sm:h-64 bg-[var(--nauka-accent)]/5 rounded-full blur-3xl" />
-
-          {/* Headline */}
-          <h2 className="text-h1 font-heading text-white mb-4 sm:mb-6 relative z-10">
-            Ingin bekerja sama?
-          </h2>
-
-          {/* Subtitle */}
-          <p className="text-body-lg text-white/60 mb-8 sm:mb-10 max-w-[480px] mx-auto relative z-10">
-            Ceritakan proyek atau ide Anda — kami siap mendengarkan dan membantu mewujudkannya.
-          </p>
-
-          {/* CTA button */}
-          <div className="relative z-10 inline-block">
-            <Button
-              asChild
-              size="lg"
-              className="nauka-cta-button bg-[var(--nauka-accent)] hover:bg-[var(--nauka-accent-dark)] text-white rounded-xl px-8 sm:px-10 py-3.5 sm:py-4 text-body font-semibold shadow-lg shadow-black/10"
-            >
-              <Link href="/contact">
-                Hubungi Kami
-                <ArrowRight className="ml-2 w-4 h-4" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </div>
-    </section>
   );
 }
