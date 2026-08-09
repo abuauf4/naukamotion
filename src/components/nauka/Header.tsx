@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "@/hooks/useTheme";
+import { LocaleSwitcher } from "@/components/nauka/LocaleSwitcher";
 
 /**
  * Header — Nauka Motion Studio
@@ -150,6 +151,7 @@ export function Header() {
           style={{ display: "flex", alignItems: "center", gap: "12px" }}
           className="nmp-header-actions"
         >
+          <LocaleSwitcher />
           <button
             onClick={toggle}
             aria-label="Toggle theme"

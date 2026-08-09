@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Instrument_Sans, Fraunces, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
+import { LocaleProvider } from "@/lib/locale-context";
 
 /* ━━ Nauka Motion — Studio Typography ━━
  * Instrument Sans  — body & interface
@@ -111,16 +112,21 @@ export default function RootLayout({
 }>) {
   // Inline theme bootstrap — prevents flash, respects stored preference
   const themeBootstrap = `try{var t=localStorage.getItem('nauka-theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark');}}catch(e){}`;
+  // Inline locale bootstrap — sets <html lang> before paint based on cookie
+  const localeBootstrap = `try{var c=document.cookie.split('; ').find(function(x){return x.indexOf('nauka-locale=')===0});var l=c?c.split('=')[1]:'id';document.documentElement.lang=l;}catch(e){}`;
 
   return (
     <html lang="id" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
+        <script dangerouslySetInnerHTML={{ __html: localeBootstrap }} />
       </head>
       <body
         className={`${instrumentSans.variable} ${fraunces.variable} ${jetbrainsMono.variable} antialiased bg-background text-foreground`}
       >
-        {children}
+        <LocaleProvider>
+          {children}
+        </LocaleProvider>
         <Toaster />
       </body>
     </html>

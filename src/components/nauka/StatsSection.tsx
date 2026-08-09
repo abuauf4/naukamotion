@@ -2,6 +2,7 @@
 
 import { useReveal } from "@/hooks/useReveal";
 import { studioStats } from "@/lib/studio-data";
+import { useLocale, pickLocal } from "@/lib/locale-context";
 
 /**
  * StatsSection — angka jujur untuk homepage.
@@ -16,19 +17,20 @@ import { studioStats } from "@/lib/studio-data";
  */
 export function StatsSection() {
   const ref = useReveal<HTMLDivElement>();
+  const { locale } = useLocale();
 
   const stats = [
     {
       value: studioStats.projectTotal.value,
-      label: studioStats.projectTotal.label.id,
+      label: pickLocal(studioStats.projectTotal.label, locale),
     },
     {
       value: studioStats.projectLive.value,
-      label: studioStats.projectLive.label.id,
+      label: pickLocal(studioStats.projectLive.label, locale),
     },
     {
       value: studioStats.categoryCount.value,
-      label: studioStats.categoryCount.label.id,
+      label: pickLocal(studioStats.categoryCount.label, locale),
     },
   ];
 

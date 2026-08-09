@@ -3,6 +3,26 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useReveal } from "@/hooks/useReveal";
+import { useLocale, pickLocal } from "@/lib/locale-context";
+
+const COPY = {
+  id: {
+    eyebrow: "Nauka Motion — Digital Product Studio",
+    headline: "Kami mengubah kebutuhan bisnis menjadi produk digital yang",
+    headlineAccent: "bekerja",
+    sub: "Nauka Motion menggabungkan desain, teknologi, dan pemecahan masalah untuk membangun website, platform, dan sistem digital di berbagai industri.",
+    ctaPrimary: "Lihat Kategori",
+    ctaSecondary: "Mulai Proyek",
+  },
+  en: {
+    eyebrow: "Nauka Motion — Digital Product Studio",
+    headline: "We turn business needs into digital products that",
+    headlineAccent: "work",
+    sub: "Nauka Motion combines design, technology, and problem-solving to build websites, platforms, and digital systems across industries.",
+    ctaPrimary: "View Categories",
+    ctaSecondary: "Start a Project",
+  },
+};
 
 /**
  * HeroSection — Nauka Motion Studio (v2)
@@ -21,6 +41,8 @@ import { useReveal } from "@/hooks/useReveal";
 export function HeroSection() {
   const containerRef = useReveal<HTMLDivElement>();
   const [shiftActive, setShiftActive] = useState(false);
+  const { locale } = useLocale();
+  const t = COPY[locale];
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -113,7 +135,7 @@ export function HeroSection() {
                 }}
               >
                 <span style={{ opacity: 0.5 }}>//</span>
-                Nauka Motion — Digital Product Studio
+                {t.eyebrow}
               </span>
             </div>
 
@@ -131,7 +153,7 @@ export function HeroSection() {
                 maxWidth: "18ch",
               }}
             >
-              Kami mengubah kebutuhan bisnis menjadi produk digital yang{" "}
+              {t.headline}{" "}
               <span
                 style={{
                   fontFamily: "var(--font-fraunces), serif",
@@ -140,7 +162,7 @@ export function HeroSection() {
                   color: "var(--burnt)",
                 }}
               >
-                bekerja
+                {t.headlineAccent}
               </span>
               .
             </h1>
@@ -157,9 +179,7 @@ export function HeroSection() {
                 maxWidth: "52ch",
               }}
             >
-              Nauka Motion menggabungkan desain, teknologi, dan pemecahan masalah
-              untuk membangun website, platform, dan sistem digital di berbagai
-              industri.
+              {t.sub}
             </p>
 
             {/* CTAs */}
@@ -173,7 +193,7 @@ export function HeroSection() {
               }}
             >
               <Link href="/#kategori" className="nmp-btn nmp-btn-primary">
-                Lihat Kategori
+                {t.ctaPrimary}
                 <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
                   <path
                     d="M2 10L10 2M10 2H4M10 2V8"
@@ -185,7 +205,7 @@ export function HeroSection() {
                 </svg>
               </Link>
               <Link href="/#contact" className="nmp-btn nmp-btn-ghost">
-                Mulai Proyek
+                {t.ctaSecondary}
               </Link>
             </div>
 

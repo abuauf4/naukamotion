@@ -3,6 +3,28 @@
 import Link from "next/link";
 import { useReveal } from "@/hooks/useReveal";
 import { studioCategories, getProjectsByCategory } from "@/lib/studio-data";
+import { useLocale, pickLocal } from "@/lib/locale-context";
+
+const COPY = {
+  id: {
+    eyebrow: "Kategori Saat Ini",
+    heading: "Industri dan jenis proyek yang telah kami",
+    headingAccent: "kerjakan",
+    sub: "Beberapa industri dan jenis proyek yang telah kami kerjakan sejauh ini. Kategori ini akan terus berkembang seiring perjalanan Nauka Motion.",
+    projectCount: "proyek",
+    soonLabel: "segera",
+    viewProjects: "Lihat proyek",
+  },
+  en: {
+    eyebrow: "Current Categories",
+    heading: "Industries and project types we have",
+    headingAccent: "worked on",
+    sub: "Several industries and project types we have worked on so far. These categories will continue to grow as Nauka Motion progresses.",
+    projectCount: "projects",
+    soonLabel: "soon",
+    viewProjects: "View projects",
+  },
+};
 
 /**
  * CategorySection — 6 big editorial cards.
@@ -14,6 +36,8 @@ import { studioCategories, getProjectsByCategory } from "@/lib/studio-data";
  */
 export function CategorySection() {
   const headerRef = useReveal<HTMLDivElement>();
+  const { locale } = useLocale();
+  const t = COPY[locale];
 
   return (
     <section
@@ -37,10 +61,10 @@ export function CategorySection() {
         >
           <p className="eyebrow eyebrow-burnt" style={{ marginBottom: "20px" }}>
             <span style={{ opacity: 0.5 }}>///</span>
-            Kategori Saat Ini
+            {t.eyebrow}
           </p>
           <h2 className="studio-h2" style={{ marginBottom: "24px" }}>
-            Industri dan jenis proyek yang telah kami{" "}
+            {t.heading}{" "}
             <span
               style={{
                 fontFamily: "var(--font-fraunces), serif",
@@ -49,7 +73,7 @@ export function CategorySection() {
                 color: "var(--burnt)",
               }}
             >
-              kerjakan
+              {t.headingAccent}
             </span>
             .
           </h2>
@@ -62,9 +86,7 @@ export function CategorySection() {
               maxWidth: "48ch",
             }}
           >
-            Beberapa industri dan jenis proyek yang telah kami kerjakan sejauh
-            ini. Kategori ini akan terus berkembang seiring perjalanan Nauka
-            Motion.
+            {t.sub}
           </p>
         </div>
 
@@ -87,9 +109,12 @@ export function CategorySection() {
                 slug={cat.slug}
                 index={cat.index}
                 title={cat.title}
-                description={cat.description.id}
+                description={pickLocal(cat.description, locale)}
                 count={count}
                 accent={cat.accent}
+                projectCountLabel={t.projectCount}
+                soonLabel={t.soonLabel}
+                viewProjectsLabel={t.viewProjects}
               />
             );
           })}
@@ -114,6 +139,9 @@ function CategoryCard({
   description,
   count,
   accent,
+  projectCountLabel,
+  soonLabel,
+  viewProjectsLabel,
 }: {
   slug: string;
   index: string;
@@ -121,6 +149,9 @@ function CategoryCard({
   description: string;
   count: number;
   accent: string;
+  projectCountLabel: string;
+  soonLabel: string;
+  viewProjectsLabel: string;
 }) {
   const ref = useReveal<HTMLAnchorElement>();
 
@@ -162,7 +193,7 @@ function CategoryCard({
             textTransform: "uppercase",
           }}
         >
-          {count > 0 ? `${String(count).padStart(2, "0")} proyek` : "segera"}
+          {count > 0 ? `${String(count).padStart(2, "0")} ${projectCountLabel}` : soonLabel}
         </span>
       </div>
 
@@ -215,7 +246,7 @@ function CategoryCard({
         }}
         className="nmp-cat-arrow"
       >
-        Lihat proyek
+        {viewProjectsLabel}
         <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
           <path
             d="M2 10L10 2M10 2H4M10 2V8"
