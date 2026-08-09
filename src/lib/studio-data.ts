@@ -400,19 +400,28 @@ export const studioProjects: StudioProject[] = [
     caseStudy: {
       sections: [
         {
-          heading: { id: "Ikhtisar", en: "Overview" },
+          heading: { id: "Awal Mula", en: "How It Started" },
           body: [
             {
-              id: "Owner toko laptop ingin memiliki e-commerce sendiri karena biaya admin dan potongan marketplace cukup membebani. Namun setelah kebutuhan toko dibahas lebih dalam, ditemukan masalah lain: pencatatan stok dan pembukuan toko masih banyak dilakukan manual dan berantakan.",
-              en: "The laptop store owner wanted their own e-commerce because marketplace admin fees and cuts were quite burdensome. But after discussing the store's needs in depth, another problem was discovered: stock recording and bookkeeping were still largely manual and messy.",
+              id: "Owner toko laptop ingin memiliki e-commerce sendiri karena biaya admin dan potongan marketplace cukup membebani. Itu adalah kebutuhan awal yang jelas — toko perlu kanal digital sendiri untuk mengontrol margin dan tidak terlalu bergantung pada marketplace.",
+              en: "The laptop store owner wanted their own e-commerce because marketplace admin fees and cuts were quite burdensome. That was the clear initial need — the store needed its own digital channel to control margins and not rely too much on marketplaces.",
             },
             {
-              id: "Dari sini scope berkembang. Kami tidak hanya membuat storefront untuk customer, tetapi juga admin panel yang terhubung langsung dengan inventory. Saat admin memasukkan produk, produk tampil di e-commerce sekaligus masuk stok inventory. Saat barang terjual, diproses melalui kasir/order, stok berkurang, dan transaksi meninggalkan history.",
-              en: "From here the scope grew. We didn't just build a storefront for customers, but an admin panel directly connected to inventory. When admin enters a product, it appears in the e-commerce and enters inventory stock simultaneously. When an item is sold, processed through cashier/order, stock decreases, and the transaction leaves a history.",
+              id: "Namun setelah kebutuhan toko dibahas lebih dalam, ditemukan masalah lain: pencatatan stok dan pembukuan toko masih banyak dilakukan manual dan berantakan. Ternyata toko tidak hanya butuh storefront — mereka juga butuh sistem yang menangani operasional di baliknya.",
+              en: "But after discussing the store's needs in depth, another problem was discovered: stock recording and bookkeeping were still largely manual and messy. It turned out the store didn't just need a storefront — they also needed a system to handle the operations behind it.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Scope yang Berkembang", en: "Scope That Grew" },
+          body: [
+            {
+              id: "Dari sini scope berkembang. Kami tidak hanya membuat storefront untuk customer, tetapi juga admin panel yang terhubung langsung dengan inventory. Saat admin memasukkan produk, produk tampil di e-commerce sekaligus masuk stok inventory. Saat barang terjual, diproses melalui kasir atau order, stok berkurang, dan transaksi meninggalkan history.",
+              en: "From here the scope grew. We didn't just build a storefront for customers, but an admin panel directly connected to inventory. When admin enters a product, it appears in the e-commerce and enters inventory stock simultaneously. When an item is sold, processed through cashier or order, stock decreases, and the transaction leaves a history.",
             },
             {
-              id: "Sistem kemudian berkembang menjadi e-commerce + mini ERP toko yang mencakup pengelolaan produk, customer, transaksi, inventory, pengeluaran, dan laporan keuangan.",
-              en: "The system then grew into an e-commerce + mini store ERP covering product management, customers, transactions, inventory, expenses, and financial reports.",
+              id: "Sistem kemudian berkembang menjadi e-commerce + mini ERP toko yang mencakup pengelolaan produk, customer, transaksi, inventory, pengeluaran, dan laporan keuangan. Bukan satu problem tunggal yang dipecahkan, melainkan kebutuhan toko yang terungkap lapisan demi lapisan.",
+              en: "The system then grew into an e-commerce + mini store ERP covering product management, customers, transactions, inventory, expenses, and financial reports. Not a single problem solved, but the store's needs revealed layer by layer.",
             },
           ],
         },
@@ -447,15 +456,28 @@ export const studioProjects: StudioProject[] = [
     caseStudy: {
       sections: [
         {
-          heading: { id: "Ikhtisar", en: "Overview" },
+          heading: { id: "Problem yang Berbeda", en: "A Different Problem" },
           body: [
             {
-              id: "Problem utama Jakarta Laptops berbeda dari toko laptop pada umumnya. Permintaan laptop bekas cukup besar, tetapi toko mengalami kesulitan mendapatkan supply atau barang. Di saat yang sama, pengelolaan stok dan pembukuan juga menjadi kebutuhan.",
-              en: "Jakarta Laptops' main problem differs from typical laptop stores. Demand for used laptops is quite high, but the store struggles to get supply. At the same time, stock management and bookkeeping are also needs.",
+              id: "Problem utama Jakarta Laptops berbeda dari toko laptop pada umumnya. Permintaan laptop bekas cukup besar, tetapi toko mengalami kesulitan mendapatkan supply atau barang. Intinya: pembeli ada, tapi stok susah didapat.",
+              en: "Jakarta Laptops' main problem differs from typical laptop stores. Demand for used laptops is quite high, but the store struggles to get supply. In short: buyers exist, but stock is hard to get.",
             },
             {
-              id: "Karena itu platform tidak hanya dirancang untuk menjual laptop, tetapi juga menyediakan jalur agar masyarakat dapat menawarkan atau menjual laptop mereka ke Jakarta Laptops. Inventory dan pencatatan mendukung alur tersebut — baik alur jual maupun alur terima.",
-              en: "Therefore the platform is designed not only to sell laptops, but also to provide a channel for the public to offer or sell their laptops to Jakarta Laptops. Inventory and recording support both flows — selling and buying.",
+              id: "Di saat yang sama, pengelolaan stok dan pembukuan juga menjadi kebutuhan. Toko tidak hanya butuh kanal jual — mereka juga butuh cara untuk mendapatkan barang.",
+              en: "At the same time, stock management and bookkeeping are also needs. The store doesn't just need a selling channel — they also need a way to get inventory.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Dua Jalur, Satu Sistem", en: "Two Channels, One System" },
+          body: [
+            {
+              id: "Karena itu platform tidak hanya dirancang untuk menjual laptop, tetapi juga menyediakan jalur agar masyarakat dapat menawarkan atau menjual laptop mereka ke Jakarta Laptops. Dua alur berjalan dalam satu sistem — alur jual dan alur terima.",
+              en: "Therefore the platform is designed not only to sell laptops, but also to provide a channel for the public to offer or sell their laptops to Jakarta Laptops. Two flows run in one system — selling and buying.",
+            },
+            {
+              id: "Inventory dan pencatatan mendukung kedua alur tersebut. Saat toko membeli laptop dari seseorang, barang masuk inventory. Saat laptop tersebut dijual ke customer lain, stok berkurang dan history tersimpan. Semua terhubung.",
+              en: "Inventory and recording support both flows. When the store buys a laptop from someone, the item enters inventory. When that laptop is sold to another customer, stock decreases and history is saved. Everything is connected.",
             },
           ],
         },
@@ -490,11 +512,15 @@ export const studioProjects: StudioProject[] = [
     caseStudy: {
       sections: [
         {
-          heading: { id: "Ikhtisar", en: "Overview" },
+          heading: { id: "Konteks", en: "Context" },
           body: [
             {
-              id: "Ghazy Computer merupakan website katalog dan e-commerce untuk membantu toko memiliki kanal digital sendiri. Fokus project ini adalah pada katalog produk, penyajian produk, informasi unit, dan jalur customer menuju pembelian atau inquiry.",
-              en: "Ghazy Computer is a catalog and e-commerce website to help the store have its own digital channel. The project focuses on product catalog, product presentation, unit information, and the customer path to purchase or inquiry.",
+              id: "Ghazy Computer berbeda dari Berkah atau Jakarta Laptops. Project ini merupakan website katalog dan e-commerce untuk membantu toko memiliki kanal digital sendiri. Fokusnya lebih sederhana — tidak ada ERP, tidak ada sistem pembukuan, tidak ada inventory accounting.",
+              en: "Ghazy Computer differs from Berkah or Jakarta Laptops. This project is a catalog and e-commerce website to help the store have its own digital channel. The focus is simpler — no ERP, no bookkeeping system, no inventory accounting.",
+            },
+            {
+              id: "Yang dibutuhkan adalah katalog produk yang dapat dijelajahi customer, penyajian produk yang jelas, informasi unit yang lengkap, dan jalur menuju pembelian atau inquiry. Cukup itu.",
+              en: "What was needed is a product catalog that customers can browse, clear product presentation, complete unit information, and a path to purchase or inquiry. Just that.",
             },
           ],
         },
@@ -529,15 +555,28 @@ export const studioProjects: StudioProject[] = [
     caseStudy: {
       sections: [
         {
-          heading: { id: "Ikhtisar", en: "Overview" },
+          heading: { id: "Paket Lengkap Sejak Awal", en: "Complete Package From the Start" },
           body: [
             {
-              id: "Owner ingin membuat sistem yang cukup lengkap sejak awal setelah melihat toko laptop lain mulai memiliki kanal digital sendiri. Scope yang diminta mencakup tiga sisi: e-commerce, terima laptop, dan pembukuan/operasional toko.",
-              en: "The owner wanted to build a fairly complete system from the start after seeing other laptop stores begin to have their own digital channels. The requested scope covers three sides: e-commerce, laptop buyback, and store bookkeeping/operations.",
+              id: "Blessing Tech berbeda dari Berkah. Owner ingin membuat sistem yang cukup lengkap sejak awal setelah melihat toko laptop lain mulai memiliki kanal digital sendiri. Bukan satu problem yang ditemukan belakangan — owner sudah tahu dari awal apa yang dibutuhkan.",
+              en: "Blessing Tech differs from Berkah. The owner wanted to build a fairly complete system from the start after seeing other laptop stores begin to have their own digital channels. Not a single problem discovered later — the owner knew from the start what was needed.",
             },
             {
-              id: "Sistem yang dibangun menghubungkan: frontend customer untuk katalog dan pembelian; terima laptop untuk jalur customer menawarkan laptop; dan admin untuk produk, customer, kasir, order, stok, pengeluaran, inventory, dan laporan keuangan.",
-              en: "The system connects: customer frontend for catalog and purchasing; laptop buyback for customers to offer laptops; and admin for products, customers, cashier, orders, stock, expenses, inventory, and financial reports.",
+              id: "Scope yang diminta mencakup tiga sisi: e-commerce, terima laptop, dan pembukuan atau operasional toko. Tiga sisi yang saling terhubung dalam satu sistem.",
+              en: "The requested scope covers three sides: e-commerce, laptop buyback, and store bookkeeping or operations. Three sides connected within one system.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Tiga Sisi yang Terhubung", en: "Three Connected Sides" },
+          body: [
+            {
+              id: "Sistem yang dibangun menghubungkan: frontend customer untuk katalog dan pembelian; jalur terima laptop untuk customer menawarkan laptop; dan admin untuk produk, customer, kasir, order, stok, pengeluaran, inventory, dan laporan keuangan.",
+              en: "The system connects: customer frontend for catalog and purchasing; laptop buyback channel for customers to offer laptops; and admin for products, customers, cashier, orders, stock, expenses, inventory, and financial reports.",
+            },
+            {
+              id: "Ketiga sisi ini tidak berdiri sendiri. Produk yang dimasukkan admin muncul di e-commerce. Laptop yang ditawarkan customer melalui jalur terima laptop menjadi calon inventory setelah evaluasi. Transaksi di kasir mengurangi stok dan meninggalkan history di laporan keuangan. Semua terhubung.",
+              en: "These three sides don't stand alone. Products entered by admin appear in the e-commerce. Laptops offered by customers through the buyback channel become candidate inventory after evaluation. Cashier transactions reduce stock and leave history in financial reports. Everything is connected.",
             },
             {
               id: "URL Vercel digunakan sementara sampai domain client tersedia.",
