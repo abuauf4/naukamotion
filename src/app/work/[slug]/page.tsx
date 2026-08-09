@@ -15,6 +15,7 @@ import {
   getAllProjectSlugs,
   type StudioProject,
   type StudioCategory,
+  type TechStory,
 } from "@/lib/studio-data";
 
 /**
@@ -356,24 +357,10 @@ function ProjectRow({
           style={{ objectFit: "cover" }}
         />
         {project.status === "internal" && (
-          <span
-            style={{
-              position: "absolute",
-              top: "16px",
-              left: "16px",
-              padding: "5px 12px",
-              background: "color-mix(in srgb, var(--ink) 88%, transparent)",
-              color: "var(--paper)",
-              fontFamily: "var(--font-mono), monospace",
-              fontSize: "0.62rem",
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              borderRadius: "999px",
-              backdropFilter: "blur(8px)",
-            }}
-          >
-            Nauka Labs
-          </span>
+          <ImageBadge label="Personal Project" />
+        )}
+        {project.status === "development" && (
+          <ImageBadge label="Dalam Pengembangan" />
         )}
       </Link>
 
@@ -499,7 +486,7 @@ function CaseStudyView({ project }: { project: StudioProject }) {
       name: "Nauka Motion",
       url: "https://motion.nauka.id",
     },
-    about: project.caseStudy.problem.body.id,
+    about: project.caseStudy.sections[0]?.body[0]?.id ?? project.summary.id,
     keywords: project.techStack.join(", "),
     datePublished: project.year,
   };
@@ -601,20 +588,10 @@ function CaseStudyView({ project }: { project: StudioProject }) {
                 {category?.title}
               </span>
               {project.status === "internal" && (
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono), monospace",
-                    fontSize: "0.62rem",
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                    color: "var(--burnt)",
-                    padding: "4px 10px",
-                    border: "1px solid var(--burnt)",
-                    borderRadius: "999px",
-                  }}
-                >
-                  Nauka Labs
-                </span>
+                <StatusBadge label="Personal Project" />
+              )}
+              {project.status === "development" && (
+                <StatusBadge label="Dalam Pengembangan" />
               )}
             </div>
 
@@ -788,7 +765,7 @@ function CaseStudyView({ project }: { project: StudioProject }) {
           </div>
         </section>
 
-        {/* 03-05 — Masalah / Solusi / Hasil */}
+        {/* 03+ — Flexible case study sections */}
         <section style={{ paddingBottom: "80px" }}>
           <div
             style={{
@@ -798,121 +775,78 @@ function CaseStudyView({ project }: { project: StudioProject }) {
               paddingRight: "clamp(20px, 5vw, 80px)",
             }}
           >
-            <CaseStudySection
-              index="03"
-              eyebrow="Masalah"
-              heading={project.caseStudy.problem.heading.id}
-              body={project.caseStudy.problem.body.id}
-              bullets={project.caseStudy.problem.bullets?.map((b) => b.id)}
-            />
-            <CaseStudySection
-              index="04"
-              eyebrow="Solusi"
-              heading={project.caseStudy.solution.heading.id}
-              body={project.caseStudy.solution.body.id}
-              bullets={project.caseStudy.solution.bullets?.map((b) => b.id)}
-            />
-            <CaseStudySection
-              index="05"
-              eyebrow="Hasil"
-              heading={project.caseStudy.result.heading.id}
-              body={project.caseStudy.result.body.id}
-              bullets={project.caseStudy.result.bullets?.map((b) => b.id)}
-            />
+            {project.caseStudy.sections.map((section, i) => (
+              <CaseStudySectionRender
+                key={i}
+                index={String(i + 3).padStart(2, "0")}
+                heading={section.heading.id}
+                body={section.body.map((b) => b.id)}
+                bullets={section.bullets?.map((b) => b.id)}
+              />
+            ))}
           </div>
         </section>
 
-        {/* 06 — Technology Stack */}
-        <section
-          style={{
-            paddingBottom: "80px",
-            borderTop: "1px solid var(--line)",
-            paddingTop: "80px",
-            background: "var(--paper-warm)",
-          }}
-        >
-          <div
-            style={{
-              maxWidth: "860px",
-              margin: "0 auto",
-              paddingLeft: "clamp(20px, 5vw, 80px)",
-              paddingRight: "clamp(20px, 5vw, 80px)",
-            }}
-          >
-            <p className="eyebrow eyebrow-burnt" style={{ marginBottom: "20px" }}>
-              <span style={{ opacity: 0.5 }}>///</span>
-              06 — Technology
-            </p>
-            <h2
+        {/* Technology storytelling (if techStory exists) or simple tech stack */}
+        {project.caseStudy.techStory ? (
+          <TechStorySection techStory={project.caseStudy.techStory} />
+        ) : (
+          project.techStack.length > 0 && (
+            <section
               style={{
-                fontFamily: "var(--font-body), sans-serif",
-                fontWeight: 500,
-                fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)",
-                letterSpacing: "-0.02em",
-                color: "var(--ink)",
-                margin: 0,
-                marginBottom: "32px",
-                lineHeight: 1.1,
+                paddingBottom: "80px",
+                borderTop: "1px solid var(--line)",
+                paddingTop: "80px",
+                background: "var(--paper-warm)",
               }}
             >
-              Technology Stack
-            </h2>
-            <p
-              style={{
-                fontFamily: "var(--font-body), sans-serif",
-                fontSize: "1.05rem",
-                color: "var(--ink-soft)",
-                lineHeight: 1.7,
-                margin: 0,
-                marginBottom: "32px",
-              }}
-            >
-              Stack yang benar-benar digunakan pada project ini:
-            </p>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                gap: "12px",
-              }}
-              className="nmp-tech-grid"
-            >
-              {project.techStack.map((tech) => (
-                <div
-                  key={tech}
+              <div
+                style={{
+                  maxWidth: "860px",
+                  margin: "0 auto",
+                  paddingLeft: "clamp(20px, 5vw, 80px)",
+                  paddingRight: "clamp(20px, 5vw, 80px)",
+                }}
+              >
+                <p className="eyebrow eyebrow-burnt" style={{ marginBottom: "20px" }}>
+                  <span style={{ opacity: 0.5 }}>///</span>
+                  Technology
+                </p>
+                <h2
                   style={{
-                    padding: "16px 20px",
-                    background: "var(--bg-card)",
-                    border: "1px solid var(--line)",
-                    borderRadius: "8px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "12px",
+                    fontFamily: "var(--font-body), sans-serif",
+                    fontWeight: 500,
+                    fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)",
+                    letterSpacing: "-0.02em",
+                    color: "var(--ink)",
+                    margin: 0,
+                    marginBottom: "32px",
+                    lineHeight: 1.1,
                   }}
                 >
-                  <span
-                    style={{
-                      width: "6px",
-                      height: "6px",
-                      background: "var(--burnt)",
-                      borderRadius: "999px",
-                      flexShrink: 0,
-                    }}
-                  />
-                  <span
-                    style={{
-                      fontFamily: "var(--font-mono), monospace",
-                      fontSize: "0.85rem",
-                      color: "var(--ink)",
-                    }}
-                  >
-                    {tech}
-                  </span>
+                  Technology Stack
+                </h2>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "8px",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {project.techStack.map((tech) => (
+                    <span
+                      key={tech}
+                      className="nmp-tag"
+                      style={{ fontSize: "0.78rem", padding: "8px 16px" }}
+                    >
+                      {tech}
+                    </span>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
+              </div>
+            </section>
+          )
+        )}
 
         {/* 07 — Live Website CTA */}
         {project.liveUrl && (
@@ -1228,17 +1162,57 @@ function MetaItem({ label, value }: { label: string; value: string }) {
   );
 }
 
-function CaseStudySection({
+function StatusBadge({ label }: { label: string }) {
+  return (
+    <span
+      style={{
+        fontFamily: "var(--font-mono), monospace",
+        fontSize: "0.62rem",
+        letterSpacing: "0.12em",
+        textTransform: "uppercase",
+        color: "var(--burnt)",
+        padding: "4px 10px",
+        border: "1px solid var(--burnt)",
+        borderRadius: "999px",
+      }}
+    >
+      {label}
+    </span>
+  );
+}
+
+function ImageBadge({ label }: { label: string }) {
+  return (
+    <span
+      style={{
+        position: "absolute",
+        top: "16px",
+        left: "16px",
+        padding: "5px 12px",
+        background: "color-mix(in srgb, var(--ink) 88%, transparent)",
+        color: "var(--paper)",
+        fontFamily: "var(--font-mono), monospace",
+        fontSize: "0.62rem",
+        letterSpacing: "0.12em",
+        textTransform: "uppercase",
+        borderRadius: "999px",
+        backdropFilter: "blur(8px)",
+      }}
+    >
+      {label}
+    </span>
+  );
+}
+
+function CaseStudySectionRender({
   index,
-  eyebrow,
   heading,
   body,
   bullets,
 }: {
   index: string;
-  eyebrow: string;
   heading: string;
-  body: string;
+  body: string[];
   bullets?: string[];
 }) {
   return (
@@ -1267,9 +1241,6 @@ function CaseStudySection({
         >
           {index}
         </span>
-        <span className="studio-meta" style={{ color: "var(--ink-faint)" }}>
-          {eyebrow}
-        </span>
       </div>
 
       <h2
@@ -1287,17 +1258,28 @@ function CaseStudySection({
         {heading}
       </h2>
 
-      <p
+      <div
         style={{
-          fontFamily: "var(--font-body), sans-serif",
-          fontSize: "1.05rem",
-          color: "var(--ink-soft)",
-          lineHeight: 1.7,
-          margin: 0,
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px",
         }}
       >
-        {body}
-      </p>
+        {body.map((para, i) => (
+          <p
+            key={i}
+            style={{
+              fontFamily: "var(--font-body), sans-serif",
+              fontSize: "1.05rem",
+              color: "var(--ink-soft)",
+              lineHeight: 1.7,
+              margin: 0,
+            }}
+          >
+            {para}
+          </p>
+        ))}
+      </div>
 
       {bullets && bullets.length > 0 && (
         <ul
@@ -1348,5 +1330,98 @@ function CaseStudySection({
         }
       `}</style>
     </article>
+  );
+}
+
+function TechStorySection({
+  techStory,
+}: {
+  techStory: TechStory;
+}) {
+  return (
+    <section
+      style={{
+        paddingBottom: "80px",
+        borderTop: "1px solid var(--line)",
+        paddingTop: "80px",
+        background: "var(--paper-warm)",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "860px",
+          margin: "0 auto",
+          paddingLeft: "clamp(20px, 5vw, 80px)",
+          paddingRight: "clamp(20px, 5vw, 80px)",
+        }}
+      >
+        <p className="eyebrow eyebrow-burnt" style={{ marginBottom: "20px" }}>
+          <span style={{ opacity: 0.5 }}>///</span>
+          Technology
+        </p>
+        <h2
+          style={{
+            fontFamily: "var(--font-body), sans-serif",
+            fontWeight: 500,
+            fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)",
+            letterSpacing: "-0.02em",
+            color: "var(--ink)",
+            margin: 0,
+            marginBottom: "32px",
+            lineHeight: 1.1,
+          }}
+        >
+          Technology
+        </h2>
+
+        <p
+          style={{
+            fontFamily: "var(--font-body), sans-serif",
+            fontSize: "1.05rem",
+            color: "var(--ink-soft)",
+            lineHeight: 1.7,
+            margin: 0,
+            marginBottom: "24px",
+          }}
+        >
+          {techStory.intro.id}
+        </p>
+
+        {techStory.details.map((detail, i) => (
+          <p
+            key={i}
+            style={{
+              fontFamily: "var(--font-body), sans-serif",
+              fontSize: "1.05rem",
+              color: "var(--ink-soft)",
+              lineHeight: 1.7,
+              margin: 0,
+              marginBottom: "20px",
+            }}
+          >
+            {detail.id}
+          </p>
+        ))}
+
+        <div
+          style={{
+            display: "flex",
+            gap: "8px",
+            flexWrap: "wrap",
+            marginTop: "32px",
+          }}
+        >
+          {techStory.stack.map((tech) => (
+            <span
+              key={tech}
+              className="nmp-tag"
+              style={{ fontSize: "0.78rem", padding: "8px 16px" }}
+            >
+              {tech}
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }

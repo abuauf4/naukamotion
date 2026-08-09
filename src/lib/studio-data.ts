@@ -1,19 +1,22 @@
 /**
- * Nauka Motion — Studio Data (v2)
- * --------------------------------
+ * Nauka Motion — Studio Data (v3 — Factual Portfolio)
+ * ----------------------------------------------------
  * Single source of truth untuk categories, projects, dan case study content.
  *
  * PRINSIP:
- * - Hanya project yang sudah LIVE atau internal yang sah ditampilkan.
- * - Status: "published" (live client work) | "internal" (Nauka Labs / eksperimen) | "draft" (belum siap)
- * - Public portfolio hanya menampilkan status "published" dan "internal" (dengan badge).
- * - TIDAK ADA claim fabricated: tidak ada close rate, conversion rate, revenue impact,
- *   performance number, dll yang tidak diberikan client.
- * - Case study format: Masalah → Solusi → Hasil → Technology → Live Website.
- *
- * Bahasa: Bilingual. Field `id` = Bahasa Indonesia, `en` = English.
- * Untuk nama kategori, istilah teknis, dan nama brand, tetap pakai English
- * sesuai instruksi branding (Automotive, Technology & Retail, dll).
+ * - Setiap project memiliki asal-usul berbeda. Case study TIDAK dipaksakan
+ *   ke template Problem→Solution→Result→Technology.
+ * - Case study menggunakan alur natural: konteks awal → kebutuhan yang
+ *   ditemukan → proses berpikir → sistem yang dibangun → keputusan teknologi →
+ *   hasil produk.
+ * - TIDAK ADA claim fabricated: tidak ada conversion rate, revenue impact,
+ *   testimonial, business metric, traffic result, atau klaim "official".
+ * - Status: "published" (live/collab) | "internal" (personal project) |
+ *   "development" (dalam pengembangan) | "draft" (sembunyikan dari public).
+ * - Technology Stack hanya menyebut teknologi yang digunakan dalam kode,
+ *   BUKAN provider/infrastructure (Vercel, Supabase tidak dimasukkan).
+ * - Bahasa: Bilingual. Field .id = Bahasa Indonesia, .en = English.
+ *   Versi English membawa cerita dan fakta yang sama, bukan terjemahan generic.
  */
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -21,12 +24,13 @@
 export type CategorySlug =
   | "automotive"
   | "technology-retail"
-  | "insurance-finance"
-  | "product-brand"
+  | "insurance"
+  | "inventory-systems"
   | "travel-tourism"
-  | "nauka-labs";
+  | "pet-health"
+  | "personal-projects";
 
-export type ProjectStatus = "published" | "internal" | "draft";
+export type ProjectStatus = "published" | "internal" | "development" | "draft";
 
 export interface LocalizedText {
   id: string;
@@ -35,21 +39,22 @@ export interface LocalizedText {
 
 export interface StudioCategory {
   slug: CategorySlug;
-  index: string; // "01", "02", ...
-  /** Title tetap English untuk konsistensi branding */
+  index: string;
   title: string;
   description: LocalizedText;
-  /** Warna accent opsional untuk kategori */
   accent: string;
 }
 
 export interface CaseStudySection {
-  /** id / en — bahasa per section */
   heading: LocalizedText;
-  /** Paragraf utama */
-  body: LocalizedText;
-  /** Bullet points opsional */
+  body: LocalizedText[];
   bullets?: LocalizedText[];
+}
+
+export interface TechStory {
+  intro: LocalizedText;
+  details: LocalizedText[];
+  stack: string[];
 }
 
 export interface StudioProject {
@@ -57,45 +62,27 @@ export interface StudioProject {
   index: string;
   name: string;
   categorySlug: CategorySlug;
-  /** Tagline pendek untuk card/list */
   tagline: LocalizedText;
-  /** Summary 1-2 kalimat untuk meta description & card */
   summary: LocalizedText;
-  /** Tahun pengerjaan */
   year: string;
-  /** Nama client — boleh "Internal" untuk project Nauka Labs */
   client: string;
-  /** Industri, misal "Automotive Retail", "Consumer Product" */
   industry: string;
-  /** Path gambar cover di /public/portfolio/* */
   cover: string;
-  /** Hex color untuk accent */
   accent: string;
-  /** URL website live — WAJIB untuk status "published", opsional untuk "internal" */
   liveUrl?: string;
-  /** Status: published (client live) | internal (Nauka Labs) | draft (sembunyikan dari public) */
   status: ProjectStatus;
-  /** Urutan tampil dalam kategori */
   order: number;
-  /** Tech stack yang BENAR-BENAR dipakai */
   techStack: string[];
-  /** Role, misal "Design · Engineering" */
   role: LocalizedText;
-  /** Case study dalam format baru */
   caseStudy: {
-    /** Konteks masalah awal client */
-    problem: CaseStudySection;
-    /** Apa yang dibuat Nauka Motion */
-    solution: CaseStudySection;
-    /** Hasil sistem/produk yang dapat diverifikasi (TANPA angka yang tidak ada sumbernya) */
-    result: CaseStudySection;
-    /** Slug project berikutnya dalam kategori yang sama (opsional) */
+    sections: CaseStudySection[];
+    techStory?: TechStory;
     nextProjectSlug?: string;
   };
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   CATEGORIES — 6 kategori saat ini
+   CATEGORIES — 7 kategori
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 export const studioCategories: StudioCategory[] = [
@@ -104,8 +91,8 @@ export const studioCategories: StudioCategory[] = [
     index: "01",
     title: "Automotive",
     description: {
-      id: "Website dan pengalaman digital untuk penjualan dan bisnis otomotif.",
-      en: "Websites and digital experiences for automotive sales and business.",
+      id: "Website pemasaran digital untuk sales otomotif.",
+      en: "Digital marketing websites for automotive sales.",
     },
     accent: "#D85A2A",
   },
@@ -114,113 +101,114 @@ export const studioCategories: StudioCategory[] = [
     index: "02",
     title: "Technology & Retail",
     description: {
-      id: "Platform, katalog, sistem, dan website untuk bisnis teknologi serta retail.",
-      en: "Platforms, catalogs, systems, and websites for technology and retail businesses.",
+      id: "E-commerce, katalog, dan sistem operasional untuk bisnis teknologi dan retail.",
+      en: "E-commerce, catalogs, and operational systems for technology and retail businesses.",
     },
     accent: "#2563EB",
   },
   {
-    slug: "insurance-finance",
+    slug: "insurance",
     index: "03",
-    title: "Insurance & Finance",
+    title: "Insurance",
     description: {
-      id: "Platform dan sistem digital untuk kebutuhan asuransi dan layanan finansial.",
-      en: "Digital platforms and systems for insurance and financial services.",
+      id: "Platform dan sistem digital untuk kebutuhan asuransi.",
+      en: "Digital platforms and systems for insurance needs.",
     },
     accent: "#6366F1",
   },
   {
-    slug: "product-brand",
+    slug: "inventory-systems",
     index: "04",
-    title: "Product & Consumer Brand",
+    title: "Inventory & Business Systems",
     description: {
-      id: "Pengalaman digital untuk produk dan brand yang berhadapan langsung dengan konsumen.",
-      en: "Digital experiences for products and brands facing consumers directly.",
+      id: "Sistem inventory, operasional, dan pencatatan bisnis.",
+      en: "Inventory, operational, and business recording systems.",
     },
-    accent: "#8B5CF6",
+    accent: "#0D9488",
   },
   {
     slug: "travel-tourism",
     index: "05",
     title: "Travel & Tourism",
     description: {
-      id: "Website dan pengalaman digital untuk bisnis perjalanan, destinasi, dan pariwisata.",
-      en: "Websites and digital experiences for travel, destinations, and tourism businesses.",
+      id: "Website dan pengalaman digital untuk bisnis pariwisata.",
+      en: "Websites and digital experiences for tourism businesses.",
     },
-    accent: "#0D9488",
+    accent: "#0891B2",
   },
   {
-    slug: "nauka-labs",
+    slug: "pet-health",
     index: "06",
-    title: "Nauka Labs",
+    title: "Pet Health",
     description: {
-      id: "Produk independen, eksperimen, dan ide digital yang dikembangkan oleh Nauka.",
-      en: "Independent products, experiments, and digital ideas developed by Nauka.",
+      id: "Pengalaman digital untuk brand produk kesehatan hewan.",
+      en: "Digital experiences for pet health product brands.",
+    },
+    accent: "#8B5CF6",
+  },
+  {
+    slug: "personal-projects",
+    index: "07",
+    title: "Personal Projects",
+    description: {
+      id: "Produk, eksperimen, dan karya pribadi yang dikembangkan di luar project client.",
+      en: "Personal products, experiments, and works developed outside client projects.",
     },
     accent: "#B8B3AA",
   },
 ];
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   PROJECTS — daftar project real yang sudah live / internal
+   PROJECTS — 19 project
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 export const studioProjects: StudioProject[] = [
-  /* ── AUTOMOTIVE ────────────────────────────── */
+
+  /* ═══════════════════════════════════════════════
+     AUTOMOTIVE — Website pemasaran digital untuk sales otomotif.
+     Bukan website resmi dealer. Landing page untuk sales mobil sebagai
+     media pemasaran digital.
+     ═══════════════════════════════════════════════ */
+
   {
     slug: "geely-bsd",
     index: "01",
     name: "Geely BSD",
     categorySlug: "automotive",
     tagline: {
-      id: "Website dealer resmi Geely di BSD City dengan katalog unit, simulasi kredit, dan jalur konsultasi sales.",
-      en: "Official Geely dealer website in BSD City with unit catalog, credit simulation, and sales consultation flow.",
+      id: "Website pemasaran digital untuk sales Geely BSD.",
+      en: "Digital marketing website for Geely BSD sales.",
     },
     summary: {
-      id: "Website dealer resmi Geely BSD dengan domain kustom, branding konsisten, dan alur penjualan yang menghubungkan calon pembeli langsung ke sales consultant.",
-      en: "Official Geely BSD dealer website with custom domain, consistent branding, and a sales flow that connects prospective buyers directly to sales consultants.",
+      id: "Website pemasaran yang menampilkan model kendaraan Geely, harga, promo, dan informasi produk, serta mengarahkan inquiry ke tim sales via WhatsApp.",
+      en: "Marketing website displaying Geely vehicle models, pricing, promotions, and product information, directing inquiries to the sales team via WhatsApp.",
     },
     year: "2025",
     client: "Geely BSD",
-    industry: "Automotive Retail",
+    industry: "Automotive Sales",
     cover: "/portfolio/geely-pluit.png",
     accent: "#2563EB",
     liveUrl: "https://geely-bsd.com",
     status: "published",
     order: 1,
-    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Vercel"],
-    role: {
-      id: "Desain · Pengembangan",
-      en: "Design · Engineering",
-    },
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS"],
+    role: { id: "Desain · Pengembangan", en: "Design · Engineering" },
     caseStudy: {
-      problem: {
-        heading: { id: "Masalah", en: "Problem" },
-        body: {
-          id: "Dealer Geely BSD membutuhkan kehadiran digital yang setara dengan teknologi mobil yang mereka jual. Website dealer konvensional tidak cukup untuk brand yang memposisikan diri di segmen kendaraan listrik dan teknologi terkini. Calon pembeli perlu bisa melihat katalog unit, membandingkan model, memahami opsi pembiayaan, dan menghubungi sales — semua dalam satu alur yang mulus.",
-          en: "Geely BSD needed a digital presence on par with the technology of the cars they sell. A conventional dealer website was not enough for a brand positioning itself in the EV and modern vehicle segment. Prospective buyers needed to view the unit catalog, compare models, understand financing options, and reach sales — all in a single smooth flow.",
+      sections: [
+        {
+          heading: { id: "Ikhtisar", en: "Overview" },
+          body: [
+            {
+              id: "Geely BSD adalah salah satu sales mobil Geely yang menggunakan website sebagai media pemasaran digital. Website ini bukan website resmi dealer, melainkan landing page yang dibuat untuk membantu sales menjangkau calon customer secara online.",
+              en: "Geely BSD is a car salesperson using a website as a digital marketing medium. This is not an official dealer website, but a landing page built to help sales reach prospective customers online.",
+            },
+            {
+              id: "Website menampilkan model kendaraan Geely yang tersedia, harga, promo, dan informasi produk. Calon customer dapat menjelajahi katalog, memahami opsi yang ada, dan ketika tertarik, langsung menghubungi sales melalui jalur WhatsApp yang terintegrasi.",
+              en: "The website displays available Geely vehicle models, pricing, promotions, and product information. Prospective customers can browse the catalog, understand available options, and when interested, directly contact sales through an integrated WhatsApp channel.",
+            },
+          ],
         },
-      },
-      solution: {
-        heading: { id: "Solusi", en: "Solution" },
-        body: {
-          id: "Dibangun website dealer dengan domain kustom (geely-bsd.com), branding yang konsisten dengan identitas Geely global, katalog unit dengan spesifikasi lengkap, simulasi kredit, dan jalur konsultasi sales yang seamless. Setiap halaman unit dirancang untuk memperkecil jarak antara minat awal dan keputusan kontak sales.",
-          en: "Built a dealer website with a custom domain (geely-bsd.com), branding consistent with global Geely identity, a unit catalog with full specifications, credit simulation, and a seamless sales consultation flow. Each unit page was designed to shorten the distance between initial interest and the decision to contact sales.",
-        },
-        bullets: [
-          { id: "Domain kustom dengan branding konsisten", en: "Custom domain with consistent branding" },
-          { id: "Katalog unit dengan spesifikasi lengkap", en: "Unit catalog with full specifications" },
-          { id: "Simulasi kredit kendaraan", en: "Vehicle credit simulation" },
-          { id: "Jalur konsultasi sales langsung", en: "Direct sales consultation flow" },
-        ],
-      },
-      result: {
-        heading: { id: "Hasil", en: "Result" },
-        body: {
-          id: "Website live di geely-bsd.com dan menjadi titik kontak digital utama untuk calon pembeli Geely di BSD City. Sales consultant dapat mengarahkan prospek ke halaman unit spesifik untuk informasi lengkap sebelum konsultasi, sehingga percakapan penjualan lebih fokus.",
-          en: "The site is live at geely-bsd.com and serves as the primary digital contact point for prospective Geely buyers in BSD City. Sales consultants can direct prospects to specific unit pages for detailed information prior to consultation, making sales conversations more focused.",
-        },
-      },
+      ],
       nextProjectSlug: "suzuki-jakbar",
     },
   },
@@ -231,187 +219,145 @@ export const studioProjects: StudioProject[] = [
     name: "Suzuki Jakarta Barat",
     categorySlug: "automotive",
     tagline: {
-      id: "Website dealer Suzuki Jakarta Barat dengan katalog unit, simulasi kredit, dan sistem lead terintegrasi.",
-      en: "Suzuki Jakarta Barat dealer website with unit catalog, credit simulation, and integrated lead system.",
+      id: "Website pemasaran digital untuk sales Suzuki Jakarta Barat.",
+      en: "Digital marketing website for Suzuki Jakarta Barat sales.",
     },
     summary: {
-      id: "Platform dealer Suzuki Jakarta Barat di subdomain autodealer.id, menampilkan katalog lengkap, simulasi pembiayaan, dan jalur konversi ke sales consultant.",
-      en: "Suzuki Jakarta Barat dealer platform on the autodealer.id subdomain, displaying a complete catalog, financing simulation, and conversion flow to sales consultants.",
+      id: "Landing page pemasaran untuk sales Suzuki Jakarta Barat, menampilkan katalog unit, harga, promo, dan jalur inquiry ke sales.",
+      en: "Marketing landing page for Suzuki Jakarta Barat sales, displaying unit catalog, pricing, promotions, and inquiry path to sales.",
     },
     year: "2025",
     client: "Suzuki Jakarta Barat",
-    industry: "Automotive Retail",
+    industry: "Automotive Sales",
     cover: "/portfolio/mitsubishi.png",
     accent: "#0D9488",
     liveUrl: "https://suzukijakbar.autodealer.id",
     status: "published",
     order: 2,
-    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "PostgreSQL"],
-    role: {
-      id: "Desain · Pengembangan",
-      en: "Design · Engineering",
-    },
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS"],
+    role: { id: "Desain · Pengembangan", en: "Design · Engineering" },
     caseStudy: {
-      problem: {
-        heading: { id: "Masalah", en: "Problem" },
-        body: {
-          id: "Suzuki Jakarta Barat membutuhkan platform digital yang dapat menampilkan seluruh line-up mobil Suzuki, membantu calon pembeli memahami opsi pembiayaan, dan secara otomatis mengarahkan minat ke tim sales yang sesuai. Website dealer lama tidak memiliki alur konversi yang jelas.",
-          en: "Suzuki Jakarta Barat needed a digital platform that could display the full Suzuki line-up, help prospective buyers understand financing options, and automatically direct interest to the appropriate sales team. The old dealer website lacked a clear conversion flow.",
+      sections: [
+        {
+          heading: { id: "Ikhtisar", en: "Overview" },
+          body: [
+            {
+              id: "Suzuki Jakarta Barat adalah sales mobil Suzuki yang menggunakan website sebagai salah satu media pemasaran digital. Website dibuat untuk menampilkan model kendaraan Suzuki, harga, promo, dan informasi produk kepada calon customer.",
+              en: "Suzuki Jakarta Barat is a Suzuki car salesperson using a website as one of their digital marketing channels. The website was built to display Suzuki vehicle models, pricing, promotions, and product information to prospective customers.",
+            },
+            {
+              id: "Calon customer yang mengunjungi website dapat melihat katalog unit, memahami pilihan yang tersedia, dan ketika siap melanjutkan, langsung terhubung dengan sales melalui WhatsApp.",
+              en: "Prospective customers visiting the website can view the unit catalog, understand available choices, and when ready to proceed, directly connect with sales through WhatsApp.",
+            },
+          ],
         },
-      },
-      solution: {
-        heading: { id: "Solusi", en: "Solution" },
-        body: {
-          id: "Dibangun di platform autodealer.id dengan katalog unit Suzuki lengkap, simulasi kredit kendaraan berdasarkan tenor dan down payment, form lead yang langsung terhubung ke CRM sales, dan halaman detail per model dengan spesifikasi teknis lengkap.",
-          en: "Built on the autodealer.id platform with the complete Suzuki unit catalog, vehicle credit simulation based on tenor and down payment, a lead form connected directly to the sales CRM, and detailed per-model pages with full technical specifications.",
-        },
-        bullets: [
-          { id: "Katalog lengkap semua model Suzuki", en: "Complete catalog of all Suzuki models" },
-          { id: "Simulasi kredit berdasarkan tenor & DP", en: "Credit simulation based on tenor & down payment" },
-          { id: "Form lead terhubung ke CRM sales", en: "Lead form connected to sales CRM" },
-          { id: "Halaman detail per model dengan spesifikasi", en: "Per-model detail pages with specifications" },
-        ],
-      },
-      result: {
-        heading: { id: "Hasil", en: "Result" },
-        body: {
-          id: "Website live di suzikijakbar.autodealer.id dan menjadi kanal utama untuk pembelian lead sales. Setiap form submission langsung masuk ke CRM dealer, sehingga follow-up sales dapat dilakukan dalam waktu singkat.",
-          en: "The site is live at suzikijakbar.autodealer.id and serves as the main channel for generating sales leads. Every form submission goes directly into the dealer CRM, allowing sales follow-up within a short window.",
-        },
-      },
-      nextProjectSlug: "mitsubishi-autodealer",
+      ],
+      nextProjectSlug: "mitsubishi",
     },
   },
 
   {
-    slug: "mitsubishi-autodealer",
+    slug: "mitsubishi",
     index: "03",
     name: "Mitsubishi",
     categorySlug: "automotive",
     tagline: {
-      id: "Website dealer Mitsubishi dengan katalog unit, simulasi kredit, dan sistem lead management.",
-      en: "Mitsubishi dealer website with unit catalog, credit simulation, and lead management system.",
+      id: "Website pemasaran digital untuk sales Mitsubishi.",
+      en: "Digital marketing website for Mitsubishi sales.",
     },
     summary: {
-      id: "Platform dealer Mitsubishi di autodealer.id dengan katalog lengkap, simulasi pembiayaan, dan integrasi sales.",
-      en: "Mitsubishi dealer platform on autodealer.id with complete catalog, financing simulation, and sales integration.",
+      id: "Landing page pemasaran untuk sales Mitsubishi, menampilkan katalog unit, harga, promo, dan jalur inquiry ke sales.",
+      en: "Marketing landing page for Mitsubishi sales, displaying unit catalog, pricing, promotions, and inquiry path to sales.",
     },
     year: "2025",
-    client: "Mitsubishi Dealer",
-    industry: "Automotive Retail",
+    client: "Mitsubishi Sales",
+    industry: "Automotive Sales",
     cover: "/portfolio/mitsubishi.png",
     accent: "#D85A2A",
     liveUrl: "https://mitsubishi.autodealer.id",
     status: "published",
     order: 3,
-    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "PostgreSQL"],
-    role: {
-      id: "Desain · Pengembangan",
-      en: "Design · Engineering",
-    },
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS"],
+    role: { id: "Desain · Pengembangan", en: "Design · Engineering" },
     caseStudy: {
-      problem: {
-        heading: { id: "Masalah", en: "Problem" },
-        body: {
-          id: "Dealer Mitsubishi membutuhkan platform digital yang dapat memperlakukan setiap kendaraan sebagai pengalaman tersendiri — dari spesifikasi teknis hingga opsi pembiayaan dan jadwal test drive — dalam satu alur yang konsisten.",
-          en: "The Mitsubishi dealer needed a digital platform that could treat each vehicle as its own experience — from technical specifications to financing options and test drive scheduling — within a single consistent flow.",
+      sections: [
+        {
+          heading: { id: "Ikhtisar", en: "Overview" },
+          body: [
+            {
+              id: "Sama dengan project otomotif lainnya, website ini merupakan media pemasaran digital untuk sales Mitsubishi. Website menampilkan model kendaraan Mitsubishi, harga, promo, dan informasi produk.",
+              en: "Like other automotive projects, this website is a digital marketing medium for Mitsubishi sales. The website displays Mitsubishi vehicle models, pricing, promotions, and product information.",
+            },
+            {
+              id: "Calon customer dapat menjelajahi katalog, menemukan informasi yang dibutuhkan, dan menghubungi sales melalui jalur WhatsApp yang tersedia.",
+              en: "Prospective customers can browse the catalog, find the information they need, and contact sales through the available WhatsApp channel.",
+            },
+          ],
         },
-      },
-      solution: {
-        heading: { id: "Solusi", en: "Solution" },
-        body: {
-          id: "Dibangun di platform autodealer.id dengan katalog unit Mitsubishi lengkap, simulasi kredit real-time, halaman detail per model dengan spesifikasi teknis dan galeri, serta jalur langsung ke sales consultant untuk test drive dan penawaran.",
-          en: "Built on the autodealer.id platform with the complete Mitsubishi unit catalog, real-time credit simulation, per-model detail pages with specifications and gallery, and a direct path to sales consultants for test drives and offers.",
-        },
-        bullets: [
-          { id: "Katalog lengkap model Mitsubishi", en: "Complete catalog of Mitsubishi models" },
-          { id: "Simulasi kredit real-time", en: "Real-time credit simulation" },
-          { id: "Halaman detail per model dengan galeri", en: "Per-model detail pages with gallery" },
-          { id: "Jalur langsung ke sales consultant", en: "Direct path to sales consultant" },
-        ],
-      },
-      result: {
-        heading: { id: "Hasil", en: "Result" },
-        body: {
-          id: "Website live di mitsubishi.autodealer.id. Sales consultant dapat mengarahkan calon pembeli ke halaman unit spesifik untuk informasi lengkap sebelum konsultasi, dan setiap form submission langsung tercatat di sistem lead dealer.",
-          en: "The site is live at mitsubishi.autodealer.id. Sales consultants can direct prospective buyers to specific unit pages for detailed information prior to consultation, and every form submission is recorded directly in the dealer lead system.",
-        },
-      },
-      nextProjectSlug: "jaecoo",
+      ],
+      nextProjectSlug: "jaecoo-bintaro",
     },
   },
 
   {
-    slug: "jaecoo",
+    slug: "jaecoo-bintaro",
     index: "04",
-    name: "JAECOO",
+    name: "JAECOO Bintaro",
     categorySlug: "automotive",
     tagline: {
-      id: "Website dealer JAECOO dengan katalog unit dan jalur konsultasi sales.",
-      en: "JAECOO dealer website with unit catalog and sales consultation flow.",
+      id: "Website pemasaran digital untuk sales JAECOO Bintaro.",
+      en: "Digital marketing website for JAECOO Bintaro sales.",
     },
     summary: {
-      id: "Platform dealer JAECOO di autodealer.id dengan katalog lengkap dan alur konversi ke sales.",
-      en: "JAECOO dealer platform on autodealer.id with complete catalog and sales conversion flow.",
+      id: "Landing page pemasaran untuk sales JAECOO Bintaro, menampilkan katalog unit, harga, promo, dan jalur inquiry ke sales.",
+      en: "Marketing landing page for JAECOO Bintaro sales, displaying unit catalog, pricing, promotions, and inquiry path to sales.",
     },
     year: "2025",
-    client: "JAECOO Dealer",
-    industry: "Automotive Retail",
+    client: "JAECOO Bintaro",
+    industry: "Automotive Sales",
     cover: "/portfolio/mitsubishi.png",
     accent: "#4A4742",
-    liveUrl: "https://jaecoo.autodealer.id",
+    liveUrl: "https://jaecoobintaro.com",
     status: "published",
     order: 4,
-    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "PostgreSQL"],
-    role: {
-      id: "Desain · Pengembangan",
-      en: "Design · Engineering",
-    },
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS"],
+    role: { id: "Desain · Pengembangan", en: "Design · Engineering" },
     caseStudy: {
-      problem: {
-        heading: { id: "Masalah", en: "Problem" },
-        body: {
-          id: "JAECOO sebagai brand baru di pasar Indonesia membutuhkan kehadiran digital yang dapat memperkenalkan line-up model mereka kepada calon pembeli, sekaligus mengarahkan minat ke dealer sales consultant.",
-          en: "JAECOO as a new brand in the Indonesian market needed a digital presence that could introduce their model line-up to prospective buyers, while directing interest to dealer sales consultants.",
+      sections: [
+        {
+          heading: { id: "Ikhtisar", en: "Overview" },
+          body: [
+            {
+              id: "JAECOO Bintaro adalah sales mobil JAECOO yang menggunakan website sebagai media pemasaran digital. Website menampilkan model kendaraan JAECOO, harga, promo, dan informasi produk.",
+              en: "JAECOO Bintaro is a JAECOO car salesperson using a website as a digital marketing medium. The website displays JAECOO vehicle models, pricing, promotions, and product information.",
+            },
+            {
+              id: "Calon customer dapat melihat katalog unit, memahami opsi yang tersedia, dan menghubungi sales melalui jalur WhatsApp.",
+              en: "Prospective customers can view the unit catalog, understand available options, and contact sales through the WhatsApp channel.",
+            },
+          ],
         },
-      },
-      solution: {
-        heading: { id: "Solusi", en: "Solution" },
-        body: {
-          id: "Dibangun di platform autodealer.id dengan katalog unit JAECOO, halaman detail per model, simulasi pembiayaan, dan jalur konsultasi sales. Branding disesuaikan dengan identitas global JAECOO.",
-          en: "Built on the autodealer.id platform with the JAECOO unit catalog, per-model detail pages, financing simulation, and sales consultation flow. Branding was aligned with JAECOO's global identity.",
-        },
-        bullets: [
-          { id: "Katalog unit JAECOO", en: "JAECOO unit catalog" },
-          { id: "Halaman detail per model", en: "Per-model detail pages" },
-          { id: "Simulasi pembiayaan", en: "Financing simulation" },
-          { id: "Branding konsisten global", en: "Consistent global branding" },
-        ],
-      },
-      result: {
-        heading: { id: "Hasil", en: "Result" },
-        body: {
-          id: "Website live di jaecoo.autodealer.id dan menjadi titik kontak digital untuk calon pembeli JAECOO. Setiap form submission masuk langsung ke sistem lead dealer.",
-          en: "The site is live at jaecoo.autodealer.id and serves as the digital contact point for prospective JAECOO buyers. Every form submission enters the dealer lead system directly.",
-        },
-      },
+      ],
       nextProjectSlug: "berkah-komputer",
     },
   },
 
-  /* ── TECHNOLOGY & RETAIL ───────────────────── */
+  /* ═══════════════════════════════════════════════
+     TECHNOLOGY & RETAIL
+     ═══════════════════════════════════════════════ */
+
   {
     slug: "berkah-komputer",
     index: "05",
     name: "Berkah Komputer",
     categorySlug: "technology-retail",
     tagline: {
-      id: "Toko komputer online dengan katalog produk, checkout, dan manajemen stok.",
-      en: "Online computer store with product catalog, checkout, and inventory management.",
+      id: "E-commerce dan mini ERP toko laptop.",
+      en: "E-commerce and mini ERP for a laptop store.",
     },
     summary: {
-      id: "Website e-commerce untuk toko komputer Berkah Komputer dengan katalog produk terorganisir, checkout, dan integrasi stok.",
-      en: "E-commerce website for Berkah Komputer store with organized product catalog, checkout, and inventory integration.",
+      id: "Bermula dari kebutuhan e-commerce sendiri untuk menghindari biaya admin marketplace, scope berkembang menjadi sistem operasional toko dengan inventory, transaksi, dan laporan keuangan.",
+      en: "Starting from the need for an independent e-commerce to avoid marketplace admin fees, the scope grew into a store operational system with inventory, transactions, and financial reports.",
     },
     year: "2025",
     client: "Berkah Komputer",
@@ -421,113 +367,44 @@ export const studioProjects: StudioProject[] = [
     liveUrl: "https://berkahkomputer.id",
     status: "published",
     order: 1,
-    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "PostgreSQL", "Prisma"],
-    role: {
-      id: "Desain · Pengembangan",
-      en: "Design · Engineering",
-    },
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Prisma", "PostgreSQL"],
+    role: { id: "Desain · Pengembangan", en: "Design · Engineering" },
     caseStudy: {
-      problem: {
-        heading: { id: "Masalah", en: "Problem" },
-        body: {
-          id: "Berkah Komputer menjual produk teknologi melalui kanal marketplace dan membutuhkan toko online sendiri untuk membangun brand, mengontrol margin, dan mengelola data pelanggan secara langsung.",
-          en: "Berkah Komputer sold technology products through marketplace channels and needed their own online store to build brand, control margins, and manage customer data directly.",
+      sections: [
+        {
+          heading: { id: "Ikhtisar", en: "Overview" },
+          body: [
+            {
+              id: "Owner toko laptop ingin memiliki e-commerce sendiri karena biaya admin dan potongan marketplace cukup membebani. Namun setelah kebutuhan toko dibahas lebih dalam, ditemukan masalah lain: pencatatan stok dan pembukuan toko masih banyak dilakukan manual dan berantakan.",
+              en: "The laptop store owner wanted their own e-commerce because marketplace admin fees and cuts were quite burdensome. But after discussing the store's needs in depth, another problem was discovered: stock recording and bookkeeping were still largely manual and messy.",
+            },
+            {
+              id: "Dari sini scope berkembang. Kami tidak hanya membuat storefront untuk customer, tetapi juga admin panel yang terhubung langsung dengan inventory. Saat admin memasukkan produk, produk tampil di e-commerce sekaligus masuk stok inventory. Saat barang terjual, diproses melalui kasir/order, stok berkurang, dan transaksi meninggalkan history.",
+              en: "From here the scope grew. We didn't just build a storefront for customers, but an admin panel directly connected to inventory. When admin enters a product, it appears in the e-commerce and enters inventory stock simultaneously. When an item is sold, processed through cashier/order, stock decreases, and the transaction leaves a history.",
+            },
+            {
+              id: "Sistem kemudian berkembang menjadi e-commerce + mini ERP toko yang mencakup pengelolaan produk, customer, transaksi, inventory, pengeluaran, dan laporan keuangan.",
+              en: "The system then grew into an e-commerce + mini store ERP covering product management, customers, transactions, inventory, expenses, and financial reports.",
+            },
+          ],
         },
-      },
-      solution: {
-        heading: { id: "Solusi", en: "Solution" },
-        body: {
-          id: "Dibangun e-commerce dengan katalog produk terorganisir per kategori, pencarian produk, halaman detail dengan spesifikasi, keranjang belanja, checkout, dan dashboard admin untuk mengelola produk serta stok.",
-          en: "Built an e-commerce site with a product catalog organized by category, product search, detail pages with specifications, shopping cart, checkout, and an admin dashboard to manage products and inventory.",
-        },
-        bullets: [
-          { id: "Katalog produk per kategori", en: "Product catalog by category" },
-          { id: "Pencarian produk", en: "Product search" },
-          { id: "Keranjang belanja & checkout", en: "Shopping cart & checkout" },
-          { id: "Dashboard admin produk & stok", en: "Admin dashboard for products & inventory" },
-        ],
-      },
-      result: {
-        heading: { id: "Hasil", en: "Result" },
-        body: {
-          id: "Toko online live di berkahkomputer.id. Pelanggan dapat membeli produk langsung dari website, dan tim Berkah Komputer dapat mengelola katalog serta stok melalui dashboard admin tanpa ketergantungan pada marketplace.",
-          en: "The online store is live at berkahkomputer.id. Customers can purchase products directly from the website, and the Berkah Komputer team can manage the catalog and inventory through the admin dashboard without marketplace dependency.",
-        },
-      },
-      nextProjectSlug: "ghazy-computer",
-    },
-  },
-
-  {
-    slug: "ghazy-computer",
-    index: "06",
-    name: "Ghazy Computer",
-    categorySlug: "technology-retail",
-    tagline: {
-      id: "Sistem buyback laptop dengan alur submit, evaluasi, penawaran harga, dan pickup.",
-      en: "Laptop buyback system with submit, evaluation, price offer, and pickup flow.",
-    },
-    summary: {
-      id: "Web app untuk bisnis buyback laptop Ghazy Computer dengan alur penawaran, tracking, dan pembayaran terorganisir.",
-      en: "Web app for Ghazy Computer's laptop buyback business with offer flow, tracking, and organized payment.",
-    },
-    year: "2025",
-    client: "Ghazy Computer",
-    industry: "Retail / Technology",
-    cover: "/portfolio/ghazy-computer.png",
-    accent: "#E11D48",
-    liveUrl: "https://ghazycomputer.com",
-    status: "published",
-    order: 2,
-    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "PostgreSQL", "Prisma"],
-    role: {
-      id: "Desain · Pengembangan",
-      en: "Design · Engineering",
-    },
-    caseStudy: {
-      problem: {
-        heading: { id: "Masalah", en: "Problem" },
-        body: {
-          id: "Bisnis buyback laptop yang berkembang tenggelam dalam spreadsheet dan WhatsApp. Tim butuh sistem yang dapat menangani alur submit barang, evaluasi kondisi, penawaran harga, pickup, dan pembayaran secara terlacak.",
-          en: "A growing laptop buyback business was drowning in spreadsheets and WhatsApp. The team needed a system that could handle the flow of item submission, condition evaluation, price offers, pickup, and payment in a trackable way.",
-        },
-      },
-      solution: {
-        heading: { id: "Solusi", en: "Solution" },
-        body: {
-          id: "Dibangun web app dengan alur lengkap: pelanggan submit detail laptop → sistem membantu evaluasi kondisi → penawaran harga otomatis berdasarkan parameter → penjadwalan pickup → konfirmasi pembayaran. Semua transaksi tercatat dan dapat di-track oleh tim admin.",
-          en: "Built a web app with the full flow: customer submits laptop details → system assists condition evaluation → automated price offer based on parameters → pickup scheduling → payment confirmation. All transactions are recorded and trackable by the admin team.",
-        },
-        bullets: [
-          { id: "Form submit detail laptop", en: "Laptop detail submission form" },
-          { id: "Evaluasi kondisi terpandu", en: "Guided condition evaluation" },
-          { id: "Penawaran harga otomatis", en: "Automated price offer" },
-          { id: "Penjadwalan pickup & pembayaran", en: "Pickup scheduling & payment" },
-        ],
-      },
-      result: {
-        heading: { id: "Hasil", en: "Result" },
-        body: {
-          id: "Website live di ghazycomputer.com. Pelanggan dapat mengajukan laptop untuk dijual melalui website, dan tim Ghazy Computer dapat mengelola seluruh alur transaksi dari satu dashboard.",
-          en: "The site is live at ghazycomputer.com. Customers can submit laptops for sale through the website, and the Ghazy Computer team can manage the entire transaction flow from a single dashboard.",
-        },
-      },
+      ],
       nextProjectSlug: "jakarta-laptops",
     },
   },
 
   {
     slug: "jakarta-laptops",
-    index: "07",
+    index: "06",
     name: "Jakarta Laptops",
     categorySlug: "technology-retail",
     tagline: {
-      id: "Toko laptop online dengan katalog produk dan checkout.",
-      en: "Online laptop store with product catalog and checkout.",
+      id: "Kanal jual dan terima laptop bekas dengan sistem inventory.",
+      en: "Sell and buyback channel for used laptops with inventory system.",
     },
     summary: {
-      id: "Website e-commerce untuk toko laptop Jakarta Laptops dengan katalog terorganisir dan alur pembelian.",
-      en: "E-commerce website for Jakarta Laptops store with organized catalog and purchase flow.",
+      id: "Permintaan laptop bekas tinggi tapi supply sulit didapat. Platform dirancang tidak hanya untuk menjual, tetapi juga menerima penawaran laptop dari masyarakat.",
+      en: "High demand for used laptops but supply is hard to get. The platform is designed not only to sell, but also to receive laptop offers from the public.",
     },
     year: "2025",
     client: "Jakarta Laptops",
@@ -536,536 +413,606 @@ export const studioProjects: StudioProject[] = [
     accent: "#8B5CF6",
     liveUrl: "https://jakartalaptops.com",
     status: "published",
-    order: 3,
-    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "PostgreSQL"],
-    role: {
-      id: "Desain · Pengembangan",
-      en: "Design · Engineering",
-    },
+    order: 2,
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Prisma", "PostgreSQL"],
+    role: { id: "Desain · Pengembangan", en: "Design · Engineering" },
     caseStudy: {
-      problem: {
-        heading: { id: "Masalah", en: "Problem" },
-        body: {
-          id: "Jakarta Laptops membutuhkan toko online sendiri untuk membangun brand di luar marketplace, dengan katalog laptop yang terorganisir per kategori dan brand.",
-          en: "Jakarta Laptops needed their own online store to build brand outside marketplaces, with a laptop catalog organized by category and brand.",
+      sections: [
+        {
+          heading: { id: "Ikhtisar", en: "Overview" },
+          body: [
+            {
+              id: "Problem utama Jakarta Laptops berbeda dari toko laptop pada umumnya. Permintaan laptop bekas cukup besar, tetapi toko mengalami kesulitan mendapatkan supply atau barang. Di saat yang sama, pengelolaan stok dan pembukuan juga menjadi kebutuhan.",
+              en: "Jakarta Laptops' main problem differs from typical laptop stores. Demand for used laptops is quite high, but the store struggles to get supply. At the same time, stock management and bookkeeping are also needs.",
+            },
+            {
+              id: "Karena itu platform tidak hanya dirancang untuk menjual laptop, tetapi juga menyediakan jalur agar masyarakat dapat menawarkan atau menjual laptop mereka ke Jakarta Laptops. Inventory dan pencatatan mendukung alur tersebut — baik alur jual maupun alur terima.",
+              en: "Therefore the platform is designed not only to sell laptops, but also to provide a channel for the public to offer or sell their laptops to Jakarta Laptops. Inventory and recording support both flows — selling and buying.",
+            },
+          ],
         },
-      },
-      solution: {
-        heading: { id: "Solusi", en: "Solution" },
-        body: {
-          id: "Dibangun e-commerce dengan katalog laptop terorganisir (brand, kategori, harga), pencarian, halaman detail produk dengan spesifikasi lengkap, dan checkout.",
-          en: "Built an e-commerce site with a laptop catalog organized by brand, category, and price, product search, detail pages with full specifications, and checkout.",
+      ],
+      nextProjectSlug: "ghazy-computer",
+    },
+  },
+
+  {
+    slug: "ghazy-computer",
+    index: "07",
+    name: "Ghazy Computer",
+    categorySlug: "technology-retail",
+    tagline: {
+      id: "Website katalog dan e-commerce untuk toko komputer.",
+      en: "Catalog and e-commerce website for a computer store.",
+    },
+    summary: {
+      id: "Kanal digital sendiri untuk Ghazy Computer dengan katalog produk, penyajian unit, dan jalur customer menuju pembelian atau inquiry.",
+      en: "An independent digital channel for Ghazy Computer with product catalog, unit presentation, and customer path to purchase or inquiry.",
+    },
+    year: "2025",
+    client: "Ghazy Computer",
+    industry: "Retail / Technology",
+    cover: "/portfolio/ghazy-computer.png",
+    accent: "#E11D48",
+    liveUrl: "https://ghazycomputer.com",
+    status: "published",
+    order: 3,
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS"],
+    role: { id: "Desain · Pengembangan", en: "Design · Engineering" },
+    caseStudy: {
+      sections: [
+        {
+          heading: { id: "Ikhtisar", en: "Overview" },
+          body: [
+            {
+              id: "Ghazy Computer merupakan website katalog dan e-commerce untuk membantu toko memiliki kanal digital sendiri. Fokus project ini adalah pada katalog produk, penyajian produk, informasi unit, dan jalur customer menuju pembelian atau inquiry.",
+              en: "Ghazy Computer is a catalog and e-commerce website to help the store have its own digital channel. The project focuses on product catalog, product presentation, unit information, and the customer path to purchase or inquiry.",
+            },
+          ],
         },
-        bullets: [
-          { id: "Katalog laptop per brand & kategori", en: "Laptop catalog by brand & category" },
-          { id: "Pencarian & filter produk", en: "Product search & filtering" },
-          { id: "Halaman detail dengan spesifikasi", en: "Detail pages with specifications" },
-          { id: "Checkout", en: "Checkout" },
-        ],
-      },
-      result: {
-        heading: { id: "Hasil", en: "Result" },
-        body: {
-          id: "Website live di jakartalaptops.com. Pelanggan dapat menjelajahi katalog laptop dan melakukan pembelian langsung dari website.",
-          en: "The site is live at jakartalaptops.com. Customers can browse the laptop catalog and make purchases directly from the website.",
+      ],
+      nextProjectSlug: "blessing-tech",
+    },
+  },
+
+  {
+    slug: "blessing-tech",
+    index: "08",
+    name: "Blessing Tech Computindo",
+    categorySlug: "technology-retail",
+    tagline: {
+      id: "E-commerce, terima laptop, dan sistem operasional toko dalam satu platform.",
+      en: "E-commerce, laptop buyback, and store operational system in one platform.",
+    },
+    summary: {
+      id: "Owner meminta paket lengkap sejak awal — e-commerce, jalur terima laptop, dan pembukuan operasional toko.",
+      en: "The owner requested a complete package from the start — e-commerce, laptop buyback channel, and store operational bookkeeping.",
+    },
+    year: "2025",
+    client: "Blessing Tech Computindo",
+    industry: "Retail / Technology",
+    cover: "/portfolio/ghazy-computer.png",
+    accent: "#0891B2",
+    liveUrl: "https://blessing-tech.vercel.app",
+    status: "published",
+    order: 4,
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Prisma", "PostgreSQL"],
+    role: { id: "Desain · Pengembangan", en: "Design · Engineering" },
+    caseStudy: {
+      sections: [
+        {
+          heading: { id: "Ikhtisar", en: "Overview" },
+          body: [
+            {
+              id: "Owner ingin membuat sistem yang cukup lengkap sejak awal setelah melihat toko laptop lain mulai memiliki kanal digital sendiri. Scope yang diminta mencakup tiga sisi: e-commerce, terima laptop, dan pembukuan/operasional toko.",
+              en: "The owner wanted to build a fairly complete system from the start after seeing other laptop stores begin to have their own digital channels. The requested scope covers three sides: e-commerce, laptop buyback, and store bookkeeping/operations.",
+            },
+            {
+              id: "Sistem yang dibangun menghubungkan: frontend customer untuk katalog dan pembelian; terima laptop untuk jalur customer menawarkan laptop; dan admin untuk produk, customer, kasir, order, stok, pengeluaran, inventory, dan laporan keuangan.",
+              en: "The system connects: customer frontend for catalog and purchasing; laptop buyback for customers to offer laptops; and admin for products, customers, cashier, orders, stock, expenses, inventory, and financial reports.",
+            },
+            {
+              id: "URL Vercel digunakan sementara sampai domain client tersedia.",
+              en: "The Vercel URL is used temporarily until the client's domain is available.",
+            },
+          ],
         },
-      },
+      ],
       nextProjectSlug: "jasa-proteksi",
     },
   },
 
-  /* ── INSURANCE & FINANCE ───────────────────── */
+  /* ═══════════════════════════════════════════════
+     INSURANCE
+     ═══════════════════════════════════════════════ */
+
   {
     slug: "jasa-proteksi",
-    index: "08",
+    index: "09",
     name: "Jasa Proteksi",
-    categorySlug: "insurance-finance",
+    categorySlug: "insurance",
     tagline: {
-      id: "Platform kalkulator premi asuransi kendaraan berbasis database 14.000+ data kendaraan.",
-      en: "Vehicle insurance premium calculator platform based on a database of 14,000+ vehicle records.",
+      id: "Platform kalkulator estimasi premi asuransi kendaraan berbasis data.",
+      en: "Data-driven vehicle insurance premium estimation calculator platform.",
     },
     summary: {
-      id: "Bukan sekadar company profile — Jasa Proteksi adalah platform kalkulator asuransi kendaraan berbasis data, dengan database lebih dari 14.000 data kendaraan.",
-      en: "Not just a company profile — Jasa Proteksi is a data-driven vehicle insurance calculator platform, with a database of more than 14,000 vehicle records.",
+      id: "Client datang dengan sekitar 14.000 data premi kendaraan dan ide untuk membuat aplikasi yang dapat cepat menampilkan estimasi premi kendaraan.",
+      en: "The client came with about 14,000 vehicle premium data records and an idea to build an application that can quickly display vehicle premium estimates.",
     },
     year: "2025",
     client: "Jasa Proteksi",
-    industry: "Insurance Brokerage",
+    industry: "Insurance",
     cover: "/portfolio/jasaprotect.png",
     accent: "#6366F1",
-    liveUrl: "https://jasa-proteksi.vercel.app",
+    liveUrl: "https://jasaproteksi.com",
     status: "published",
     order: 1,
-    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "PostgreSQL", "Prisma"],
-    role: {
-      id: "Strategi · Desain · Pengembangan",
-      en: "Strategy · Design · Engineering",
-    },
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Prisma", "PostgreSQL"],
+    role: { id: "Strategi · Desain · Pengembangan", en: "Strategy · Design · Engineering" },
     caseStudy: {
-      problem: {
-        heading: { id: "Masalah", en: "Problem" },
-        body: {
-          id: "Jasa Proteksi memiliki database lebih dari 14.000 data kendaraan dan membutuhkan sistem yang dapat secara otomatis menghasilkan estimasi premi asuransi kendaraan. Sebelumnya, perhitungan premi dilakukan manual oleh tim sales, yang memakan waktu dan rentan kesalahan. Calon nasabah harus menghubungi sales terlebih dahulu untuk mendapatkan estimasi harga.",
-          en: "Jasa Proteksi had a database of more than 14,000 vehicle records and needed a system that could automatically generate vehicle insurance premium estimates. Previously, premium calculations were done manually by the sales team, which was time-consuming and error-prone. Prospective customers had to contact sales first to get a price estimate.",
+      sections: [
+        {
+          heading: { id: "Ikhtisar", en: "Overview" },
+          body: [
+            {
+              id: "Client datang dengan sekitar 14.000 data premi kendaraan dan memiliki ide untuk membuat aplikasi yang dapat dengan cepat menampilkan estimasi premi kendaraan. Pengguna cukup memilih merek, tipe, dan tahun kendaraan.",
+              en: "The client came with about 14,000 vehicle premium data records and an idea to build an application that can quickly display vehicle premium estimates. Users simply select the brand, type, and year of the vehicle.",
+            },
+            {
+              id: "Tantangannya adalah membuat ribuan data tersebut tidak membebani pengguna. Dibangun engine kalkulator yang membaca pilihan pengguna dan hanya mencari atau menampilkan data yang relevan.",
+              en: "The challenge was to make thousands of data records not burden the user. A calculator engine was built that reads the user's selections and only searches for or displays relevant data.",
+            },
+            {
+              id: "Dari kebutuhan tersebut terbentuk Jasa Proteksi, sebuah platform kalkulator estimasi premi kendaraan berbasis data.",
+              en: "From that need, Jasa Proteksi was formed — a data-driven vehicle insurance premium estimation calculator platform.",
+            },
+          ],
         },
-      },
-      solution: {
-        heading: { id: "Solusi", en: "Solution" },
-        body: {
-          id: "Dibangun platform kalkulator asuransi kendaraan berbasis data. Pengguna cukup memilih merek, tipe, dan tahun kendaraan — kemudian sistem mencari kendaraan yang sesuai dalam database 14.000+ entri dan menghasilkan estimasi premi berdasarkan parameter perlindungan yang dipilih. Sistem terpisah dari UI layer, sehingga perhitungan yang sama dapat dipakai ulang di beberapa permukaan (kalkulator, perbandingan, email).",
-          en: "Built a data-driven vehicle insurance calculator platform. Users simply select the brand, type, and year of the vehicle — the system then searches the matching vehicle in the 14,000+ entry database and generates a premium estimate based on the chosen protection parameters. The calculation engine is separated from the UI layer, so the same calculation can be reused across surfaces (calculator, comparison, email).",
-        },
-        bullets: [
-          { id: "Database 14.000+ data kendaraan", en: "Database of 14,000+ vehicle records" },
-          { id: "Pencarian kendaraan: merek, tipe, tahun", en: "Vehicle search: brand, type, year" },
-          { id: "Estimasi premi otomatis berdasarkan parameter", en: "Automated premium estimate based on parameters" },
-          { id: "Engine perhitungan terpisah dari UI", en: "Calculation engine separated from UI" },
-        ],
-      },
-      result: {
-        heading: { id: "Hasil", en: "Result" },
-        body: {
-          id: "Platform live di jasa-proteksi.vercel.app. Calon nasabah dapat langsung mendapatkan estimasi premi setelah memilih kendaraan, tanpa harus menunggu respons sales. Tim Jasa Proteksi dapat memperbarui data kendaraan dan parameter premi melalui dashboard admin tanpa deployment ulang.",
-          en: "The platform is live at jasa-proteksi.vercel.app. Prospective customers can immediately get a premium estimate after selecting a vehicle, without waiting for a sales response. The Jasa Proteksi team can update vehicle data and premium parameters through an admin dashboard without redeployment.",
-        },
-      },
-      nextProjectSlug: "anima-companion",
+      ],
+      nextProjectSlug: "betawi-laptop",
     },
   },
 
-  /* ── PRODUCT & CONSUMER BRAND ──────────────── */
-  {
-    slug: "anima-companion",
-    index: "09",
-    name: "Anima Companion",
-    categorySlug: "product-brand",
-    tagline: {
-      id: "Brand produk konsumen dengan pengalaman digital yang berhadapan langsung dengan konsumen.",
-      en: "Consumer product brand with a digital experience that engages consumers directly.",
-    },
-    summary: {
-      id: "Anima Companion adalah brand produk konsumen. Website dibangun untuk memperkenalkan produk, membangun brand, dan mengarahkan konsumen ke kanal pembelian.",
-      en: "Anima Companion is a consumer product brand. The website was built to introduce the product, build the brand, and direct consumers to purchase channels.",
-    },
-    year: "2025",
-    client: "Anima Companion",
-    industry: "Consumer Product",
-    cover: "/portfolio/jasaprotect.png",
-    accent: "#8B5CF6",
-    status: "published",
-    order: 1,
-    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],
-    role: {
-      id: "Desain · Pengembangan",
-      en: "Design · Engineering",
-    },
-    caseStudy: {
-      problem: {
-        heading: { id: "Masalah", en: "Problem" },
-        body: {
-          id: "Anima Companion sebagai brand produk konsumen membutuhkan kehadiran digital yang dapat memperkenalkan produk kepada target audiens, membangun brand identity, dan mengarahkan konsumen ke kanal pembelian yang tepat. Tidak adanya website sendiri membuat brand kesulitan membangun positioning di luar marketplace.",
-          en: "Anima Companion as a consumer product brand needed a digital presence that could introduce the product to its target audience, build brand identity, and direct consumers to the right purchase channel. Without its own website, the brand struggled to build positioning outside marketplaces.",
-        },
-      },
-      solution: {
-        heading: { id: "Solusi", en: "Solution" },
-        body: {
-          id: "Dibangun website brand dengan halaman utama yang memperkenalkan produk, halaman detail produk, storytelling brand, dan call-to-action yang mengarah ke kanal pembelian. Branding dikembangkan konsisten di semua halaman, dengan motion halus untuk memperkuat karakter brand.",
-          en: "Built a brand website with a homepage that introduces the product, product detail pages, brand storytelling, and call-to-actions leading to the purchase channel. Branding was developed consistently across all pages, with subtle motion to reinforce the brand character.",
-        },
-        bullets: [
-          { id: "Halaman utama perkenalan produk", en: "Homepage introducing the product" },
-          { id: "Halaman detail produk", en: "Product detail pages" },
-          { id: "Brand storytelling konsisten", en: "Consistent brand storytelling" },
-          { id: "CTA ke kanal pembelian", en: "CTA to purchase channel" },
-        ],
-      },
-      result: {
-        heading: { id: "Hasil", en: "Result" },
-        body: {
-          id: "Website brand Anima Companion live, menjadi titik kontak digital utama untuk konsumen. Brand memiliki kehadiran digital sendiri di luar marketplace, dengan branding dan storytelling yang dapat diperbarui oleh tim internal.",
-          en: "The Anima Companion brand website is live, serving as the main digital contact point for consumers. The brand has its own digital presence outside marketplaces, with branding and storytelling that the internal team can update.",
-        },
-      },
-      nextProjectSlug: "lets-go-karimun",
-    },
-  },
+  /* ═══════════════════════════════════════════════
+     INVENTORY & BUSINESS SYSTEMS
+     ═══════════════════════════════════════════════ */
 
-  /* ── TRAVEL & TOURISM ──────────────────────── */
   {
-    slug: "lets-go-karimun",
+    slug: "betawi-laptop",
     index: "10",
-    name: "Let's Go Karimun",
-    categorySlug: "travel-tourism",
+    name: "Betawi Laptop Kemayoran",
+    categorySlug: "inventory-systems",
     tagline: {
-      id: "Website destinasi wisata Karimun dengan informasi paket tour dan kontak.",
-      en: "Karimun tourism destination website with tour package information and contact.",
+      id: "Sistem inventory dan operasional untuk toko laptop bekas.",
+      en: "Inventory and operational system for a used laptop store.",
     },
     summary: {
-      id: "Website untuk bisnis pariwisata Karimun dengan informasi destinasi, paket tour, dan jalur pemesanan.",
-      en: "Website for a Karimun tourism business with destination info, tour packages, and booking flow.",
+      id: "Berawal dari kebutuhan sederhana untuk mengingat histori harga, sistem berkembang menjadi operational & inventory system untuk toko laptop bekas.",
+      en: "Starting from a simple need to remember price history, the system grew into an operational & inventory system for a used laptop store.",
     },
     year: "2025",
-    client: "Let's Go Karimun",
-    industry: "Travel & Tourism",
-    cover: "/portfolio/jasaprotect.png",
+    client: "Betawi Laptop Kemayoran",
+    industry: "Retail / Inventory",
+    cover: "/portfolio/ghazy-computer.png",
     accent: "#0D9488",
     status: "published",
     order: 1,
-    techStack: ["Next.js", "TypeScript", "Tailwind CSS"],
-    role: {
-      id: "Desain · Pengembangan",
-      en: "Design · Engineering",
-    },
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Prisma", "PostgreSQL"],
+    role: { id: "Desain · Pengembangan", en: "Design · Engineering" },
     caseStudy: {
-      problem: {
-        heading: { id: "Masalah", en: "Problem" },
-        body: {
-          id: "Bisnis pariwisata Karimun membutuhkan website yang dapat memperkenalkan destinasi, menampilkan paket tour yang tersedia, dan memudahkan calon wisatawan menghubungi pengelola untuk pemesanan.",
-          en: "A Karimun tourism business needed a website that could introduce the destination, display available tour packages, and make it easy for prospective tourists to contact the operator for booking.",
+      sections: [
+        {
+          heading: { id: "Ikhtisar", en: "Overview" },
+          body: [
+            {
+              id: "Owner merupakan pemilik toko laptop bekas dan awalnya mempunyai masalah yang sangat sederhana namun spesifik. Ia sering kesulitan mengingat: terakhir beli laptop merk/seri/spek seperti ini dari siapa dan berapa? Terakhir jual spek seperti ini ke siapa dan berapa?",
+              en: "The owner is a used laptop store owner who initially had a very simple but specific problem. He often had trouble remembering: last time I bought a laptop with this brand/series/spec, from whom and for how much? Last time I sold this spec, to whom and for how much?",
+            },
+            {
+              id: "Dari situ dibuat sistem pencarian berdasarkan merk, tipe, dan spesifikasi. Sistem dapat menampilkan history transaksi relevan — pernah dibeli dari seller siapa, kapan, berapa harga beli, pernah dijual ke buyer siapa, kapan, berapa harga jual.",
+              en: "From there, a search system was built based on brand, type, and specifications. The system can display relevant transaction history — bought from which seller, when, at what purchase price, sold to which buyer, when, at what selling price.",
+            },
+            {
+              id: "Sistem kemudian berkembang lebih jauh. Saat toko membeli barang, admin memasukkan tanggal, merk, tipe, spesifikasi, dan harga beli. Barang tersebut otomatis masuk inventory. Saat barang dijual, transaksi dilakukan melalui kasir, barang keluar dari stok, dan history transaksi tetap tersimpan.",
+              en: "The system then grew further. When the store buys an item, admin enters the date, brand, type, specifications, and purchase price. The item automatically enters inventory. When an item is sold, the transaction is processed through the cashier, the item leaves stock, and the transaction history remains saved.",
+            },
+            {
+              id: "Sistem memiliki history barang, stok barang, daftar buyer, daftar seller, transaksi/kasir, laporan keuangan, modal, omzet, dan profit. Aplikasi mengandung data bisnis asli sehingga tidak menampilkan screenshot atau data client.",
+              en: "The system has item history, stock, buyer list, seller list, transactions/cashier, financial reports, capital, revenue, and profit. The application contains real business data, so no screenshots or client data are displayed.",
+            },
+          ],
         },
-      },
-      solution: {
-        heading: { id: "Solusi", en: "Solution" },
-        body: {
-          id: "Dibangun website dengan halaman utama yang memperkenalkan destinasi Karimun, halaman paket tour dengan detail itinerary dan harga, galeri foto, dan call-to-action untuk pemesanan via WhatsApp atau form kontak.",
-          en: "Built a website with a homepage introducing Karimun as a destination, tour package pages with detailed itineraries and pricing, a photo gallery, and call-to-actions for booking via WhatsApp or contact form.",
-        },
-        bullets: [
-          { id: "Halaman perkenalan destinasi", en: "Destination introduction page" },
-          { id: "Paket tour dengan itinerary & harga", en: "Tour packages with itinerary & pricing" },
-          { id: "Galeri foto destinasi", en: "Destination photo gallery" },
-          { id: "CTA pemesanan via WhatsApp / form", en: "Booking CTA via WhatsApp / form" },
-        ],
-      },
-      result: {
-        heading: { id: "Hasil", en: "Result" },
-        body: {
-          id: "Website Let's Go Karimun live dan menjadi titik kontak digital utama untuk wisatawan yang tertarik berkunjung ke Karimun.",
-          en: "The Let's Go Karimun website is live and serves as the main digital contact point for tourists interested in visiting Karimun.",
-        },
-      },
-      nextProjectSlug: "jejak-cahaya",
-    },
-  },
-
-  /* ── NAUKA LABS ────────────────────────────── */
-  {
-    slug: "jejak-cahaya",
-    index: "11",
-    name: "Jejak Cahaya",
-    categorySlug: "nauka-labs",
-    tagline: {
-      id: "Pengalaman digital storytelling dengan animasi scroll-driven dan tipografi editorial.",
-      en: "Digital storytelling experience with scroll-driven animation and editorial typography.",
-    },
-    summary: {
-      id: "Proyek independen Nauka Labs yang mengeksplorasi bagaimana animasi berbasis scroll dan tipografi editorial dapat menciptakan pengalaman naratif yang imersif.",
-      en: "An independent Nauka Labs project exploring how scroll-driven animation and editorial typography can create an immersive narrative experience.",
-    },
-    year: "2025",
-    client: "Nauka Labs",
-    industry: "Internal R&D",
-    cover: "/portfolio/jasaprotect.png",
-    accent: "#B8B3AA",
-    liveUrl: "https://jejakcahaya.my.id",
-    status: "internal",
-    order: 1,
-    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Web Animations API", "IntersectionObserver"],
-    role: {
-      id: "Desain · Pengembangan",
-      en: "Design · Engineering",
-    },
-    caseStudy: {
-      problem: {
-        heading: { id: "Masalah", en: "Problem" },
-        body: {
-          id: "Nauka Labs ingin mengeksplorasi bagaimana animasi berbasis scroll dapat digunakan untuk bercerita secara digital, tanpa bergantung pada library animasi berat yang membebani performa.",
-          en: "Nauka Labs wanted to explore how scroll-based animation can be used for digital storytelling, without relying on heavy animation libraries that burden performance.",
-        },
-      },
-      solution: {
-        heading: { id: "Solusi", en: "Solution" },
-        body: {
-          id: "Dibangun pengalaman web dengan animasi scroll-driven menggunakan Web Animations API dan IntersectionObserver, tipografi editorial dengan font variabel, dan struktur halaman yang mengikuti alur naratif. Audio dikendalikan oleh interaksi pengguna untuk menghormati kebijakan autoplay browser.",
-          en: "Built a web experience with scroll-driven animation using the Web Animations API and IntersectionObserver, editorial typography with variable fonts, and a page structure following the narrative flow. Audio is gated behind user interaction to respect browser autoplay policies.",
-        },
-        bullets: [
-          { id: "Web Animations API + IntersectionObserver", en: "Web Animations API + IntersectionObserver" },
-          { id: "Tipografi editorial variabel", en: "Variable editorial typography" },
-          { id: "Tanpa library animasi berat", en: "No heavy animation library" },
-          { id: "Audio gated oleh user interaction", en: "Audio gated by user interaction" },
-        ],
-      },
-      result: {
-        heading: { id: "Hasil", en: "Result" },
-        body: {
-          id: "Project live di jejakcahaya.my.id sebagai eksperimen Nauka Labs. Pola animasi dan pendekatan tipografi dari project ini menginformasikan gaya visual homepage Nauka Motion sendiri.",
-          en: "The project is live at jejakcahaya.my.id as a Nauka Labs experiment. The animation patterns and typography approach from this project informed the visual style of the Nauka Motion homepage itself.",
-        },
-      },
-      nextProjectSlug: "nauka-tech",
-    },
-  },
-
-  {
-    slug: "nauka-tech",
-    index: "12",
-    name: "Nauka Tech",
-    categorySlug: "nauka-labs",
-    tagline: {
-      id: "Halaman landing Nauka Tech dengan informasi layanan dan identitas brand.",
-      en: "Nauka Tech landing page with service information and brand identity.",
-    },
-    summary: {
-      id: "Website Nauka Tech di subdomain tech.nauka.id sebagai pengenalan layanan teknologi di bawah naungan Nauka.",
-      en: "Nauka Tech website at the tech.nauka.id subdomain introducing technology services under the Nauka umbrella.",
-    },
-    year: "2025",
-    client: "Nauka",
-    industry: "Internal R&D",
-    cover: "/portfolio/jasaprotect.png",
-    accent: "#4A4742",
-    liveUrl: "https://tech.nauka.id",
-    status: "internal",
-    order: 2,
-    techStack: ["Next.js", "TypeScript", "Tailwind CSS"],
-    role: {
-      id: "Desain · Pengembangan",
-      en: "Design · Engineering",
-    },
-    caseStudy: {
-      problem: {
-        heading: { id: "Masalah", en: "Problem" },
-        body: {
-          id: "Nauka membutuhkan halaman terpisah untuk lini layanan teknologi di bawah subdomain tech.nauka.id, untuk memisahkan positioning dari studio motion.nauka.id.",
-          en: "Nauka needed a separate page for its technology service line under the tech.nauka.id subdomain, to separate positioning from the motion.nauka.id studio.",
-        },
-      },
-      solution: {
-        heading: { id: "Solusi", en: "Solution" },
-        body: {
-          id: "Dibangun halaman landing dengan identitas brand sendiri, perkenalan layanan, dan call-to-action kontak. Sharing design tokens dengan motion.nauka.id untuk konsistensi brand Nauka.",
-          en: "Built a landing page with its own brand identity, service introduction, and contact CTA. Sharing design tokens with motion.nauka.id for Nauka brand consistency.",
-        },
-      },
-      result: {
-        heading: { id: "Hasil", en: "Result" },
-        body: {
-          id: "Website live di tech.nauka.id sebagai pintu masuk untuk lini layanan teknologi Nauka.",
-          en: "The site is live at tech.nauka.id as the entry point for Nauka's technology service line.",
-        },
-      },
+      ],
       nextProjectSlug: "inventra",
     },
   },
 
   {
     slug: "inventra",
-    index: "13",
+    index: "11",
     name: "Inventra",
-    categorySlug: "nauka-labs",
+    categorySlug: "inventory-systems",
     tagline: {
-      id: "Eksperimen sistem operasional bisnis dengan inventory dan transaksi multi-cabang.",
-      en: "Experiment of a business operating system with multi-branch inventory and transactions.",
+      id: "ERP versi sendiri, dalam pengembangan.",
+      en: "A self-built ERP, in development.",
     },
     summary: {
-      id: "Produk internal Nauka Labs yang mengeksplorasi arsitektur sistem operasional bisnis dengan model data unit-centric dan alur multi-cabang.",
-      en: "Internal Nauka Labs product exploring the architecture of a business operating system with a unit-centric data model and multi-branch flow.",
+      id: "Berasal dari pengalaman pribadi menggunakan ERP setiap hari sebagai admin. Setelah resign, pengalaman tersebut menjadi dasar untuk membangun Inventra.",
+      en: "Originated from personal experience using an ERP daily as an admin. After resigning, that experience became the foundation for building Inventra.",
     },
     year: "2025",
-    client: "Nauka Labs",
+    client: "Personal R&D",
     industry: "Internal R&D",
     cover: "/portfolio/ghazy-computer.png",
     accent: "#B8B3AA",
-    status: "internal",
-    order: 3,
-    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "PostgreSQL", "Prisma"],
-    role: {
-      id: "Arsitektur · Pengembangan",
-      en: "Architecture · Engineering",
-    },
+    status: "development",
+    order: 2,
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Prisma", "PostgreSQL"],
+    role: { id: "Arsitektur · Pengembangan", en: "Architecture · Engineering" },
     caseStudy: {
-      problem: {
-        heading: { id: "Masalah", en: "Problem" },
-        body: {
-          id: "Nauka Labs ingin mengeksplorasi bagaimana sistem operasional bisnis dirancang ketika setiap unit barang (bukan transaksi) menjadi pusat model data — terutama untuk kategori dengan SKU unik seperti elektronik bekas.",
-          en: "Nauka Labs wanted to explore how a business operating system is designed when each unit of goods (not the transaction) becomes the center of the data model — especially for categories with unique SKUs like used electronics.",
+      sections: [
+        {
+          heading: { id: "Ikhtisar", en: "Overview" },
+          body: [
+            {
+              id: "Inventra berasal dari pengalaman pribadi menggunakan ERP setiap hari saat bekerja sebagai admin. Semakin lama ERP digunakan, semakin terlihat menarik bagaimana banyak role bekerja dalam satu sistem, setiap role hanya melihat data atau fungsi yang diperlukan, transaksi saling terhubung, data tidak berbenturan, inventory dan operasional tetap sinkron, dan angka harus tetap konsisten.",
+              en: "Inventra originates from personal experience using an ERP daily while working as an admin. The longer the ERP was used, the more interesting it became how many roles work within one system, each role only sees the data or functions they need, transactions are interconnected, data doesn't conflict, inventory and operations stay in sync, and numbers must remain consistent.",
+            },
+            {
+              id: "Selama bekerja, menu, workflow, dan business logic ERP dipelajari sedikit demi sedikit sampai benar-benar memahami alurnya. Setelah resign, pengalaman tersebut menjadi dasar untuk mulai membangun Inventra, ERP versi sendiri, sedikit demi sedikit.",
+              en: "During employment, the ERP's menu, workflow, and business logic were studied bit by bit until the flow was truly understood. After resigning, that experience became the foundation to start building Inventra — a self-built ERP, piece by piece.",
+            },
+            {
+              id: "Inventra masih dalam pengembangan.",
+              en: "Inventra is still in development.",
+            },
+          ],
         },
-      },
-      solution: {
-        heading: { id: "Solusi", en: "Solution" },
-        body: {
-          id: "Dibangun prototipe sistem dengan model data unit-centric, alur inventory, transaksi, pelaporan, dan transfer antar-cabang. Setiap perubahan status unit tercatat dalam audit trail.",
-          en: "Built a system prototype with a unit-centric data model, inventory flow, transactions, reporting, and inter-branch transfers. Every unit state change is recorded in an audit trail.",
+      ],
+      nextProjectSlug: "lets-go-karimun",
+    },
+  },
+
+  /* ═══════════════════════════════════════════════
+     TRAVEL & TOURISM
+     ═══════════════════════════════════════════════ */
+
+  {
+    slug: "lets-go-karimun",
+    index: "12",
+    name: "Let's Go Karimun",
+    categorySlug: "travel-tourism",
+    tagline: {
+      id: "Website pariwisata Karimun, dikerjakan melalui kolaborasi dengan agency.",
+      en: "Karimun tourism website, done through collaboration with an agency.",
+    },
+    summary: {
+      id: "Project kolaborasi dengan agency. Pengalaman digital yang dibangun untuk bisnis pariwisata Karimun.",
+      en: "A collaboration project with an agency. Digital experience built for a Karimun tourism business.",
+    },
+    year: "2025",
+    client: "Kolaborasi Agency",
+    industry: "Travel & Tourism",
+    cover: "/portfolio/jasaprotect.png",
+    accent: "#0891B2",
+    status: "published",
+    order: 1,
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS"],
+    role: { id: "Desain · Pengembangan", en: "Design · Engineering" },
+    caseStudy: {
+      sections: [
+        {
+          heading: { id: "Ikhtisar", en: "Overview" },
+          body: [
+            {
+              id: "Project ini dibuat melalui kolaborasi dengan agency. Scope yang diterima mencakup pengalaman digital untuk bisnis pariwisata Karimun — website destinasi, paket tour, dan jalur pemesanan.",
+              en: "This project was done through collaboration with an agency. The accepted scope covers the digital experience for a Karimun tourism business — destination website, tour packages, and booking channel.",
+            },
+            {
+              id: "Keputusan desain dan implementasi teknis disesuaikan dengan kebutuhan destinasi wisata.",
+              en: "Design decisions and technical implementation were tailored to the needs of a tourism destination.",
+            },
+          ],
         },
-        bullets: [
-          { id: "Model data unit-centric", en: "Unit-centric data model" },
-          { id: "Audit trail setiap state change", en: "Audit trail on every state change" },
-          { id: "Alur transfer antar-cabang", en: "Inter-branch transfer flow" },
-          { id: "Pelaporan real-time per cabang", en: "Real-time per-branch reporting" },
-        ],
-      },
-      result: {
-        heading: { id: "Hasil", en: "Result" },
-        body: {
-          id: "Inventra adalah eksperimen internal Nauka Labs yang menginformasikan pendekatan arsitektur untuk sistem operasional bisnis pada project client. Belum dirilis sebagai produk publik.",
-          en: "Inventra is an internal Nauka Labs experiment that informs the architectural approach for business operating systems in client projects. It has not been released as a public product.",
+      ],
+      nextProjectSlug: "anima-companion",
+    },
+  },
+
+  /* ═══════════════════════════════════════════════
+     PET HEALTH
+     ═══════════════════════════════════════════════ */
+
+  {
+    slug: "anima-companion",
+    index: "13",
+    name: "Anima Companion",
+    categorySlug: "pet-health",
+    tagline: {
+      id: "Brand produk kesehatan hewan, dikerjakan melalui kolaborasi dengan agency.",
+      en: "Pet health product brand, done through collaboration with an agency.",
+    },
+    summary: {
+      id: "Project kolaborasi dengan agency untuk brand produk pet health.",
+      en: "A collaboration project with an agency for a pet health product brand.",
+    },
+    year: "2025",
+    client: "Kolaborasi Agency",
+    industry: "Pet Health",
+    cover: "/portfolio/jasaprotect.png",
+    accent: "#8B5CF6",
+    status: "published",
+    order: 1,
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS"],
+    role: { id: "Desain · Pengembangan", en: "Design · Engineering" },
+    caseStudy: {
+      sections: [
+        {
+          heading: { id: "Ikhtisar", en: "Overview" },
+          body: [
+            {
+              id: "Anima Companion adalah brand produk kesehatan hewan. Project dikerjakan melalui kolaborasi dengan agency.",
+              en: "Anima Companion is a pet health product brand. The project was done through collaboration with an agency.",
+            },
+            {
+              id: "Pengalaman digital yang dibangun mencakup website brand, penyajian produk, dan jalur customer menuju pembelian.",
+              en: "The digital experience built covers the brand website, product presentation, and the customer path to purchase.",
+            },
+          ],
         },
-      },
-      nextProjectSlug: "nauka-kostay",
+      ],
+      nextProjectSlug: "nauka-motion",
+    },
+  },
+
+  /* ═══════════════════════════════════════════════
+     PERSONAL PROJECTS
+     ═══════════════════════════════════════════════ */
+
+  {
+    slug: "nauka-motion",
+    index: "14",
+    name: "Nauka Motion",
+    categorySlug: "personal-projects",
+    tagline: {
+      id: "Studio produk digital Nauka Motion — website ini sendiri.",
+      en: "Nauka Motion digital product studio — this website itself.",
+    },
+    summary: {
+      id: "Website studio Nauka Motion, dirancang dan dikembangkan sebagai representasi digital studio.",
+      en: "The Nauka Motion studio website, designed and developed as the studio's digital representation.",
+    },
+    year: "2025",
+    client: "Nauka Motion",
+    industry: "Personal Project",
+    cover: "/portfolio/jasaprotect.png",
+    accent: "#D85A2A",
+    liveUrl: "https://motion.nauka.id",
+    status: "internal",
+    order: 1,
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS"],
+    role: { id: "Desain · Pengembangan", en: "Design · Engineering" },
+    caseStudy: {
+      sections: [
+        {
+          heading: { id: "Ikhtisar", en: "Overview" },
+          body: [
+            {
+              id: "Website studio Nauka Motion sendiri. Dirancang dengan warm-paper editorial design system, menggabungkan tipografi Instrument Sans, Fraunces, dan JetBrains Mono.",
+              en: "The Nauka Motion studio website itself. Designed with a warm-paper editorial design system, combining Instrument Sans, Fraunces, and JetBrains Mono typography.",
+            },
+            {
+              id: "Visual system, motion language, dan struktur halaman dikembangkan sebagai eksperimen desain yang juga menginformasikan project client.",
+              en: "The visual system, motion language, and page structure were developed as a design experiment that also informs client projects.",
+            },
+          ],
+        },
+      ],
+      nextProjectSlug: "jejak-cahaya",
     },
   },
 
   {
-    slug: "nauka-kostay",
-    index: "14",
-    name: "Nauka Kostay",
-    categorySlug: "nauka-labs",
+    slug: "jejak-cahaya",
+    index: "15",
+    name: "Jejak Cahaya",
+    categorySlug: "personal-projects",
     tagline: {
-      id: "Eksperimen pengalaman digital hospitality untuk bisnis kos.",
-      en: "Digital hospitality experience experiment for a boarding house business.",
+      id: "Platform pembelajaran sejarah Islam, bercerita imersif tentang perjalanan Rasulullah.",
+      en: "Islamic history learning platform, immersive storytelling about the Prophet's journey.",
     },
     summary: {
-      id: "Prototipe internal Nauka Labs yang mengeksplorasi bagaimana pengalaman digital hospitality dapat diterapkan pada bisnis kos.",
-      en: "Internal Nauka Labs prototype exploring how digital hospitality experiences can be applied to a boarding house business.",
+      id: "Project pribadi yang menggabungkan cita-cita menjadi penulis, kemampuan developer, dan ketertarikan pada sejarah Islam.",
+      en: "A personal project combining the aspiration to be a writer, developer skills, and interest in Islamic history.",
     },
     year: "2025",
-    client: "Nauka Labs",
-    industry: "Internal R&D",
-    cover: "/portfolio/nauka-kostay.png",
-    accent: "#D97706",
+    client: "Personal Project",
+    industry: "Personal Project",
+    cover: "/portfolio/jasaprotect.png",
+    accent: "#B8B3AA",
+    liveUrl: "https://jejakcahaya.nauka.id",
     status: "internal",
-    order: 4,
+    order: 2,
     techStack: ["Next.js", "TypeScript", "Tailwind CSS"],
-    role: {
-      id: "Desain · Pengembangan",
-      en: "Design · Engineering",
-    },
+    role: { id: "Penulisan · Desain · Pengembangan", en: "Writing · Design · Engineering" },
     caseStudy: {
-      problem: {
-        heading: { id: "Masalah", en: "Problem" },
-        body: {
-          id: "Nauka Labs ingin mengeksplorasi bagaimana pengalaman digital yang biasa diterapkan pada hotel dapat diadaptasi untuk bisnis kos — di mana penghuni layak mendapat pengalaman yang lebih baik dari sekadar melihat foto kamar dan harga.",
-          en: "Nauka Labs wanted to explore how digital experiences usually applied to hotels can be adapted for boarding house businesses — where residents deserve a better experience than just viewing room photos and pricing.",
+      sections: [
+        {
+          heading: { id: "Ikhtisar", en: "Overview" },
+          body: [
+            {
+              id: "Jejak Cahaya menggabungkan cita-cita menjadi penulis, kemampuan sebagai developer, ketertarikan pada sejarah Islam, media pembelajaran, dan dakwah. Kisah pertama yang dikembangkan adalah perjalanan hidup Rasulullah Muhammad, dari konteks sebelum kelahiran sampai wafat.",
+              en: "Jejak Cahaya combines the aspiration to be a writer, developer skills, interest in Islamic history, learning media, and dakwah. The first story developed is the life journey of Prophet Muhammad, from the context before his birth to his passing.",
+            },
+            {
+              id: "Proses penulisannya dilakukan bab demi bab dengan mencari dan membandingkan sumber yang dianggap paling terpercaya dan paling mendekati, termasuk Al-Qur'an, hadits, dan kitab-kitab sirah tepercaya. Saat ini penulisannya masih berkembang, sekitar Bab 11.",
+              en: "The writing process is done chapter by chapter, searching for and comparing sources considered most trusted and most accurate, including the Qur'an, hadith, and trusted sirah books. The writing is still developing, currently around Chapter 11.",
+            },
+            {
+              id: "Gaya Jejak Cahaya berbeda dari tulisan sejarah biasa. Narasinya dibuat imersif, seperti sebuah kamera berada dekat dengan peristiwa dan mengajak pembaca membayangkan suasana di sana, tanpa pernah mengklaim narator sebagai saksi sejarah.",
+              en: "Jejak Cahaya's style differs from typical historical writing. The narrative is immersive, as if a camera is close to the events, inviting readers to imagine the atmosphere there, without ever claiming the narrator as a historical witness.",
+            },
+            {
+              id: "Platform juga direncanakan berkembang ke media visual/video. Jejak Cahaya bukan platform animasi, bukan project komersial. Merupakan platform terbuka — siapa pun yang memiliki tujuan serupa dapat ikut berkontribusi dalam pengembangannya.",
+              en: "The platform is also planned to expand into visual/video media. Jejak Cahaya is not an animation platform, not a commercial project. It is an open platform — anyone with a similar goal can contribute to its development.",
+            },
+          ],
         },
-      },
-      solution: {
-        heading: { id: "Solusi", en: "Solution" },
-        body: {
-          id: "Dibangun prototipe dengan virtual tour kamar, tampilan fasilitas, testimoni penghuni, dan alur booking yang seamless. Eksperimen ini menguji sejauh mana pengalaman hotel-like dapat diterapkan pada kategori kos.",
-          en: "Built a prototype with virtual room tours, facility display, resident testimonials, and a seamless booking flow. This experiment tested how far hotel-like experiences can be applied to the boarding house category.",
+      ],
+      nextProjectSlug: "nauka-tech",
+    },
+  },
+
+  {
+    slug: "nauka-tech",
+    index: "16",
+    name: "Nauka Tech",
+    categorySlug: "personal-projects",
+    tagline: {
+      id: "Halaman landing untuk lini layanan teknologi Nauka.",
+      en: "Landing page for Nauka's technology service line.",
+    },
+    summary: {
+      id: "Subdomain tech.nauka.id sebagai pengenalan layanan teknologi di bawah naungan Nauka.",
+      en: "The tech.nauka.id subdomain introducing technology services under Nauka.",
+    },
+    year: "2025",
+    client: "Nauka",
+    industry: "Personal Project",
+    cover: "/portfolio/jasaprotect.png",
+    accent: "#4A4742",
+    liveUrl: "https://tech.nauka.id",
+    status: "internal",
+    order: 3,
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS"],
+    role: { id: "Desain · Pengembangan", en: "Design · Engineering" },
+    caseStudy: {
+      sections: [
+        {
+          heading: { id: "Ikhtisar", en: "Overview" },
+          body: [
+            {
+              id: "Halaman landing Nauka Tech di subdomain tech.nauka.id sebagai pengenalan layanan teknologi di bawah naungan Nauka. Memisahkan positioning dari studio motion.nauka.id.",
+              en: "The Nauka Tech landing page on the tech.nauka.id subdomain introducing technology services under Nauka. Separating positioning from the motion.nauka.id studio.",
+            },
+          ],
         },
-      },
-      result: {
-        heading: { id: "Hasil", en: "Result" },
-        body: {
-          id: "Prototipe internal Nauka Labs. Pola UX dari eksperimen ini menginformasikan pendekatan hospitality pada project client sejenis.",
-          en: "Internal Nauka Labs prototype. The UX patterns from this experiment inform the hospitality approach for similar client projects.",
-        },
-      },
+      ],
       nextProjectSlug: "nauka-gadget",
     },
   },
 
   {
     slug: "nauka-gadget",
-    index: "15",
+    index: "17",
     name: "Nauka Gadget",
-    categorySlug: "nauka-labs",
+    categorySlug: "personal-projects",
     tagline: {
       id: "Eksperimen toko gadget premium di luar marketplace.",
       en: "Premium gadget store experiment outside marketplaces.",
     },
     summary: {
-      id: "Prototipe internal Nauka Labs yang mengeksplorasi bagaimana toko gadget premium dapat dibangun di luar marketplace, dengan branding dan UX yang lebih terkontrol.",
-      en: "Internal Nauka Labs prototype exploring how a premium gadget store can be built outside marketplaces, with more controlled branding and UX.",
+      id: "Prototipe e-commerce gadget dengan branding dan UX yang lebih terkontrol.",
+      en: "Gadget e-commerce prototype with more controlled branding and UX.",
     },
     year: "2025",
-    client: "Nauka Labs",
-    industry: "Internal R&D",
+    client: "Personal Project",
+    industry: "Personal Project",
     cover: "/portfolio/nauka-gadget.png",
     accent: "#8B5CF6",
+    liveUrl: "https://gadget.nauka.id",
     status: "internal",
-    order: 5,
+    order: 4,
     techStack: ["Next.js", "TypeScript", "Tailwind CSS"],
-    role: {
-      id: "Desain · Pengembangan",
-      en: "Design · Engineering",
-    },
+    role: { id: "Desain · Pengembangan", en: "Design · Engineering" },
     caseStudy: {
-      problem: {
-        heading: { id: "Masalah", en: "Problem" },
-        body: {
-          id: "Nauka Labs ingin mengeksplorasi bagaimana toko gadget premium dapat dibangun di luar marketplace, di mana margin dan brand dapat dikontrol sendiri, dengan UX yang lebih premium daripada tampilan marketplace generik.",
-          en: "Nauka Labs wanted to explore how a premium gadget store can be built outside marketplaces, where margins and brand can be controlled, with a more premium UX than generic marketplace layouts.",
+      sections: [
+        {
+          heading: { id: "Ikhtisar", en: "Overview" },
+          body: [
+            {
+              id: "Eksperimen toko gadget premium di luar marketplace. Prototipe e-commerce dengan desain premium, katalog terorganisir, dan checkout yang dirancang untuk meminimalkan friksi.",
+              en: "A premium gadget store experiment outside marketplaces. E-commerce prototype with premium design, organized catalog, and checkout designed to minimize friction.",
+            },
+          ],
         },
-      },
-      solution: {
-        heading: { id: "Solusi", en: "Solution" },
-        body: {
-          id: "Dibangun prototipe e-commerce dengan desain premium, katalog terorganisir, halaman detail produk, dan checkout yang dirancang untuk meminimalkan friksi.",
-          en: "Built an e-commerce prototype with premium design, organized catalog, product detail pages, and a checkout designed to minimize friction.",
-        },
-      },
-      result: {
-        heading: { id: "Hasil", en: "Result" },
-        body: {
-          id: "Prototipe internal Nauka Labs. Pendekatan UX dan branding dari eksperimen ini menginformasikan project e-commerce client sejenis.",
-          en: "Internal Nauka Labs prototype. The UX and branding approach from this experiment informs similar client e-commerce projects.",
-        },
-      },
-      nextProjectSlug: "booking-club",
+      ],
+      nextProjectSlug: "nauka-kostay",
     },
   },
 
   {
-    slug: "booking-club",
-    index: "16",
-    name: "Booking Club",
-    categorySlug: "nauka-labs",
+    slug: "nauka-kostay",
+    index: "18",
+    name: "Nauka Kostay",
+    categorySlug: "personal-projects",
     tagline: {
-      id: "Eksperimen sistem booking untuk klub / layanan berbasis jadwal.",
-      en: "Booking system experiment for club / schedule-based services.",
+      id: "Eksperimen pengalaman digital hospitality untuk bisnis kos.",
+      en: "Digital hospitality experience experiment for a boarding house business.",
     },
     summary: {
-      id: "Prototipe internal Nauka Labs yang mengeksplorasi arsitektur sistem booking berbasis jadwal untuk klub atau layanan serupa.",
-      en: "Internal Nauka Labs prototype exploring the architecture of a schedule-based booking system for clubs or similar services.",
+      id: "Prototipe yang mengeksplorasi bagaimana pengalaman digital hospitality dapat diterapkan pada bisnis kos.",
+      en: "A prototype exploring how digital hospitality experiences can be applied to a boarding house business.",
     },
     year: "2025",
-    client: "Nauka Labs",
-    industry: "Internal R&D",
+    client: "Personal Project",
+    industry: "Personal Project",
+    cover: "/portfolio/nauka-kostay.png",
+    accent: "#D97706",
+    status: "internal",
+    order: 5,
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS"],
+    role: { id: "Desain · Pengembangan", en: "Design · Engineering" },
+    caseStudy: {
+      sections: [
+        {
+          heading: { id: "Ikhtisar", en: "Overview" },
+          body: [
+            {
+              id: "Eksperimen pengalaman digital hospitality untuk bisnis kos. Mengeksplorasi bagaimana pengalaman yang biasa diterapkan pada hotel dapat diadaptasi untuk kos — di mana penghuni layak mendapat pengalaman lebih baik dari sekadar melihat foto kamar dan harga.",
+              en: "A digital hospitality experience experiment for a boarding house business. Exploring how experiences usually applied to hotels can be adapted for boarding houses — where residents deserve a better experience than just viewing room photos and pricing.",
+            },
+          ],
+        },
+      ],
+      nextProjectSlug: "padel-club",
+    },
+  },
+
+  {
+    slug: "padel-club",
+    index: "19",
+    name: "Padel Club",
+    categorySlug: "personal-projects",
+    tagline: {
+      id: "Eksperimen sistem booking untuk klub padel.",
+      en: "Booking system experiment for a padel club.",
+    },
+    summary: {
+      id: "Prototipe sistem booking berbasis jadwal untuk klub padel.",
+      en: "A schedule-based booking system prototype for a padel club.",
+    },
+    year: "2025",
+    client: "Personal Project",
+    industry: "Personal Project",
     cover: "/portfolio/jasaprotect.png",
     accent: "#B8B3AA",
     status: "internal",
     order: 6,
     techStack: ["Next.js", "TypeScript", "Tailwind CSS"],
-    role: {
-      id: "Desain · Pengembangan",
-      en: "Design · Engineering",
-    },
+    role: { id: "Desain · Pengembangan", en: "Design · Engineering" },
     caseStudy: {
-      problem: {
-        heading: { id: "Masalah", en: "Problem" },
-        body: {
-          id: "Nauka Labs ingin mengeksplorasi bagaimana sistem booking berbasis jadwal dirancang untuk klub atau layanan yang memerlukan reservasi slot waktu, dengan konflik jadwal dan konfirmasi otomatis.",
-          en: "Nauka Labs wanted to explore how a schedule-based booking system is designed for clubs or services requiring time-slot reservations, with schedule conflict handling and automated confirmation.",
+      sections: [
+        {
+          heading: { id: "Ikhtisar", en: "Overview" },
+          body: [
+            {
+              id: "Eksperimen sistem booking untuk klub padel. Mengeksplorasi arsitektur sistem reservasi berbasis slot waktu dengan deteksi konflik jadwal dan konfirmasi otomatis.",
+              en: "A booking system experiment for a padel club. Exploring the architecture of a time-slot-based reservation system with schedule conflict detection and automated confirmation.",
+            },
+          ],
         },
-      },
-      solution: {
-        heading: { id: "Solusi", en: "Solution" },
-        body: {
-          id: "Dibangun prototipe dengan kalender ketersediaan, sistem reservasi slot, deteksi konflik jadwal, dan konfirmasi otomatis via email/WhatsApp.",
-          en: "Built a prototype with availability calendar, slot reservation system, schedule conflict detection, and automated confirmation via email/WhatsApp.",
-        },
-      },
-      result: {
-        heading: { id: "Hasil", en: "Result" },
-        body: {
-          id: "Prototipe internal Nauka Labs. Pola arsitektur dari eksperimen ini menginformasikan sistem booking pada project client sejenis.",
-          en: "Internal Nauka Labs prototype. The architectural patterns from this experiment inform booking systems in similar client projects.",
-        },
-      },
+      ],
     },
   },
 ];
@@ -1075,15 +1022,31 @@ export const studioProjects: StudioProject[] = [
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 export const studioStats = {
-  projectTotal: { value: "50+", label: { id: "Project & eksperimen dikembangkan", en: "Projects & experiments developed" } },
-  projectLive: { value: "10+", label: { id: "Project telah live", en: "Projects live" } },
-  categoryCount: { value: "6", label: { id: "Kategori saat ini", en: "Current categories" } },
+  projectTotal: {
+    value: "50+",
+    label: {
+      id: "Project, prototype & eksperimen dikembangkan",
+      en: "Projects, prototypes & experiments developed",
+    },
+  },
+  projectLive: {
+    value: "10+",
+    label: {
+      id: "Project telah dipublikasikan",
+      en: "Projects published",
+    },
+  },
+  categoryCount: {
+    value: "7",
+    label: {
+      id: "Kategori project saat ini",
+      en: "Current project categories",
+    },
+  },
 };
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   CAPABILITIES / SERVICES — apa yang Nauka bangun
-   (Bukan kategori industri. Kategori = industri.
-    Capabilities = jenis deliverable.)
+   CAPABILITIES — apa yang Nauka bangun
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 export interface StudioCapability {
