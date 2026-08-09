@@ -1,14 +1,14 @@
 /**
  * CMS Source Selector
  *
- * Exports the same data shape as studio-data.ts, but reads from
- * Neon database when CMS_DATA_SOURCE=database.
+ * Default is "database" — Neon CMS is the portfolio source of truth.
+ * Set CMS_DATA_SOURCE=static for emergency fallback to studio-data.ts.
  *
- * Default is "static" — production stays on studio-data.ts.
- * Set CMS_DATA_SOURCE=database to test Neon output locally.
+ * No silent fallback: if database mode encounters an error, the error
+ * propagates visibly rather than silently serving stale static content.
  *
- * Server-side only. Client components continue to import
- * from @/lib/studio-data directly.
+ * Server-side only. Client components receive data via props from
+ * server components that call these functions.
  *
  * Usage (server components):
  *   import { getCategories, getProjectBySlug } from "@/lib/cms";
@@ -33,10 +33,11 @@ export type {
 export { studioStats, studioCapabilities, studioProcess } from '../studio-data';
 
 // ─── Source selection ───
+// Default: 'database' (Neon is source of truth)
+// Emergency fallback: CMS_DATA_SOURCE=static
+const DATA_SOURCE = process.env.CMS_DATA_SOURCE ?? 'database';
 
-const DATA_SOURCE = process.env.CMS_DATA_SOURCE ?? 'static';
-
-// ─── Static imports (fallback / default) ───
+// ─── Static imports (emergency fallback) ───
 import {
   studioCategories,
   studioProjects,
@@ -68,63 +69,59 @@ import type {
   CategorySlug,
 } from '../studio-data';
 
-// ─── Public API (async — works for both static and database) ───
+// ─── Public API ───
 
 export async function getCategories(): Promise<StudioCategory[]> {
-  if (DATA_SOURCE === 'database') {
-    const dbCategories = await fetchAllCategories();
-    return adaptCategories(dbCategories);
+  if (DATA_SOURCE === 'static') {
+    return studioCategories;
   }
-  return studioCategories;
+  const dbCategories = await fetchAllCategories();
+  return adaptCategories(dbCategories);
 }
 
 export async function getCategoryBySlug(
   slug: string
 ): Promise<StudioCategory | undefined> {
-  if (DATA_SOURCE === 'database') {
-    const dbCategory = await fetchCategoryBySlug(slug);
-    if (!dbCategory) return undefined;
-    return adaptCategory(dbCategory);
+  if (DATA_SOURCE === 'static') {
+    return staticGetCategoryBySlug(slug);
   }
-  return staticGetCategoryBySlug(slug);
+  const dbCategory = await fetchCategoryBySlug(slug);
+  if (!dbCategory) return undefined;
+  return adaptCategory(dbCategory);
 }
 
 export async function getProjectBySlug(
   slug: string
 ): Promise<StudioProject | undefined> {
-  if (DATA_SOURCE === 'database') {
-    const dbProject = await fetchPublicProjectBySlug(slug);
-    if (!dbProject) return undefined;
-    return adaptProject(dbProject);
+  if (DATA_SOURCE === 'static') {
+    return staticGetProjectBySlug(slug);
   }
-  return staticGetProjectBySlug(slug);
+  const dbProject = await fetchPublicProjectBySlug(slug);
+  if (!dbProject) return undefined;
+  return adaptProject(dbProject);
 }
 
 export async function getAllProjectSlugs(): Promise<string[]> {
-  if (DATA_SOURCE === 'database') {
-    return fetchAllPublicSlugs();
+  if (DATA_SOURCE === 'static') {
+    return staticGetAllProjectSlugs();
   }
-  return staticGetAllProjectSlugs();
+  return fetchAllPublicSlugs();
 }
 
 export async function getProjectsByCategory(
   categorySlug: CategorySlug
 ): Promise<StudioProject[]> {
-  if (DATA_SOURCE === 'database') {
-    const dbProjects = await fetchPublicProjectsByCategory(categorySlug);
-    return adaptProjects(dbProjects);
+  if (DATA_SOURCE === 'static') {
+    return staticGetProjectsByCategory(categorySlug);
   }
-  return staticGetProjectsByCategory(categorySlug);
+  const dbProjects = await fetchPublicProjectsByCategory(categorySlug);
+  return adaptProjects(dbProjects);
 }
 
 export async function getPublicProjects(): Promise<StudioProject[]> {
-  if (DATA_SOURCE === 'database') {
-    const dbProjects = await fetchPublicProjects();
-    return adaptProjects(dbProjects);
+  if (DATA_SOURCE === 'static') {
+    return staticGetPublicProjects();
   }
-  return staticGetPublicProjects();
+  const dbProjects = await fetchPublicProjects();
+  return adaptProjects(dbProjects);
 }
-
-// ─── Also export static arrays for backward compat ───
-// (server components that need synchronous access during static mode)
-export { studioCategories, studioProjects } from '../studio-data';
