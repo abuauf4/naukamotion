@@ -4,18 +4,11 @@ import { useReveal } from "@/hooks/useReveal";
 import { studioProcess } from "@/lib/studio-data";
 
 /**
- * ProcessSection — 5-step workflow
+ * ProcessSection — "Cara Kami Bekerja"
  *
- * Per brief: copy-nya sebaiknya dipadatkan menjadi:
- *   Discover — Understand the business, users, and real constraints.
- *   Define  — Shape the product direction, architecture, and priorities.
- *   Design  — Build the visual system and interaction model.
- *   Develop — Turn the system into a reliable working product.
- *   Evolve  — Launch, learn, measure, and improve.
- *
- * Jangan menjelaskan bahwa lu "bukan coding manual baris per baris".
+ * 5 langkah: Diskusi → Definisi → Desain → Pengembangan → Evolusi.
+ * Bahasa Indonesia.
  */
-
 export function ProcessSection() {
   const ref = useReveal<HTMLDivElement>();
 
@@ -23,8 +16,8 @@ export function ProcessSection() {
     <section
       id="process"
       style={{
-        paddingTop: "140px",
-        paddingBottom: "140px",
+        paddingTop: "120px",
+        paddingBottom: "120px",
         background: "var(--paper-warm)",
         borderTop: "1px solid var(--line)",
       }}
@@ -41,10 +34,21 @@ export function ProcessSection() {
         >
           <p className="eyebrow eyebrow-burnt" style={{ marginBottom: "20px" }}>
             <span style={{ opacity: 0.5 }}>///</span>
-            Process — 05 Steps
+            Cara Kami Bekerja — 05 Langkah
           </p>
           <h2 className="studio-h2">
-            How a product moves from question to working system.
+            Bagaimana produk bergerak dari pertanyaan menjadi sistem yang{" "}
+            <span
+              style={{
+                fontFamily: "var(--font-fraunces), serif",
+                fontStyle: "italic",
+                fontWeight: 400,
+                color: "var(--burnt)",
+              }}
+            >
+              bekerja
+            </span>
+            .
           </h2>
         </div>
 
@@ -68,7 +72,7 @@ export function ProcessSection() {
                 display: "flex",
                 flexDirection: "column",
                 gap: "16px",
-                minHeight: "280px",
+                minHeight: "240px",
               }}
               className="nmp-process-step"
             >
@@ -77,13 +81,13 @@ export function ProcessSection() {
                 style={{
                   fontFamily: "var(--font-body), sans-serif",
                   fontWeight: 500,
-                  fontSize: "clamp(1.3rem, 1.8vw, 1.6rem)",
+                  fontSize: "clamp(1.2rem, 1.6vw, 1.5rem)",
                   letterSpacing: "-0.015em",
                   color: "var(--ink)",
                   margin: 0,
                 }}
               >
-                {step.title}
+                {step.title.id}
               </h3>
               <p
                 style={{
@@ -94,42 +98,10 @@ export function ProcessSection() {
                   margin: 0,
                 }}
               >
-                {step.body}
+                {step.description.id}
               </p>
             </div>
           ))}
-        </div>
-
-        {/* Footer note */}
-        <div
-          style={{
-            marginTop: "48px",
-            paddingTop: "32px",
-            borderTop: "1px solid var(--line)",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: "16px",
-            flexWrap: "wrap",
-          }}
-        >
-          <p
-            style={{
-              fontFamily: "var(--font-fraunces), serif",
-              fontStyle: "italic",
-              fontSize: "1.05rem",
-              color: "var(--ink-soft)",
-              margin: 0,
-            }}
-          >
-            AI-accelerated, human-directed.
-          </p>
-          <p
-            className="studio-meta"
-            style={{ margin: 0 }}
-          >
-            ~ 12-week average engagement
-          </p>
         </div>
       </div>
 

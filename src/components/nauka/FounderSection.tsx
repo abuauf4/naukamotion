@@ -3,26 +3,21 @@
 import { useReveal } from "@/hooks/useReveal";
 
 /**
- * FounderSection — Abu Aufa as founder, not brand
+ * FounderSection — "Tentang Nauka Motion"
  *
- * Per brief: Baru di sini nama lu tampil.
- *   Founded and directed by Abu Aufa
- *   Product strategist, systems architect, and creative director working across
- *   technology, commerce, automotive, insurance, and storytelling.
- *
- * Collaborator line:
- *   Independent by structure. Collaborative by nature.
+ * Founder: Abu Aufa. Bahasa Indonesia.
+ * Hanya fakta yang dapat diverifikasi. Tanpa klaim berlebihan.
  */
-
 export function FounderSection() {
   const ref = useReveal<HTMLDivElement>();
 
   return (
     <section
+      id="studio"
       style={{
-        paddingTop: "140px",
-        paddingBottom: "140px",
-        background: "var(--paper-warm)",
+        paddingTop: "120px",
+        paddingBottom: "120px",
+        background: "var(--bg)",
         borderTop: "1px solid var(--line)",
       }}
     >
@@ -50,8 +45,8 @@ export function FounderSection() {
               alignItems: "center",
               justifyContent: "center",
             }}
+            className="nmp-founder-portrait"
           >
-            {/* Portrait placeholder — typographic, not photographic */}
             <div
               style={{
                 position: "absolute",
@@ -87,16 +82,16 @@ export function FounderSection() {
                 className="studio-meta"
                 style={{ color: "var(--ink-faint)" }}
               >
-                Portrait — to be commissioned
+                Founder — Abu Aufa
               </span>
             </div>
           </div>
 
-          {/* Right: Founder copy */}
+          {/* Right: Copy */}
           <div>
             <p className="eyebrow eyebrow-burnt" style={{ marginBottom: "24px" }}>
               <span style={{ opacity: 0.5 }}>///</span>
-              Founder & Director
+              Tentang Nauka Motion
             </p>
 
             <h2
@@ -111,8 +106,7 @@ export function FounderSection() {
                 marginBottom: "8px",
               }}
             >
-              Founded and directed by
-              <br />
+              Didirikan dan dipimpin oleh{" "}
               <span
                 style={{
                   fontFamily: "var(--font-fraunces), serif",
@@ -135,9 +129,10 @@ export function FounderSection() {
                 maxWidth: "48ch",
               }}
             >
-              Product strategist, systems architect, and creative director
-              working across technology, commerce, automotive, insurance, and
-              storytelling.
+              Seorang web developer dan digital strategist yang berbasis di
+              Jakarta, bekerja di lintas industri — otomotif, retail teknologi,
+              asuransi, brand konsumen, pariwisata, serta produk internal Nauka
+              Labs.
             </p>
 
             <p
@@ -150,21 +145,18 @@ export function FounderSection() {
                 maxWidth: "48ch",
               }}
             >
-              The studio operates with a small core team that scales per
-              engagement — designers, engineers, and collaborators brought in
-              based on what each project actually needs. Not a 30-person agency
-              billing overhead, not a single freelancer wearing every hat.
+              Nauka Motion bekerja dengan tim inti kecil yang dapat diperluas
+              sesuai kebutuhan project — designer, engineer, dan kolaborator
+              dibawa masuk berdasarkan apa yang benar-benar dibutuhkan setiap
+              project.
             </p>
 
-            {/* Collaborator line */}
+            {/* Tagline */}
             <div
               style={{
                 marginTop: "48px",
                 paddingTop: "32px",
                 borderTop: "1px solid var(--line)",
-                display: "flex",
-                flexDirection: "column",
-                gap: "12px",
               }}
             >
               <p
@@ -178,22 +170,20 @@ export function FounderSection() {
                   letterSpacing: "-0.01em",
                 }}
               >
-                Independent by structure.
-                <br />
-                Collaborative by nature.
+                Small movement. Real Impact.
               </p>
               <p
                 style={{
                   fontFamily: "var(--font-body), sans-serif",
                   fontSize: "0.92rem",
                   color: "var(--ink-soft)",
-                  margin: 0,
+                  margin: "12px 0 0 0",
                   maxWidth: "44ch",
                 }}
               >
-                The studio takes on a small number of engagements per quarter.
-                Each engagement gets the founder's direct involvement from
-                discovery to delivery — not a project manager reading a brief.
+                Filosofi kerja Nauka Motion — pergerakan kecil yang tepat
+                sasaran menciptakan perubahan yang lebih bermakna dibandingkan
+                perubahan besar yang tidak terarah.
               </p>
             </div>
           </div>
@@ -202,6 +192,9 @@ export function FounderSection() {
 
       <style jsx>{`
         @media (max-width: 1024px) {
+          :global(.nmp-founder-portrait) {
+            display: none !important;
+          }
           :global(.container-wide > div.reveal) {
             grid-template-columns: minmax(0, 1fr) !important;
             gap: 40px !important;

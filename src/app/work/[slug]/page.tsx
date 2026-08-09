@@ -1,114 +1,112 @@
-import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
-import {
-  getProjectBySlug,
-  getAllProjectSlugs,
-  studioProjects,
-  type CaseStudyBlock,
-} from "@/lib/studio-data";
+import { notFound } from "next/navigation";
 import { Header } from "@/components/nauka/Header";
 import { Footer } from "@/components/nauka/Footer";
 import { ScrollProgress } from "@/components/nauka/ScrollProgress";
 
+// Single source of truth — studio-data.ts
+import {
+  studioCategories as cats,
+  getCategoryBySlug as getCat,
+  getProjectBySlug as getProj,
+  getProjectsByCategory as getProjs,
+  getAllProjectSlugs,
+  type StudioProject,
+  type StudioCategory,
+} from "@/lib/studio-data";
+
 /**
- * Case Study Detail Page — /work/[slug]
+ * /work/[slug] — Dispatch berdasarkan slug.
  *
- * This page is FULLY SERVER-RENDERED so crawlers, OG scrapers, and search
- * engines can read every section. Previously this route only rendered the
- * navbar and footer — content was client-rendered and invisible to bots.
+ * Jika slug cocok dengan kategori (automotive, technology-retail, dll) →
+ *   render halaman kategori: list project dalam kategori tersebut.
  *
- * Sections (per brief):
- *   01 Hero visual
- *   02 Project overview
- *   03 Client / industry / year / role
- *   04 The challenge
- *   05 Strategic direction
- *   06 User journey
- *   07 System architecture
- *   08 UI design system
- *   09 Key screens
- *   10 Mobile experience
- *   11 Engineering approach
- *   12 Outcome / impact
- *   13 What we learned
- *   14 Next project
+ * Jika slug cocok dengan project (geely-bsd, jasa-proteksi, dll) →
+ *   render halaman case study detail.
+ *
+ * URL tetap pendek: /work/automotive (kategori), /work/geely-bsd (project).
  */
 
 type Params = { params: Promise<{ slug: string }> };
 
 export function generateStaticParams() {
-  return getAllProjectSlugs().map((slug) => ({ slug }));
+  const catSlugs = cats.map((c) => ({ slug: c.slug }));
+  const projectSlugs = getAllProjectSlugs().map((slug) => ({ slug }));
+  return [...catSlugs, ...projectSlugs];
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
-  const project = getProjectBySlug(slug);
-  if (!project) {
+
+  const cat = getCat(slug);
+  if (cat) {
     return {
-      title: "Project Not Found",
+      title: `${cat.title} — Kategori Proyek`,
+      description: cat.description.id,
+      alternates: { canonical: `/work/${cat.slug}` },
+      openGraph: {
+        title: `${cat.title} — Nauka Motion`,
+        description: cat.description.id,
+        type: "website",
+      },
     };
   }
 
-  const title = `${project.name} — ${project.category}`;
-  const description = project.tagline;
-
-  return {
-    title,
-    description,
-    openGraph: {
-      title: `${project.name} — Nauka Motion`,
+  const project = getProj(slug);
+  if (project) {
+    const title = `${project.name} — ${getCat(project.categorySlug)?.title ?? "Proyek"}`;
+    const description = project.summary.id;
+    return {
+      title,
       description,
-      type: "article",
-      images: [
-        {
-          url: project.cover,
-          width: 1200,
-          height: 630,
-          alt: `${project.name} — ${project.category}`,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: `${project.name} — Nauka Motion`,
-      description,
-      images: [project.cover],
-    },
-    alternates: {
-      canonical: `/work/${project.slug}`,
-    },
-  };
-}
-
-export default async function CaseStudyPage({ params }: Params) {
-  const { slug } = await params;
-  const project = getProjectBySlug(slug);
-
-  if (!project) {
-    notFound();
+      openGraph: {
+        title: `${project.name} — Nauka Motion`,
+        description,
+        type: "article",
+        images: [
+          {
+            url: project.cover,
+            width: 1200,
+            height: 630,
+            alt: `${project.name} — cover`,
+          },
+        ],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: `${project.name} — Nauka Motion`,
+        description,
+        images: [project.cover],
+      },
+      alternates: { canonical: `/work/${project.slug}` },
+    };
   }
 
-  const nextProject = project.caseStudy.nextProjectSlug
-    ? getProjectBySlug(project.caseStudy.nextProjectSlug)
-    : studioProjects[0];
+  return { title: "Tidak Ditemukan" };
+}
 
-  // JSON-LD structured data — makes Google understand this is a case study
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "CreativeWork",
-    name: project.name,
-    description: project.tagline,
-    creator: {
-      "@type": "Organization",
-      name: "Nauka Motion",
-      url: "https://motion.nauka.id",
-    },
-    about: project.caseStudy.overview,
-    keywords: project.services.join(", "),
-    datePublished: project.year,
-  };
+export default async function WorkSlugPage({ params }: Params) {
+  const { slug } = await params;
+
+  const cat = getCat(slug);
+  if (cat) {
+    return <CategoryView category={cat} />;
+  }
+
+  const project = getProj(slug);
+  if (project) {
+    return <CaseStudyView project={project} />;
+  }
+
+  notFound();
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+function CategoryView({ category }: { category: StudioCategory }) {
+  const projects = getProjs(category.slug);
 
   return (
     <div
@@ -119,23 +117,13 @@ export default async function CaseStudyPage({ params }: Params) {
         background: "var(--bg)",
       }}
     >
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
       <ScrollProgress />
       <Header />
 
-      <main style={{ flex: 1, paddingTop: "80px" }}>
-        {/* 01 — Hero visual */}
-        <section
-          style={{
-            paddingTop: "60px",
-            paddingBottom: "80px",
-          }}
-        >
+      <main style={{ flex: 1, paddingTop: "120px" }}>
+        {/* Header */}
+        <section style={{ paddingBottom: "60px" }}>
           <div className="container-wide">
-            {/* Breadcrumb */}
             <div
               style={{
                 marginBottom: "48px",
@@ -145,7 +133,7 @@ export default async function CaseStudyPage({ params }: Params) {
               }}
             >
               <Link
-                href="/#work"
+                href="/work"
                 className="studio-meta"
                 style={{
                   color: "var(--ink-soft)",
@@ -171,23 +159,16 @@ export default async function CaseStudyPage({ params }: Params) {
                     transform="rotate(180 6 6)"
                   />
                 </svg>
-                All Work
+                Kategori
               </Link>
-              <span
-                className="studio-meta"
-                style={{ color: "var(--ink-faint)" }}
-              >
+              <span className="studio-meta" style={{ color: "var(--ink-faint)" }}>
                 /
               </span>
-              <span
-                className="studio-meta"
-                style={{ color: "var(--ink)" }}
-              >
-                {project.name}
+              <span className="studio-meta" style={{ color: "var(--ink)" }}>
+                {category.title}
               </span>
             </div>
 
-            {/* Eyebrow + index */}
             <div
               style={{
                 display: "flex",
@@ -196,18 +177,452 @@ export default async function CaseStudyPage({ params }: Params) {
                 marginBottom: "24px",
               }}
             >
-              <span className="nmp-index">{project.index}</span>
+              <span className="nmp-index">{category.index}</span>
               <span className="studio-meta" style={{ color: "var(--ink-faint)" }}>
-                {project.category}
+                Kategori
               </span>
             </div>
 
-            {/* Title */}
             <h1
               style={{
                 fontFamily: "var(--font-body), sans-serif",
                 fontWeight: 500,
-                fontSize: "clamp(2.5rem, 7vw, 6rem)",
+                fontSize: "clamp(2.4rem, 7vw, 5rem)",
+                lineHeight: 1.02,
+                letterSpacing: "-0.03em",
+                color: "var(--ink)",
+                margin: 0,
+                marginBottom: "32px",
+                maxWidth: "16ch",
+              }}
+            >
+              {category.title}
+            </h1>
+
+            <p
+              style={{
+                fontFamily: "var(--font-fraunces), serif",
+                fontStyle: "italic",
+                fontWeight: 400,
+                fontSize: "clamp(1.2rem, 2vw, 1.6rem)",
+                color: "var(--ink-soft)",
+                lineHeight: 1.4,
+                margin: 0,
+                maxWidth: "44ch",
+              }}
+            >
+              {category.description.id}
+            </p>
+          </div>
+        </section>
+
+        {/* Project list */}
+        <section style={{ paddingBottom: "120px" }}>
+          <div className="container-wide">
+            {projects.length === 0 ? (
+              <div
+                style={{
+                  padding: "80px 0",
+                  textAlign: "center",
+                  borderTop: "1px solid var(--line)",
+                }}
+              >
+                <p
+                  className="studio-meta"
+                  style={{ color: "var(--ink-faint)", marginBottom: "16px" }}
+                >
+                  Belum ada proyek di kategori ini
+                </p>
+                <p
+                  style={{
+                    fontFamily: "var(--font-body), sans-serif",
+                    fontSize: "1.05rem",
+                    color: "var(--ink-soft)",
+                    maxWidth: "44ch",
+                    margin: "0 auto",
+                  }}
+                >
+                  Kategori ini akan diisi seiring perjalanan Nauka Motion.
+                </p>
+              </div>
+            ) : (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "80px",
+                }}
+              >
+                {projects.map((project, i) => (
+                  <ProjectRow
+                    key={project.slug}
+                    project={project}
+                    reversed={i % 2 === 1}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Other categories */}
+        <section
+          style={{
+            paddingTop: "80px",
+            paddingBottom: "80px",
+            borderTop: "1px solid var(--line)",
+            background: "var(--paper-warm)",
+          }}
+        >
+          <div className="container-wide">
+            <p
+              className="eyebrow eyebrow-burnt"
+              style={{ marginBottom: "24px" }}
+            >
+              <span style={{ opacity: 0.5 }}>///</span>
+              Kategori Lain
+            </p>
+            <div
+              style={{
+                display: "flex",
+                gap: "12px",
+                flexWrap: "wrap",
+              }}
+            >
+              {cats
+                .filter((c) => c.slug !== category.slug)
+                .map((c) => (
+                  <Link
+                    key={c.slug}
+                    href={`/work/${c.slug}`}
+                    className="nmp-tag"
+                    style={{
+                      textDecoration: "none",
+                      padding: "10px 18px",
+                      fontSize: "0.78rem",
+                    }}
+                  >
+                    {c.title}
+                  </Link>
+                ))}
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}
+
+function ProjectRow({
+  project,
+  reversed,
+}: {
+  project: StudioProject;
+  reversed: boolean;
+}) {
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "minmax(0, 1.3fr) minmax(0, 1fr)",
+        gap: "60px",
+        alignItems: "center",
+        direction: reversed ? "rtl" : "ltr",
+      }}
+      className="nmp-proj-row"
+    >
+      <Link
+        href={`/work/${project.slug}`}
+        style={{
+          display: "block",
+          position: "relative",
+          aspectRatio: "4 / 3",
+          background: "var(--bg-card)",
+          border: "1px solid var(--line)",
+          borderRadius: "8px",
+          overflow: "hidden",
+          direction: "ltr",
+          textDecoration: "none",
+        }}
+        aria-label={`${project.name} — lihat case study`}
+      >
+        <Image
+          src={project.cover}
+          alt={`${project.name} — cover`}
+          fill
+          sizes="(max-width: 1024px) 100vw, 60vw"
+          style={{ objectFit: "cover" }}
+        />
+        {project.status === "internal" && (
+          <span
+            style={{
+              position: "absolute",
+              top: "16px",
+              left: "16px",
+              padding: "5px 12px",
+              background: "color-mix(in srgb, var(--ink) 88%, transparent)",
+              color: "var(--paper)",
+              fontFamily: "var(--font-mono), monospace",
+              fontSize: "0.62rem",
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              borderRadius: "999px",
+              backdropFilter: "blur(8px)",
+            }}
+          >
+            Nauka Labs
+          </span>
+        )}
+      </Link>
+
+      <div
+        style={{
+          direction: "ltr",
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            gap: "16px",
+          }}
+        >
+          <span className="nmp-index">{project.index}</span>
+          <span className="studio-meta" style={{ color: "var(--ink-faint)" }}>
+            {project.year}
+          </span>
+        </div>
+
+        <h2
+          style={{
+            fontFamily: "var(--font-body), sans-serif",
+            fontWeight: 500,
+            fontSize: "clamp(1.6rem, 2.4vw, 2.4rem)",
+            letterSpacing: "-0.02em",
+            color: "var(--ink)",
+            margin: 0,
+            lineHeight: 1.1,
+          }}
+        >
+          {project.name}
+        </h2>
+
+        <p
+          style={{
+            fontFamily: "var(--font-body), sans-serif",
+            fontSize: "1.05rem",
+            color: "var(--ink-soft)",
+            lineHeight: 1.5,
+            margin: 0,
+            maxWidth: "42ch",
+          }}
+        >
+          {project.tagline.id}
+        </p>
+
+        <div
+          style={{
+            display: "flex",
+            gap: "6px",
+            flexWrap: "wrap",
+            marginTop: "8px",
+          }}
+        >
+          {project.techStack.slice(0, 4).map((tech) => (
+            <span key={tech} className="nmp-tag">
+              {tech}
+            </span>
+          ))}
+          {project.techStack.length > 4 && (
+            <span className="nmp-tag">+{project.techStack.length - 4}</span>
+          )}
+        </div>
+
+        <div style={{ marginTop: "12px" }}>
+          <Link href={`/work/${project.slug}`} className="nmp-link-arrow">
+            Lihat Case Study
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 12 12"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M2 10L10 2M10 2H4M10 2V8"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </Link>
+        </div>
+      </div>
+
+      <style>{`
+        @media (max-width: 1024px) {
+          .nmp-proj-row {
+            grid-template-columns: minmax(0, 1fr) !important;
+            direction: ltr !important;
+            gap: 32px !important;
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+function CaseStudyView({ project }: { project: StudioProject }) {
+  const category = getCat(project.categorySlug);
+  const categoryProjects = getProjs(project.categorySlug);
+  const currentIdx = categoryProjects.findIndex((p) => p.slug === project.slug);
+  const nextProject =
+    currentIdx >= 0 && currentIdx < categoryProjects.length - 1
+      ? categoryProjects[currentIdx + 1]
+      : categoryProjects[0];
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: project.name,
+    description: project.summary.id,
+    creator: {
+      "@type": "Organization",
+      name: "Nauka Motion",
+      url: "https://motion.nauka.id",
+    },
+    about: project.caseStudy.problem.body.id,
+    keywords: project.techStack.join(", "),
+    datePublished: project.year,
+  };
+
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        background: "var(--bg)",
+      }}
+    >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <ScrollProgress />
+      <Header />
+
+      <main style={{ flex: 1, paddingTop: "80px" }}>
+        {/* 01 — Hero */}
+        <section style={{ paddingTop: "60px", paddingBottom: "60px" }}>
+          <div className="container-wide">
+            <div
+              style={{
+                marginBottom: "48px",
+                display: "flex",
+                gap: "12px",
+                alignItems: "center",
+                flexWrap: "wrap",
+              }}
+            >
+              <Link
+                href="/work"
+                className="studio-meta"
+                style={{
+                  color: "var(--ink-soft)",
+                  textDecoration: "none",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                }}
+              >
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M10 10L2 2M2 2H8M2 2V8"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    transform="rotate(180 6 6)"
+                  />
+                </svg>
+                Kategori
+              </Link>
+              <span className="studio-meta" style={{ color: "var(--ink-faint)" }}>
+                /
+              </span>
+              {category && (
+                <>
+                  <Link
+                    href={`/work/${category.slug}`}
+                    className="studio-meta"
+                    style={{
+                      color: "var(--ink-soft)",
+                      textDecoration: "none",
+                    }}
+                  >
+                    {category.title}
+                  </Link>
+                  <span className="studio-meta" style={{ color: "var(--ink-faint)" }}>
+                    /
+                  </span>
+                </>
+              )}
+              <span className="studio-meta" style={{ color: "var(--ink)" }}>
+                {project.name}
+              </span>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "baseline",
+                gap: "16px",
+                marginBottom: "24px",
+                flexWrap: "wrap",
+              }}
+            >
+              <span className="nmp-index">{project.index}</span>
+              <span className="studio-meta" style={{ color: "var(--ink-faint)" }}>
+                {category?.title}
+              </span>
+              {project.status === "internal" && (
+                <span
+                  style={{
+                    fontFamily: "var(--font-mono), monospace",
+                    fontSize: "0.62rem",
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                    color: "var(--burnt)",
+                    padding: "4px 10px",
+                    border: "1px solid var(--burnt)",
+                    borderRadius: "999px",
+                  }}
+                >
+                  Nauka Labs
+                </span>
+              )}
+            </div>
+
+            <h1
+              style={{
+                fontFamily: "var(--font-body), sans-serif",
+                fontWeight: 500,
+                fontSize: "clamp(2.4rem, 7vw, 5.5rem)",
                 lineHeight: 1.02,
                 letterSpacing: "-0.03em",
                 color: "var(--ink)",
@@ -219,20 +634,19 @@ export default async function CaseStudyPage({ params }: Params) {
               {project.name}
             </h1>
 
-            {/* Tagline */}
             <p
               style={{
                 fontFamily: "var(--font-fraunces), serif",
                 fontStyle: "italic",
                 fontWeight: 400,
-                fontSize: "clamp(1.3rem, 2.2vw, 1.85rem)",
+                fontSize: "clamp(1.2rem, 2vw, 1.7rem)",
                 color: "var(--ink-soft)",
                 lineHeight: 1.4,
                 margin: 0,
                 maxWidth: "44ch",
               }}
             >
-              {project.tagline}
+              {project.tagline.id}
             </p>
           </div>
         </section>
@@ -252,7 +666,7 @@ export default async function CaseStudyPage({ params }: Params) {
             >
               <Image
                 src={project.cover}
-                alt={`${project.name} — ${project.category} cover`}
+                alt={`${project.name} — cover`}
                 fill
                 priority
                 sizes="(max-width: 1024px) 100vw, 80vw"
@@ -262,10 +676,10 @@ export default async function CaseStudyPage({ params }: Params) {
           </div>
         </section>
 
-        {/* 02 + 03 — Overview + meta sidebar */}
+        {/* 02 — Overview + meta */}
         <section
           style={{
-            paddingBottom: "120px",
+            paddingBottom: "100px",
             borderTop: "1px solid var(--line)",
             paddingTop: "80px",
           }}
@@ -283,24 +697,23 @@ export default async function CaseStudyPage({ params }: Params) {
               <div>
                 <p className="eyebrow eyebrow-burnt" style={{ marginBottom: "24px" }}>
                   <span style={{ opacity: 0.5 }}>///</span>
-                  Project Overview
+                  Ringkasan
                 </p>
                 <p
                   style={{
                     fontFamily: "var(--font-fraunces), serif",
                     fontStyle: "italic",
-                    fontSize: "clamp(1.4rem, 2vw, 1.85rem)",
+                    fontSize: "clamp(1.3rem, 1.8vw, 1.7rem)",
                     color: "var(--ink)",
                     lineHeight: 1.5,
                     margin: 0,
                     maxWidth: "52ch",
                   }}
                 >
-                  {project.caseStudy.overview}
+                  {project.summary.id}
                 </p>
               </div>
 
-              {/* Meta sidebar */}
               <aside
                 style={{
                   display: "flex",
@@ -312,10 +725,10 @@ export default async function CaseStudyPage({ params }: Params) {
                   borderRadius: "8px",
                 }}
               >
-                <MetaItem label="Client" value={project.client} />
-                <MetaItem label="Industry" value={project.industry} />
-                <MetaItem label="Year" value={project.year} />
-                <MetaItem label="Role" value={project.role} />
+                <MetaItem label="Klien" value={project.client} />
+                <MetaItem label="Industri" value={project.industry} />
+                <MetaItem label="Tahun" value={project.year} />
+                <MetaItem label="Peran" value={project.role.id} />
                 <div>
                   <p
                     className="studio-meta"
@@ -324,7 +737,7 @@ export default async function CaseStudyPage({ params }: Params) {
                       color: "var(--ink-faint)",
                     }}
                   >
-                    Services
+                    Technology
                   </p>
                   <div
                     style={{
@@ -333,13 +746,13 @@ export default async function CaseStudyPage({ params }: Params) {
                       flexWrap: "wrap",
                     }}
                   >
-                    {project.services.map((s) => (
+                    {project.techStack.map((tech) => (
                       <span
-                        key={s}
+                        key={tech}
                         className="nmp-tag"
                         style={{ fontSize: "0.6rem" }}
                       >
-                        {s}
+                        {tech}
                       </span>
                     ))}
                   </div>
@@ -352,7 +765,7 @@ export default async function CaseStudyPage({ params }: Params) {
                     className="nmp-link-arrow"
                     style={{ marginTop: "8px" }}
                   >
-                    Visit live site
+                    Kunjungi Website Live
                     <svg
                       width="12"
                       height="12"
@@ -375,7 +788,7 @@ export default async function CaseStudyPage({ params }: Params) {
           </div>
         </section>
 
-        {/* 04-13 — Case study blocks */}
+        {/* 03-05 — Masalah / Solusi / Hasil */}
         <section style={{ paddingBottom: "80px" }}>
           <div
             style={{
@@ -385,24 +798,222 @@ export default async function CaseStudyPage({ params }: Params) {
               paddingRight: "clamp(20px, 5vw, 80px)",
             }}
           >
-            {project.caseStudy.blocks.map((block, i) => (
-              <CaseStudyBlockRender
-                key={block.kind + i}
-                block={block}
-                index={i + 4}
-              />
-            ))}
+            <CaseStudySection
+              index="03"
+              eyebrow="Masalah"
+              heading={project.caseStudy.problem.heading.id}
+              body={project.caseStudy.problem.body.id}
+              bullets={project.caseStudy.problem.bullets?.map((b) => b.id)}
+            />
+            <CaseStudySection
+              index="04"
+              eyebrow="Solusi"
+              heading={project.caseStudy.solution.heading.id}
+              body={project.caseStudy.solution.body.id}
+              bullets={project.caseStudy.solution.bullets?.map((b) => b.id)}
+            />
+            <CaseStudySection
+              index="05"
+              eyebrow="Hasil"
+              heading={project.caseStudy.result.heading.id}
+              body={project.caseStudy.result.body.id}
+              bullets={project.caseStudy.result.bullets?.map((b) => b.id)}
+            />
           </div>
         </section>
 
-        {/* 14 — Next project */}
+        {/* 06 — Technology Stack */}
+        <section
+          style={{
+            paddingBottom: "80px",
+            borderTop: "1px solid var(--line)",
+            paddingTop: "80px",
+            background: "var(--paper-warm)",
+          }}
+        >
+          <div
+            style={{
+              maxWidth: "860px",
+              margin: "0 auto",
+              paddingLeft: "clamp(20px, 5vw, 80px)",
+              paddingRight: "clamp(20px, 5vw, 80px)",
+            }}
+          >
+            <p className="eyebrow eyebrow-burnt" style={{ marginBottom: "20px" }}>
+              <span style={{ opacity: 0.5 }}>///</span>
+              06 — Technology
+            </p>
+            <h2
+              style={{
+                fontFamily: "var(--font-body), sans-serif",
+                fontWeight: 500,
+                fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)",
+                letterSpacing: "-0.02em",
+                color: "var(--ink)",
+                margin: 0,
+                marginBottom: "32px",
+                lineHeight: 1.1,
+              }}
+            >
+              Technology Stack
+            </h2>
+            <p
+              style={{
+                fontFamily: "var(--font-body), sans-serif",
+                fontSize: "1.05rem",
+                color: "var(--ink-soft)",
+                lineHeight: 1.7,
+                margin: 0,
+                marginBottom: "32px",
+              }}
+            >
+              Stack yang benar-benar digunakan pada project ini:
+            </p>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                gap: "12px",
+              }}
+              className="nmp-tech-grid"
+            >
+              {project.techStack.map((tech) => (
+                <div
+                  key={tech}
+                  style={{
+                    padding: "16px 20px",
+                    background: "var(--bg-card)",
+                    border: "1px solid var(--line)",
+                    borderRadius: "8px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                  }}
+                >
+                  <span
+                    style={{
+                      width: "6px",
+                      height: "6px",
+                      background: "var(--burnt)",
+                      borderRadius: "999px",
+                      flexShrink: 0,
+                    }}
+                  />
+                  <span
+                    style={{
+                      fontFamily: "var(--font-mono), monospace",
+                      fontSize: "0.85rem",
+                      color: "var(--ink)",
+                    }}
+                  >
+                    {tech}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 07 — Live Website CTA */}
+        {project.liveUrl && (
+          <section
+            style={{
+              paddingTop: "80px",
+              paddingBottom: "80px",
+              background: "var(--ink)",
+              color: "var(--paper)",
+            }}
+          >
+            <div className="container-wide">
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  textAlign: "center",
+                  gap: "24px",
+                }}
+              >
+                <p className="eyebrow" style={{ color: "var(--burnt)" }}>
+                  <span style={{ opacity: 0.5 }}>///</span>
+                  07 — Live Website
+                </p>
+                <h2
+                  style={{
+                    fontFamily: "var(--font-body), sans-serif",
+                    fontWeight: 500,
+                    fontSize: "clamp(1.8rem, 4vw, 3rem)",
+                    lineHeight: 1.05,
+                    letterSpacing: "-0.025em",
+                    color: "var(--paper)",
+                    margin: 0,
+                    maxWidth: "16ch",
+                  }}
+                >
+                  Kunjungi website{" "}
+                  <span
+                    style={{
+                      fontFamily: "var(--font-fraunces), serif",
+                      fontStyle: "italic",
+                      fontWeight: 400,
+                      color: "var(--burnt)",
+                    }}
+                  >
+                    {project.name}
+                  </span>
+                </h2>
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="nmp-btn nmp-btn-primary"
+                  style={{
+                    background: "var(--burnt)",
+                    borderColor: "var(--burnt)",
+                    color: "#ffffff",
+                  }}
+                >
+                  Buka Website
+                  <svg
+                    width="11"
+                    height="11"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M2 10L10 2M10 2H4M10 2V8"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </a>
+                <p
+                  style={{
+                    fontFamily: "var(--font-mono), monospace",
+                    fontSize: "0.78rem",
+                    color: "var(--ink-faint)",
+                    letterSpacing: "0.06em",
+                    margin: 0,
+                  }}
+                >
+                  {project.liveUrl.replace(/^https?:\/\//, "")}
+                </p>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* 08 — Next project */}
         {nextProject && nextProject.slug !== project.slug && (
           <section
             style={{
               borderTop: "1px solid var(--line)",
               paddingTop: "80px",
               paddingBottom: "80px",
-              background: "var(--paper-warm)",
+              background: "var(--bg)",
             }}
           >
             <div className="container-wide">
@@ -424,14 +1035,14 @@ export default async function CaseStudyPage({ params }: Params) {
                     style={{ marginBottom: "20px" }}
                   >
                     <span style={{ opacity: 0.5 }}>///</span>
-                    Next Project
+                    Proyek Berikutnya
                   </p>
                   <span className="nmp-index">{nextProject.index}</span>
                   <h3
                     style={{
                       fontFamily: "var(--font-body), sans-serif",
                       fontWeight: 500,
-                      fontSize: "clamp(2rem, 4vw, 3rem)",
+                      fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)",
                       letterSpacing: "-0.02em",
                       color: "var(--ink)",
                       margin: "16px 0",
@@ -450,13 +1061,13 @@ export default async function CaseStudyPage({ params }: Params) {
                       maxWidth: "40ch",
                     }}
                   >
-                    {nextProject.tagline}
+                    {nextProject.tagline.id}
                   </p>
                   <span
                     className="nmp-link-arrow"
                     style={{ marginTop: "24px", display: "inline-flex" }}
                   >
-                    View Case Study
+                    Lihat Case Study
                     <svg
                       width="12"
                       height="12"
@@ -502,8 +1113,8 @@ export default async function CaseStudyPage({ params }: Params) {
           style={{
             paddingTop: "100px",
             paddingBottom: "100px",
-            background: "var(--ink)",
-            color: "var(--paper)",
+            background: "var(--paper-warm)",
+            borderTop: "1px solid var(--line)",
           }}
         >
           <div
@@ -516,26 +1127,23 @@ export default async function CaseStudyPage({ params }: Params) {
               gap: "32px",
             }}
           >
-            <p
-              className="eyebrow"
-              style={{ color: "var(--burnt)" }}
-            >
+            <p className="eyebrow eyebrow-burnt">
               <span style={{ opacity: 0.5 }}>///</span>
-              Have a product worth building?
+              Punya proyek yang layak dibangun?
             </p>
             <h2
               style={{
                 fontFamily: "var(--font-body), sans-serif",
                 fontWeight: 500,
-                fontSize: "clamp(2rem, 5vw, 4rem)",
+                fontSize: "clamp(2rem, 5vw, 3.5rem)",
                 lineHeight: 1.05,
                 letterSpacing: "-0.025em",
-                color: "var(--paper)",
+                color: "var(--ink)",
                 margin: 0,
                 maxWidth: "16ch",
               }}
             >
-              Start a{" "}
+              Mulai{" "}
               <span
                 style={{
                   fontFamily: "var(--font-fraunces), serif",
@@ -544,20 +1152,12 @@ export default async function CaseStudyPage({ params }: Params) {
                   color: "var(--burnt)",
                 }}
               >
-                project
+                proyek
               </span>{" "}
-              with us.
+              bersama kami.
             </h2>
-            <Link
-              href="/#contact"
-              className="nmp-btn nmp-btn-primary"
-              style={{
-                background: "var(--burnt)",
-                borderColor: "var(--burnt)",
-                color: "#ffffff",
-              }}
-            >
-              Start a Project
+            <Link href="/#contact" className="nmp-btn nmp-btn-primary">
+              Mulai Proyek
               <svg
                 width="11"
                 height="11"
@@ -590,11 +1190,16 @@ export default async function CaseStudyPage({ params }: Params) {
             grid-template-columns: minmax(0, 1fr) !important;
             gap: 32px !important;
           }
+          .nmp-tech-grid {
+            grid-template-columns: minmax(0, 1fr) !important;
+          }
         }
       `}</style>
     </div>
   );
 }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 function MetaItem({ label, value }: { label: string; value: string }) {
   return (
@@ -623,15 +1228,19 @@ function MetaItem({ label, value }: { label: string; value: string }) {
   );
 }
 
-function CaseStudyBlockRender({
-  block,
+function CaseStudySection({
   index,
+  eyebrow,
+  heading,
+  body,
+  bullets,
 }: {
-  block: CaseStudyBlock;
-  index: number;
+  index: string;
+  eyebrow: string;
+  heading: string;
+  body: string;
+  bullets?: string[];
 }) {
-  const formattedIndex = String(index).padStart(2, "0");
-
   return (
     <article
       style={{
@@ -640,7 +1249,6 @@ function CaseStudyBlockRender({
         borderBottom: "1px solid var(--line)",
       }}
     >
-      {/* Block header */}
       <div
         style={{
           display: "flex",
@@ -657,13 +1265,10 @@ function CaseStudyBlockRender({
             letterSpacing: "0.15em",
           }}
         >
-          {formattedIndex}
+          {index}
         </span>
-        <span
-          className="studio-meta"
-          style={{ color: "var(--ink-faint)" }}
-        >
-          {block.kind.replace(/-/g, " ")}
+        <span className="studio-meta" style={{ color: "var(--ink-faint)" }}>
+          {eyebrow}
         </span>
       </div>
 
@@ -671,7 +1276,7 @@ function CaseStudyBlockRender({
         style={{
           fontFamily: "var(--font-body), sans-serif",
           fontWeight: 500,
-          fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)",
+          fontSize: "clamp(1.6rem, 3vw, 2.4rem)",
           letterSpacing: "-0.02em",
           color: "var(--ink)",
           margin: 0,
@@ -679,35 +1284,22 @@ function CaseStudyBlockRender({
           lineHeight: 1.1,
         }}
       >
-        {block.title}
+        {heading}
       </h2>
 
-      {/* Body paragraphs */}
-      <div
+      <p
         style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "20px",
+          fontFamily: "var(--font-body), sans-serif",
+          fontSize: "1.05rem",
+          color: "var(--ink-soft)",
+          lineHeight: 1.7,
+          margin: 0,
         }}
       >
-        {block.body.map((para, i) => (
-          <p
-            key={i}
-            style={{
-              fontFamily: "var(--font-body), sans-serif",
-              fontSize: "1.05rem",
-              color: "var(--ink-soft)",
-              lineHeight: 1.7,
-              margin: 0,
-            }}
-          >
-            {para}
-          </p>
-        ))}
-      </div>
+        {body}
+      </p>
 
-      {/* Bullets */}
-      {block.bullets && block.bullets.length > 0 && (
+      {bullets && bullets.length > 0 && (
         <ul
           style={{
             listStyle: "none",
@@ -719,7 +1311,7 @@ function CaseStudyBlockRender({
           }}
           className="nmp-cs-bullets"
         >
-          {block.bullets.map((b, i) => (
+          {bullets.map((b, i) => (
             <li
               key={i}
               style={{

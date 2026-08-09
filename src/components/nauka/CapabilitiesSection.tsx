@@ -4,168 +4,193 @@ import { useReveal } from "@/hooks/useReveal";
 import { studioCapabilities } from "@/lib/studio-data";
 
 /**
- * CapabilitiesSection — Proof strip
+ * CapabilitiesSection — "Yang Kami Bangun"
  *
- * Per brief: kalau belum punya deretan klien besar, jangan membuat logo wall palsu.
- * Buat proof dalam bentuk domain capability atau statistik yang benar-benar dapat dibuktikan.
- *
- * Stats:
- *   40+        Products Explored
- *   6          Business Domains
- *   End-to-End Delivery
- *   Mobile-First by Default
+ * Bukan kategori industri (itu di Section Kategori).
+ * Capabilities = jenis deliverable yang Nauka Motion bangun:
+ *   Website Development, Web Application, Business System,
+ *   E-Commerce & Catalog, UI/UX & Product Design, SEO & Digital Growth.
  */
-
 export function CapabilitiesSection() {
-  const ref = useReveal<HTMLDivElement>();
+  const headerRef = useReveal<HTMLDivElement>();
 
   return (
     <section
+      id="capabilities"
       style={{
         paddingTop: "120px",
         paddingBottom: "120px",
         background: "var(--bg)",
         borderTop: "1px solid var(--line)",
-        borderBottom: "1px solid var(--line)",
       }}
     >
       <div className="container-wide">
+        {/* Header */}
         <div
-          ref={ref}
+          ref={headerRef}
           className="reveal"
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-            gap: "0",
+            marginBottom: "80px",
+            maxWidth: "60ch",
           }}
         >
-          {studioCapabilities.map((cap, i) => (
-            <div
-              key={cap.label}
+          <p className="eyebrow eyebrow-burnt" style={{ marginBottom: "20px" }}>
+            <span style={{ opacity: 0.5 }}>///</span>
+            Yang Kami Bangun
+          </p>
+          <h2 className="studio-h2" style={{ marginBottom: "24px" }}>
+            Layanan yang dapat Nauka Motion{" "}
+            <span
               style={{
-                padding: "32px 24px",
-                borderLeft: i === 0 ? "none" : "1px solid var(--line)",
-                display: "flex",
-                flexDirection: "column",
-                gap: "12px",
+                fontFamily: "var(--font-fraunces), serif",
+                fontStyle: "italic",
+                fontWeight: 400,
+                color: "var(--burnt)",
               }}
-              className="nmp-cap-card"
             >
-              <span
-                style={{
-                  fontFamily: "var(--font-body), sans-serif",
-                  fontWeight: 500,
-                  fontSize: "clamp(2rem, 4vw, 3.5rem)",
-                  letterSpacing: "-0.025em",
-                  color: "var(--ink)",
-                  lineHeight: 1,
-                }}
-              >
-                {cap.metric}
-              </span>
-              <span
-                className="studio-meta"
-                style={{ color: "var(--burnt)" }}
-              >
-                {cap.label}
-              </span>
-              <p
-                style={{
-                  fontFamily: "var(--font-body), sans-serif",
-                  fontSize: "0.88rem",
-                  color: "var(--ink-soft)",
-                  lineHeight: 1.5,
-                  margin: 0,
-                }}
-              >
-                {cap.note}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        {/* Domain capability marquee */}
-        <div
-          style={{
-            marginTop: "80px",
-            paddingTop: "40px",
-            borderTop: "1px solid var(--line)",
-          }}
-        >
+              kerjakan
+            </span>
+            .
+          </h2>
           <p
-            className="eyebrow"
             style={{
-              marginBottom: "32px",
-              justifyContent: "center",
-              display: "flex",
+              fontFamily: "var(--font-body), sans-serif",
+              fontSize: "1.1rem",
+              color: "var(--ink-soft)",
+              lineHeight: 1.55,
+              maxWidth: "48ch",
             }}
           >
-            <span style={{ opacity: 0.5 }}>///</span>
-            Domains We Work Across
+            Kategori di atas adalah industri yang pernah kami kerjakan. Di bawah
+            ini adalah jenis deliverable yang dapat kami bangun untuk bisnis
+            Anda.
           </p>
+        </div>
 
-          <div className="nmp-marquee">
-            <div className="nmp-marquee-track">
-              {[
-                "Platforms",
-                "Commerce",
-                "Business Systems",
-                "Automotive",
-                "Insurance",
-                "Digital Storytelling",
-                "Hospitality",
-                "Consumer AI",
-                "Platforms",
-                "Commerce",
-                "Business Systems",
-                "Automotive",
-                "Insurance",
-                "Digital Storytelling",
-                "Hospitality",
-                "Consumer AI",
-              ].map((domain, idx) => (
-                <span
-                  key={`${domain}-${idx}`}
-                  style={{
-                    fontFamily: "var(--font-fraunces), serif",
-                    fontStyle: "italic",
-                    fontWeight: 400,
-                    fontSize: "clamp(2rem, 4vw, 3.5rem)",
-                    color: idx % 4 === 1 ? "var(--burnt)" : "var(--ink)",
-                    letterSpacing: "-0.02em",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {domain}
-                </span>
-              ))}
-            </div>
-          </div>
+        {/* Capabilities grid */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+            gap: "0",
+            borderTop: "1px solid var(--line)",
+            borderLeft: "1px solid var(--line)",
+          }}
+          className="nmp-cap-grid"
+        >
+          {studioCapabilities.map((cap) => (
+            <CapabilityCard
+              key={cap.index}
+              index={cap.index}
+              title={cap.title}
+              description={cap.description.id}
+              deliverables={cap.deliverables.map((d) => d.id)}
+            />
+          ))}
         </div>
       </div>
 
       <style jsx>{`
         @media (max-width: 1024px) {
-          :global(.nmp-cap-card) {
-            border-left: none !important;
-            border-top: 1px solid var(--line) !important;
-          }
-          :global(.nmp-cap-card:first-child) {
-            border-top: none !important;
+          :global(.nmp-cap-grid) {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
           }
         }
-        @media (max-width: 768px) {
-          :global(.container-wide > div.reveal) {
-            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
-          }
-          :global(.nmp-cap-card:nth-child(3)) {
-            border-top: 1px solid var(--line) !important;
-          }
-          :global(.nmp-cap-card:nth-child(4)) {
-            border-top: 1px solid var(--line) !important;
+        @media (max-width: 640px) {
+          :global(.nmp-cap-grid) {
+            grid-template-columns: minmax(0, 1fr) !important;
           }
         }
       `}</style>
     </section>
+  );
+}
+
+function CapabilityCard({
+  index,
+  title,
+  description,
+  deliverables,
+}: {
+  index: string;
+  title: string;
+  description: string;
+  deliverables: string[];
+}) {
+  const ref = useReveal<HTMLDivElement>();
+
+  return (
+    <div
+      ref={ref}
+      className="reveal nmp-cap-card"
+      style={{
+        padding: "32px clamp(24px, 3vw, 36px)",
+        borderBottom: "1px solid var(--line)",
+        borderRight: "1px solid var(--line)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "16px",
+        transition: "background 0.25s ease",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "baseline", gap: "12px" }}>
+        <span className="nmp-index">{index}</span>
+      </div>
+
+      <h3
+        style={{
+          fontFamily: "var(--font-body), sans-serif",
+          fontWeight: 500,
+          fontSize: "1.4rem",
+          letterSpacing: "-0.015em",
+          lineHeight: 1.15,
+          color: "var(--ink)",
+          margin: 0,
+        }}
+      >
+        {title}
+      </h3>
+
+      <p
+        style={{
+          fontFamily: "var(--font-body), sans-serif",
+          fontSize: "0.92rem",
+          color: "var(--ink-soft)",
+          lineHeight: 1.55,
+          margin: 0,
+        }}
+      >
+        {description}
+      </p>
+
+      <ul
+        style={{
+          listStyle: "none",
+          padding: 0,
+          margin: "8px 0 0 0",
+          display: "flex",
+          flexDirection: "column",
+          gap: "6px",
+        }}
+      >
+        {deliverables.map((d) => (
+          <li
+            key={d}
+            style={{
+              fontFamily: "var(--font-mono), monospace",
+              fontSize: "0.7rem",
+              letterSpacing: "0.06em",
+              color: "var(--ink-faint)",
+              display: "flex",
+              gap: "8px",
+              alignItems: "baseline",
+            }}
+          >
+            <span style={{ color: "var(--burnt)", flexShrink: 0 }}>·</span>
+            {d}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

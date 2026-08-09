@@ -16,10 +16,10 @@ import { useTheme } from "@/hooks/useTheme";
  */
 
 const navItems = [
-  { label: "Work", href: "/#work" },
-  { label: "Services", href: "/#services" },
+  { label: "Kategori", href: "/#kategori" },
+  { label: "Layanan", href: "/#capabilities" },
+  { label: "Proses", href: "/#process" },
   { label: "Studio", href: "/#studio" },
-  { label: "Insights", href: "/#insights" },
 ];
 
 export function Header() {
@@ -206,7 +206,7 @@ export function Header() {
           </button>
 
           <Link href="/#contact" className="nmp-btn nmp-btn-primary nmp-header-cta">
-            Start a Project
+            Mulai Proyek
             <svg
               width="11"
               height="11"
@@ -290,7 +290,7 @@ export function Header() {
           }}
         >
           <div className="container-wide" style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-            {[...navItems, { label: "Contact", href: "/#contact" }].map((item, i) => (
+            {[...navItems, { label: "Kontak", href: "/#contact" }].map((item, i) => (
               <Link
                 key={item.href}
                 href={item.href}

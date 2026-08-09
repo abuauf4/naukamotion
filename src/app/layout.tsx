@@ -36,20 +36,20 @@ const SITE_URL = "https://motion.nauka.id";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Nauka Motion — Independent Digital Product Studio",
+    default: "Nauka Motion — Studio Produk Digital",
     template: "%s — Nauka Motion",
   },
   description:
-    "We design and build digital products that move businesses forward. From business platforms and e-commerce to digital identity and storytelling — Nauka Motion unifies strategy, design, and technology into experiences that work.",
+    "Nauka Motion menggabungkan desain, teknologi, dan pemecahan masalah untuk membangun website, platform, dan sistem digital di berbagai industri.",
   keywords: [
     "Nauka Motion",
-    "digital product studio",
-    "product strategy",
-    "experience design",
-    "platform engineering",
-    "brand experience",
-    "creative technology",
-    "Indonesia studio",
+    "studio produk digital",
+    "website development",
+    "web application",
+    "business system",
+    "e-commerce",
+    "UI/UX design",
+    "digital product studio Indonesia",
     "Jakarta",
   ],
   authors: [{ name: "Nauka Motion", url: SITE_URL }],
@@ -60,22 +60,27 @@ export const metadata: Metadata = {
     icon: "/logo.svg",
   },
   openGraph: {
-    title: "Nauka Motion — Independent Digital Product Studio",
+    title: "Nauka Motion — Studio Produk Digital",
     description:
-      "We design and build digital products that move businesses forward. Strategy, design, and technology unified into experiences that work.",
+      "Kami mengubah kebutuhan bisnis menjadi produk digital yang bekerja. Website, platform, dan sistem digital di berbagai industri.",
     url: SITE_URL,
     siteName: "Nauka Motion",
     type: "website",
-    locale: "en_US",
+    locale: "id_ID",
+    alternateLocale: ["en_US"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nauka Motion — Independent Digital Product Studio",
+    title: "Nauka Motion — Studio Produk Digital",
     description:
-      "We design and build digital products that move businesses forward.",
+      "Kami mengubah kebutuhan bisnis menjadi produk digital yang bekerja.",
   },
   alternates: {
     canonical: SITE_URL,
+    languages: {
+      "id-ID": SITE_URL,
+      "en-US": `${SITE_URL}/en`,
+    },
   },
   robots: {
     index: true,
@@ -108,7 +113,7 @@ export default function RootLayout({
   const themeBootstrap = `try{var t=localStorage.getItem('nauka-theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark');}}catch(e){}`;
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="id" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
       </head>
