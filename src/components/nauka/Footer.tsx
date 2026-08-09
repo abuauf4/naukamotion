@@ -1,45 +1,85 @@
 "use client";
 
 import Link from "next/link";
+import { useLocale } from "@/lib/locale-context";
 
 /**
  * Footer — Nauka Motion Studio
  *
  * Brand: NAUKA MOTION (large wordmark)
- * Sub: Independent Digital Product & Creative Technology Studio
+ * Sub: Studio Produk Digital
  *
  * Columns:
- *   - Studio (About, Process, Insights, Contact)
- *   - Work (Selected Work, All Work, Case Studies)
- *   - Connect (Email, WhatsApp, LinkedIn, Instagram)
+ *   - Studio (Tentang, Proses, Insights, Kontak)
+ *   - Kategori (link ke /work overview + kategori populer)
+ *   - Connect (Email, WhatsApp, Instagram, Facebook, LinkedIn)
  *
  * Bottom: © year, location, "Small movement. Real Impact."
+ *
+ * Kontak asli (dari instruksi):
+ *   WhatsApp: 089662524524 / @naukamotion
+ *   Instagram: @naukamotion
+ *   Facebook: @naukamotion
+ *   LinkedIn: linkedin.com/in/abu-aufa-734b85418
+ *   Email: info@nauka.id
  */
 
-const studioLinks = [
-  { label: "About", href: "/#studio" },
-  { label: "Process", href: "/#process" },
-  { label: "Insights", href: "/#insights" },
-  { label: "Contact", href: "/#contact" },
-];
-
-const workLinks = [
-  { label: "Selected Work", href: "/#work" },
-  { label: "All Work", href: "/work" },
-  { label: "Jasa Proteksi", href: "/work/jasaprotect" },
-  { label: "Inventra ERP", href: "/work/inventra-erp" },
-  { label: "Anima Companion", href: "/work/anima-companion" },
-];
-
-const connectLinks = [
-  { label: "hello@naukamotion.id", href: "mailto:hello@naukamotion.id" },
-  { label: "WhatsApp", href: "https://wa.me/6281234567890" },
-  { label: "LinkedIn", href: "https://linkedin.com" },
-  { label: "Instagram", href: "https://instagram.com" },
-];
+const COPY = {
+  id: {
+    studio: "Studio",
+    categories: "Kategori",
+    connect: "Connect",
+    about: "Tentang",
+    process: "Proses",
+    insights: "Insights",
+    contact: "Kontak",
+    allWork: "Semua Kategori",
+    privacy: "Privasi",
+    terms: "Syarat",
+    tagline: "Studio Produk Digital. Kami mengubah kebutuhan bisnis menjadi produk digital yang bekerja.",
+  },
+  en: {
+    studio: "Studio",
+    categories: "Categories",
+    connect: "Connect",
+    about: "About",
+    process: "Process",
+    insights: "Insights",
+    contact: "Contact",
+    allWork: "All Categories",
+    privacy: "Privacy",
+    terms: "Terms",
+    tagline: "Digital Product Studio. We turn business needs into digital products that work.",
+  },
+};
 
 export function Footer() {
   const year = new Date().getFullYear();
+  const { locale } = useLocale();
+  const t = COPY[locale];
+
+  const studioLinks = [
+    { label: t.about, href: "/about" },
+    { label: t.process, href: "/#process" },
+    { label: t.insights, href: "/insights" },
+    { label: t.contact, href: "/contact" },
+  ];
+
+  const categoryLinks = [
+    { label: t.allWork, href: "/work" },
+    { label: "Automotive", href: "/work/automotive" },
+    { label: "Technology & Retail", href: "/work/technology-retail" },
+    { label: "Insurance", href: "/work/insurance" },
+    { label: "Personal Projects", href: "/work/personal-projects" },
+  ];
+
+  const connectLinks = [
+    { label: "info@nauka.id", href: "mailto:info@nauka.id" },
+    { label: "WhatsApp", href: "https://wa.me/6289662524524" },
+    { label: "Instagram", href: "https://instagram.com/naukamotion" },
+    { label: "Facebook", href: "https://facebook.com/naukamotion" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/abu-aufa-734b85418" },
+  ];
 
   return (
     <footer
@@ -105,8 +145,7 @@ export function Footer() {
                 marginBottom: "24px",
               }}
             >
-              Independent Digital Product &amp; Creative Technology Studio.
-              We design and build digital products that move businesses forward.
+              {t.tagline}
             </p>
             <p
               style={{
@@ -123,7 +162,7 @@ export function Footer() {
           {/* Studio column */}
           <div>
             <p className="studio-meta" style={{ marginBottom: "20px" }}>
-              Studio
+              {t.studio}
             </p>
             <ul
               style={{
@@ -160,10 +199,10 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Work column */}
+          {/* Categories column */}
           <div>
             <p className="studio-meta" style={{ marginBottom: "20px" }}>
-              Work
+              {t.categories}
             </p>
             <ul
               style={{
@@ -175,7 +214,7 @@ export function Footer() {
                 gap: "12px",
               }}
             >
-              {workLinks.map((link) => (
+              {categoryLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
@@ -203,7 +242,7 @@ export function Footer() {
           {/* Connect column */}
           <div>
             <p className="studio-meta" style={{ marginBottom: "20px" }}>
-              Connect
+              {t.connect}
             </p>
             <ul
               style={{
@@ -283,7 +322,7 @@ export function Footer() {
                 textDecoration: "none",
               }}
             >
-              Privacy
+              {t.privacy}
             </Link>
             <Link
               href="/legal/terms"
@@ -292,7 +331,7 @@ export function Footer() {
                 textDecoration: "none",
               }}
             >
-              Terms
+              {t.terms}
             </Link>
           </p>
         </div>

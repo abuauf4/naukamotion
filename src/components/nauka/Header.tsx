@@ -5,29 +5,36 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "@/hooks/useTheme";
 import { LocaleSwitcher } from "@/components/nauka/LocaleSwitcher";
+import { useLocale } from "@/lib/locale-context";
 
-/**
- * Header — Nauka Motion Studio
- *
- * Brand: NAUKA MOTION (primary)
- * Nav: Work / Services / Studio / Insights / Contact
- * CTA: Start a Project
- *
- * Mobile: wordmark + hamburger
- */
+const NAV = {
+  id: [
+    { label: "Kategori", href: "/#kategori" },
+    { label: "Layanan", href: "/#capabilities" },
+    { label: "Proses", href: "/#process" },
+    { label: "Studio", href: "/#studio" },
+  ],
+  en: [
+    { label: "Categories", href: "/#kategori" },
+    { label: "Services", href: "/#capabilities" },
+    { label: "Process", href: "/#process" },
+    { label: "Studio", href: "/#studio" },
+  ],
+};
 
-const navItems = [
-  { label: "Kategori", href: "/#kategori" },
-  { label: "Layanan", href: "/#capabilities" },
-  { label: "Proses", href: "/#process" },
-  { label: "Studio", href: "/#studio" },
-];
+const COPY = {
+  id: { cta: "Mulai Proyek", contact: "Kontak" },
+  en: { cta: "Start a Project", contact: "Contact" },
+};
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const { theme, toggle, mounted } = useTheme();
+  const { locale } = useLocale();
+  const navItems = NAV[locale];
+  const t = COPY[locale];
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 24);
@@ -208,7 +215,7 @@ export function Header() {
           </button>
 
           <Link href="/#contact" className="nmp-btn nmp-btn-primary nmp-header-cta">
-            Mulai Proyek
+            {t.cta}
             <svg
               width="11"
               height="11"
@@ -292,7 +299,7 @@ export function Header() {
           }}
         >
           <div className="container-wide" style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-            {[...navItems, { label: "Kontak", href: "/#contact" }].map((item, i) => (
+            {[...navItems, { label: t.contact, href: "/#contact" }].map((item, i) => (
               <Link
                 key={item.href}
                 href={item.href}

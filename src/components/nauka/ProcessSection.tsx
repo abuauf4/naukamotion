@@ -2,6 +2,20 @@
 
 import { useReveal } from "@/hooks/useReveal";
 import { studioProcess } from "@/lib/studio-data";
+import { useLocale, pickLocal } from "@/lib/locale-context";
+
+const COPY = {
+  id: {
+    eyebrow: "Cara Kami Bekerja — 05 Langkah",
+    heading: "Bagaimana produk bergerak dari pertanyaan menjadi sistem yang",
+    headingAccent: "bekerja",
+  },
+  en: {
+    eyebrow: "How We Work — 05 Steps",
+    heading: "How a product moves from question to a system that",
+    headingAccent: "works",
+  },
+};
 
 /**
  * ProcessSection — "Cara Kami Bekerja"
@@ -11,6 +25,8 @@ import { studioProcess } from "@/lib/studio-data";
  */
 export function ProcessSection() {
   const ref = useReveal<HTMLDivElement>();
+  const { locale } = useLocale();
+  const t = COPY[locale];
 
   return (
     <section
@@ -34,10 +50,10 @@ export function ProcessSection() {
         >
           <p className="eyebrow eyebrow-burnt" style={{ marginBottom: "20px" }}>
             <span style={{ opacity: 0.5 }}>///</span>
-            Cara Kami Bekerja — 05 Langkah
+            {t.eyebrow}
           </p>
           <h2 className="studio-h2">
-            Bagaimana produk bergerak dari pertanyaan menjadi sistem yang{" "}
+            {t.heading}{" "}
             <span
               style={{
                 fontFamily: "var(--font-fraunces), serif",
@@ -46,7 +62,7 @@ export function ProcessSection() {
                 color: "var(--burnt)",
               }}
             >
-              bekerja
+              {t.headingAccent}
             </span>
             .
           </h2>
@@ -87,7 +103,7 @@ export function ProcessSection() {
                   margin: 0,
                 }}
               >
-                {step.title.id}
+                {pickLocal(step.title, locale)}
               </h3>
               <p
                 style={{
@@ -98,7 +114,7 @@ export function ProcessSection() {
                   margin: 0,
                 }}
               >
-                {step.description.id}
+                {pickLocal(step.description, locale)}
               </p>
             </div>
           ))}

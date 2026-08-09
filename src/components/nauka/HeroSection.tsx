@@ -13,6 +13,9 @@ const COPY = {
     sub: "Nauka Motion menggabungkan desain, teknologi, dan pemecahan masalah untuk membangun website, platform, dan sistem digital di berbagai industri.",
     ctaPrimary: "Lihat Kategori",
     ctaSecondary: "Mulai Proyek",
+    scrollHint: "Scroll untuk menjelajah",
+    studioReel: "Studio Reel",
+    showreel: "Showreel 2025",
   },
   en: {
     eyebrow: "Nauka Motion — Digital Product Studio",
@@ -21,6 +24,9 @@ const COPY = {
     sub: "Nauka Motion combines design, technology, and problem-solving to build websites, platforms, and digital systems across industries.",
     ctaPrimary: "View Categories",
     ctaSecondary: "Start a Project",
+    scrollHint: "Scroll to explore",
+    studioReel: "Studio Reel",
+    showreel: "Showreel 2025",
   },
 };
 
@@ -145,7 +151,7 @@ export function HeroSection() {
               style={{
                 fontFamily: "var(--font-body), sans-serif",
                 fontWeight: 500,
-                fontSize: "clamp(2.4rem, 6vw, 5rem)",
+                fontSize: "clamp(2.5rem, 7vw, 5.5rem)",
                 lineHeight: 1.04,
                 letterSpacing: "-0.03em",
                 color: "var(--ink)",
@@ -267,7 +273,7 @@ export function HeroSection() {
                   color: "var(--ink-soft)",
                 }}
               >
-                Studio Reel
+                {t.studioReel}
               </span>
               <span
                 style={{
@@ -384,7 +390,7 @@ export function HeroSection() {
                   color: "var(--ink-faint)",
                 }}
               >
-                Showreel 2025
+                {t.showreel}
               </span>
             </div>
           </div>
@@ -417,7 +423,7 @@ export function HeroSection() {
             transformOrigin: "left center",
           }}
         />
-        Scroll to explore
+        {t.scrollHint}
       </div>
 
       <style jsx>{`
@@ -427,6 +433,13 @@ export function HeroSection() {
           }
           :global(.nmp-hero-grid) {
             grid-template-columns: minmax(0, 1fr) !important;
+          }
+        }
+        @media (max-width: 768px) and (orientation: landscape) {
+          section {
+            min-height: auto !important;
+            padding-top: 100px !important;
+            padding-bottom: 60px !important;
           }
         }
       `}</style>

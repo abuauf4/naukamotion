@@ -2,6 +2,22 @@
 
 import { useReveal } from "@/hooks/useReveal";
 import { studioCapabilities } from "@/lib/studio-data";
+import { useLocale, pickLocal } from "@/lib/locale-context";
+
+const COPY = {
+  id: {
+    eyebrow: "Yang Kami Bangun",
+    heading: "Layanan yang dapat kami",
+    headingAccent: "kerjakan",
+    sub: "Kategori di atas adalah industri yang pernah kami kerjakan. Di bawah ini adalah jenis deliverable yang dapat kami bangun untuk bisnis Anda.",
+  },
+  en: {
+    eyebrow: "What We Build",
+    heading: "Services we can",
+    headingAccent: "deliver",
+    sub: "The categories above are industries we've worked in. Below are the types of deliverables we can build for your business.",
+  },
+};
 
 /**
  * CapabilitiesSection — "Yang Kami Bangun"
@@ -13,6 +29,8 @@ import { studioCapabilities } from "@/lib/studio-data";
  */
 export function CapabilitiesSection() {
   const headerRef = useReveal<HTMLDivElement>();
+  const { locale } = useLocale();
+  const t = COPY[locale];
 
   return (
     <section
@@ -36,10 +54,10 @@ export function CapabilitiesSection() {
         >
           <p className="eyebrow eyebrow-burnt" style={{ marginBottom: "20px" }}>
             <span style={{ opacity: 0.5 }}>///</span>
-            Yang Kami Bangun
+            {t.eyebrow}
           </p>
           <h2 className="studio-h2" style={{ marginBottom: "24px" }}>
-            Layanan yang dapat Nauka Motion{" "}
+            {t.heading}{" "}
             <span
               style={{
                 fontFamily: "var(--font-fraunces), serif",
@@ -48,7 +66,7 @@ export function CapabilitiesSection() {
                 color: "var(--burnt)",
               }}
             >
-              kerjakan
+              {t.headingAccent}
             </span>
             .
           </h2>
@@ -61,9 +79,7 @@ export function CapabilitiesSection() {
               maxWidth: "48ch",
             }}
           >
-            Kategori di atas adalah industri yang pernah kami kerjakan. Di bawah
-            ini adalah jenis deliverable yang dapat kami bangun untuk bisnis
-            Anda.
+            {t.sub}
           </p>
         </div>
 
@@ -83,8 +99,8 @@ export function CapabilitiesSection() {
               key={cap.index}
               index={cap.index}
               title={cap.title}
-              description={cap.description.id}
-              deliverables={cap.deliverables.map((d) => d.id)}
+              description={pickLocal(cap.description, locale)}
+              deliverables={cap.deliverables.map((d) => pickLocal(d, locale))}
             />
           ))}
         </div>

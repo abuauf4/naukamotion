@@ -1,6 +1,30 @@
 "use client";
 
 import { useReveal } from "@/hooks/useReveal";
+import { useLocale } from "@/lib/locale-context";
+
+const COPY = {
+  id: {
+    eyebrow: "Tentang Nauka Motion",
+    heading: "Didirikan dan dipimpin oleh",
+    headingAccent: "Abu Aufa",
+    p1: "Seorang web developer dan digital strategist yang berbasis di Jakarta, bekerja di lintas industri — otomotif, retail teknologi, asuransi, brand konsumen, pariwisata, serta produk internal Nauka Labs.",
+    p2: "Nauka Motion bekerja dengan tim inti kecil yang dapat diperluas sesuai kebutuhan project — designer, engineer, dan kolaborator dibawa masuk berdasarkan apa yang benar-benar dibutuhkan setiap project.",
+    tagline: "Small movement. Real Impact.",
+    taglineDesc: "Filosofi kerja Nauka Motion — pergerakan kecil yang tepat sasaran menciptakan perubahan yang lebih bermakna dibandingkan perubahan besar yang tidak terarah.",
+    founderLabel: "Founder — Abu Aufa",
+  },
+  en: {
+    eyebrow: "About Nauka Motion",
+    heading: "Founded and directed by",
+    headingAccent: "Abu Aufa",
+    p1: "A web developer and digital strategist based in Jakarta, working across industries — automotive, retail technology, insurance, consumer brands, tourism, and Nauka Labs internal products.",
+    p2: "Nauka Motion works with a small core team that scales per project — designers, engineers, and collaborators brought in based on what each project actually needs.",
+    tagline: "Small movement. Real Impact.",
+    taglineDesc: "Nauka Motion's working philosophy — small, well-targeted movement creates more meaningful change than large but aimless change.",
+    founderLabel: "Founder — Abu Aufa",
+  },
+};
 
 /**
  * FounderSection — "Tentang Nauka Motion"
@@ -10,6 +34,8 @@ import { useReveal } from "@/hooks/useReveal";
  */
 export function FounderSection() {
   const ref = useReveal<HTMLDivElement>();
+  const { locale } = useLocale();
+  const t = COPY[locale];
 
   return (
     <section
@@ -91,7 +117,7 @@ export function FounderSection() {
           <div>
             <p className="eyebrow eyebrow-burnt" style={{ marginBottom: "24px" }}>
               <span style={{ opacity: 0.5 }}>///</span>
-              Tentang Nauka Motion
+              {t.eyebrow}
             </p>
 
             <h2
@@ -106,7 +132,7 @@ export function FounderSection() {
                 marginBottom: "8px",
               }}
             >
-              Didirikan dan dipimpin oleh{" "}
+              {t.heading}{" "}
               <span
                 style={{
                   fontFamily: "var(--font-fraunces), serif",
@@ -115,7 +141,7 @@ export function FounderSection() {
                   color: "var(--burnt)",
                 }}
               >
-                Abu Aufa
+                {t.headingAccent}
               </span>
             </h2>
 
@@ -129,10 +155,7 @@ export function FounderSection() {
                 maxWidth: "48ch",
               }}
             >
-              Seorang web developer dan digital strategist yang berbasis di
-              Jakarta, bekerja di lintas industri — otomotif, retail teknologi,
-              asuransi, brand konsumen, pariwisata, serta produk internal Nauka
-              Labs.
+              {t.p1}
             </p>
 
             <p
@@ -145,10 +168,7 @@ export function FounderSection() {
                 maxWidth: "48ch",
               }}
             >
-              Nauka Motion bekerja dengan tim inti kecil yang dapat diperluas
-              sesuai kebutuhan project — designer, engineer, dan kolaborator
-              dibawa masuk berdasarkan apa yang benar-benar dibutuhkan setiap
-              project.
+              {t.p2}
             </p>
 
             {/* Tagline */}
@@ -170,7 +190,7 @@ export function FounderSection() {
                   letterSpacing: "-0.01em",
                 }}
               >
-                Small movement. Real Impact.
+                {t.tagline}
               </p>
               <p
                 style={{
@@ -181,9 +201,7 @@ export function FounderSection() {
                   maxWidth: "44ch",
                 }}
               >
-                Filosofi kerja Nauka Motion — pergerakan kecil yang tepat
-                sasaran menciptakan perubahan yang lebih bermakna dibandingkan
-                perubahan besar yang tidak terarah.
+                {t.taglineDesc}
               </p>
             </div>
           </div>
