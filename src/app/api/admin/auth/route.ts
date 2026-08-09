@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase';
-import { createAdminToken } from '@/lib/auth';
-
-// Admin credentials from env (fallback if DB is not available)
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'Bagas';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '122333';
+import bcrypt from 'bcryptjs';
+import { prisma } from '@/lib/cms/db';
+import { createAdminToken } from '@/lib/admin-auth';
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,29 +15,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Try database first
-    let admin: { id: string; username: string; name: string } | null = null;
-
-    try {
-      const { data: dbAdmin, error } = await supabaseAdmin
-        .from('admins')
-        .select('id, username, name, password')
-        .eq('username', username)
-        .single();
-
-      if (!error && dbAdmin && dbAdmin.password === password) {
-        admin = { id: dbAdmin.id, username: dbAdmin.username, name: dbAdmin.name };
-      }
-    } catch {
-      // DB not available — fall through to env-based auth
-    }
-
-    // Fallback: env-based admin credentials
-    if (!admin && username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-      admin = { id: 'env-admin-1', username: ADMIN_USERNAME, name: 'Abu Aufa' };
-    }
+    // Query admin from Neon (Prisma)
+    const admin = await prisma.admin.findUnique({
+      where: { username },
+    });
 
     if (!admin) {
+      return NextResponse.json(
+        { error: 'Username atau password salah' },
+        { status: 401 }
+      );
+    }
+
+    // Verify password hash
+    const isValid = await bcrypt.compare(password, admin.password);
+    if (!isValid) {
       return NextResponse.json(
         { error: 'Username atau password salah' },
         { status: 401 }
@@ -54,7 +43,7 @@ export async function POST(request: NextRequest) {
       name: admin.name,
     });
 
-    // Set HttpOnly cookie and return success
+    // Set HttpOnly cookie
     const response = NextResponse.json({
       success: true,
       admin: { id: admin.id, name: admin.name, username: admin.username },
@@ -69,8 +58,7 @@ export async function POST(request: NextRequest) {
     });
 
     return response;
-  } catch (error) {
-    console.error('Auth error:', error);
+  } catch {
     return NextResponse.json(
       { error: 'Terjadi kesalahan server' },
       { status: 500 }

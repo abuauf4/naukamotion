@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
 
-const SECRET_KEY = process.env.JWT_SECRET || 'nauka-motion-admin-secret-2026';
-const secret = new TextEncoder().encode(SECRET_KEY);
+// JWT secret — NO hardcoded fallback. Must be set in env.
+const SECRET_STRING = process.env.JWT_SECRET;
+if (!SECRET_STRING && process.env.NODE_ENV === 'production') {
+  throw new Error('JWT_SECRET environment variable is required in production');
+}
+const secret = new TextEncoder().encode(SECRET_STRING || 'dev-only-secret-not-for-production');
 
 async function isValidToken(token: string): Promise<boolean> {
+  if (!SECRET_STRING) return false;
   try {
     await jwtVerify(token, secret);
     return true;

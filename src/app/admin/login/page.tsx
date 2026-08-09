@@ -1,14 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { User, Lock, Loader2 } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function AdminLoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -30,104 +27,167 @@ export default function AdminLoginPage() {
 
       if (!res.ok) {
         setError(data.error || 'Login gagal');
+        setLoading(false);
         return;
       }
 
-      router.push('/admin');
+      const from = searchParams.get('from') || '/admin';
+      router.push(from);
+      router.refresh();
     } catch {
-      setError('Terjadi kesalahan koneksi');
-    } finally {
+      setError('Koneksi gagal. Coba lagi.');
       setLoading(false);
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0f0e0d] px-4">
-      {/* Subtle background texture */}
-      <div className="fixed inset-0 pointer-events-none opacity-[0.03]"
-        style={{
-          backgroundImage: `radial-gradient(ellipse at 50% 0%, rgba(13,148,136,0.15) 0%, transparent 60%)`,
-        }}
-      />
-
-      <div className="w-full max-w-sm relative">
-        {/* Brand */}
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-white tracking-tight">
-            Nauka Motion
-          </h1>
-          <p className="text-sm text-slate-400 mt-1">
-            Admin Panel
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'var(--bg)',
+      padding: '20px',
+    }}>
+      <div style={{
+        width: '100%',
+        maxWidth: '380px',
+      }}>
+        {/* Logo */}
+        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+          <span style={{
+            fontFamily: 'var(--font-body), sans-serif',
+            fontWeight: 600,
+            fontSize: '1.5rem',
+            color: 'var(--ink)',
+          }}>
+            NAUKA{' '}
+            <span style={{
+              fontFamily: 'var(--font-fraunces), serif',
+              fontStyle: 'italic',
+              fontWeight: 400,
+              color: 'var(--burnt)',
+            }}>
+              motion
+            </span>
+          </span>
+          <p style={{
+            fontFamily: 'var(--font-mono), monospace',
+            fontSize: '0.7rem',
+            color: 'var(--ink-faint)',
+            letterSpacing: '0.15em',
+            textTransform: 'uppercase',
+            marginTop: '8px',
+          }}>
+            Admin CMS
           </p>
         </div>
 
-        {/* Login Card */}
-        <form
-          onSubmit={handleSubmit}
-          className="bg-slate-900/80 border border-slate-800 rounded-xl p-6 space-y-5 backdrop-blur-sm"
-        >
-          <div className="space-y-2">
-            <Label htmlFor="username" className="text-slate-300 text-sm">
-              Username
-            </Label>
-            <div className="relative">
-              <User className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-500" />
-              <Input
-                id="username"
-                type="text"
-                placeholder="Masukkan username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                className="pl-10 bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 focus-visible:border-[#0d9488] focus-visible:ring-[#0d9488]/30"
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="password" className="text-slate-300 text-sm">
-              Password
-            </Label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-500" />
-              <Input
-                id="password"
-                type="password"
-                placeholder="Masukkan password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="pl-10 bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 focus-visible:border-[#0d9488] focus-visible:ring-[#0d9488]/30"
-              />
-            </div>
-          </div>
-
+        {/* Form */}
+        <form onSubmit={handleSubmit} style={{
+          background: 'var(--bg-card)',
+          border: '1px solid var(--line)',
+          borderRadius: '12px',
+          padding: '32px 24px',
+        }}>
           {error && (
-            <div className="bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2 text-sm text-red-400">
+            <div style={{
+              background: 'rgba(216, 90, 42, 0.1)',
+              border: '1px solid var(--burnt)',
+              borderRadius: '8px',
+              padding: '12px 16px',
+              marginBottom: '20px',
+              fontFamily: 'var(--font-body), sans-serif',
+              fontSize: '0.85rem',
+              color: 'var(--burnt)',
+            }}>
               {error}
             </div>
           )}
 
-          <Button
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{
+              display: 'block',
+              fontFamily: 'var(--font-mono), monospace',
+              fontSize: '0.7rem',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              color: 'var(--ink-soft)',
+              marginBottom: '8px',
+            }}>
+              Username
+            </label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              autoFocus
+              style={{
+                width: '100%',
+                padding: '12px 16px',
+                fontFamily: 'var(--font-body), sans-serif',
+                fontSize: '0.95rem',
+                color: 'var(--ink)',
+                background: 'var(--bg)',
+                border: '1px solid var(--line-strong)',
+                borderRadius: '8px',
+                outline: 'none',
+              }}
+            />
+          </div>
+
+          <div style={{ marginBottom: '28px' }}>
+            <label style={{
+              display: 'block',
+              fontFamily: 'var(--font-mono), monospace',
+              fontSize: '0.7rem',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              color: 'var(--ink-soft)',
+              marginBottom: '8px',
+            }}>
+              Password
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              style={{
+                width: '100%',
+                padding: '12px 16px',
+                fontFamily: 'var(--font-body), sans-serif',
+                fontSize: '0.95rem',
+                color: 'var(--ink)',
+                background: 'var(--bg)',
+                border: '1px solid var(--line-strong)',
+                borderRadius: '8px',
+                outline: 'none',
+              }}
+            />
+          </div>
+
+          <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#0d9488] hover:bg-[#0f766e] text-white font-medium h-10"
+            style={{
+              width: '100%',
+              padding: '12px',
+              fontFamily: 'var(--font-body), sans-serif',
+              fontWeight: 500,
+              fontSize: '0.95rem',
+              color: 'var(--paper)',
+              background: loading ? 'var(--ink-faint)' : 'var(--ink)',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              transition: 'background 0.2s ease',
+            }}
           >
-            {loading ? (
-              <>
-                <Loader2 className="size-4 animate-spin" />
-                Memproses...
-              </>
-            ) : (
-              'Masuk'
-            )}
-          </Button>
+            {loading ? 'Memuat...' : 'Login'}
+          </button>
         </form>
-
-        {/* Footer */}
-        <p className="text-center text-xs text-slate-600 mt-6">
-          Nauka Motion Admin &copy; {new Date().getFullYear()}
-        </p>
       </div>
     </div>
   );

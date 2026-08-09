@@ -1,279 +1,128 @@
-'use client';
+import { prisma } from '@/lib/cms/db';
 
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Mail, Briefcase, FileText, MessageSquare, Loader2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
-
-interface DashboardData {
-  totalLeads: number;
-  newLeadsThisMonth: number;
-  activeProjects: number;
-  publishedInsights: number;
-  totalTestimonials: number;
-  recentLeads: {
-    id: string;
-    name: string;
-    service: string | null;
-    status: string;
-    createdAt: string;
-  }[];
-  recentProjects: {
-    id: string;
-    title: string;
-    client: string;
-    category: string;
-    status: string;
-  }[];
-}
-
-const statusColors: Record<string, string> = {
-  new: 'bg-green-100 text-green-700',
-  contacted: 'bg-blue-100 text-blue-700',
-  qualified: 'bg-amber-100 text-amber-700',
-  converted: 'bg-teal-100 text-teal-700',
-  lost: 'bg-red-100 text-red-700',
-};
-
-const statusLabels: Record<string, string> = {
-  new: 'Baru',
-  contacted: 'Dihubungi',
-  qualified: 'Terkualifikasi',
-  converted: 'Konversi',
-  lost: 'Hilang',
-};
-
-export default function AdminDashboardPage() {
-  const [data, setData] = useState<DashboardData | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await fetch('/api/admin/dashboard');
-        if (res.ok) {
-          const json = await res.json();
-          setData(json);
-        }
-      } catch (err) {
-        console.error('Failed to load dashboard:', err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchData();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="size-6 animate-spin text-slate-400" />
-      </div>
-    );
-  }
-
-  if (!data) {
-    return (
-      <div className="text-center py-20 text-slate-400">
-        Gagal memuat data dashboard
-      </div>
-    );
-  }
+export default async function AdminDashboardPage() {
+  // Fetch real counts from Neon
+  const [
+    totalCategories,
+    totalProjects,
+    publishedProjects,
+    developmentProjects,
+    draftProjects,
+    publicProjects,
+    privateProjects,
+    clientProjects,
+    personalProjects,
+    collaborationProjects,
+    internalProjects,
+    totalSections,
+    totalTechnologies,
+  ] = await Promise.all([
+    prisma.category.count(),
+    prisma.project.count(),
+    prisma.project.count({ where: { status: 'published' } }),
+    prisma.project.count({ where: { status: 'development' } }),
+    prisma.project.count({ where: { status: 'draft' } }),
+    prisma.project.count({ where: { visibility: 'public' } }),
+    prisma.project.count({ where: { visibility: 'private' } }),
+    prisma.project.count({ where: { type: 'client' } }),
+    prisma.project.count({ where: { type: 'personal' } }),
+    prisma.project.count({ where: { type: 'collaboration' } }),
+    prisma.project.count({ where: { type: 'internal' } }),
+    prisma.caseStudySection.count(),
+    prisma.projectTechnology.count(),
+  ]);
 
   const stats = [
-    {
-      title: 'Total Leads',
-      value: data.totalLeads,
-      subtitle: `${data.newLeadsThisMonth} baru bulan ini`,
-      icon: Mail,
-      color: 'text-teal-600',
-      bgColor: 'bg-teal-50',
-    },
-    {
-      title: 'Proyek Aktif',
-      value: data.activeProjects,
-      subtitle: 'proyek dipublikasikan',
-      icon: Briefcase,
-      color: 'text-amber-600',
-      bgColor: 'bg-amber-50',
-    },
-    {
-      title: 'Wawasan',
-      value: data.publishedInsights,
-      subtitle: 'artikel dipublikasikan',
-      icon: FileText,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-50',
-    },
-    {
-      title: 'Testimoni',
-      value: data.totalTestimonials,
-      subtitle: 'testimoni dipublikasikan',
-      icon: MessageSquare,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-50',
-    },
+    { label: 'Categories', value: totalCategories },
+    { label: 'Total Projects', value: totalProjects },
+    { label: 'Case Study Sections', value: totalSections },
+    { label: 'Technologies', value: totalTechnologies },
+  ];
+
+  const statusBreakdown = [
+    { label: 'Published', value: publishedProjects, color: 'var(--ink)' },
+    { label: 'Development', value: developmentProjects, color: 'var(--burnt)' },
+    { label: 'Draft', value: draftProjects, color: 'var(--ink-faint)' },
+  ];
+
+  const typeBreakdown = [
+    { label: 'Client', value: clientProjects },
+    { label: 'Personal', value: personalProjects },
+    { label: 'Collaboration', value: collaborationProjects },
+    { label: 'Internal', value: internalProjects },
+  ];
+
+  const visibilityBreakdown = [
+    { label: 'Public', value: publicProjects },
+    { label: 'Private', value: privateProjects },
   ];
 
   return (
-    <div className="space-y-8">
-      {/* Page Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
-        <p className="text-sm text-slate-500 mt-1">
-          Ringkasan data Nauka Motion
-        </p>
+    <main style={{ flex: 1, padding: '32px clamp(16px, 4vw, 40px)' }}>
+      <h1 style={{ fontFamily: 'var(--font-body), sans-serif', fontWeight: 500, fontSize: 'clamp(1.5rem, 3vw, 2rem)', color: 'var(--ink)', margin: '0 0 32px 0' }}>
+        Dashboard
+      </h1>
+
+      {/* Top stats */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px', marginBottom: '40px' }}>
+        {stats.map((stat) => (
+          <div key={stat.label} style={{
+            background: 'var(--bg-card)',
+            border: '1px solid var(--line)',
+            borderRadius: '12px',
+            padding: '24px',
+          }}>
+            <p style={{ fontFamily: 'var(--font-fraunces), serif', fontStyle: 'italic', fontSize: '2.5rem', color: 'var(--ink)', margin: 0, lineHeight: 1 }}>
+              {stat.value}
+            </p>
+            <p style={{ fontFamily: 'var(--font-mono), monospace', fontSize: '0.7rem', color: 'var(--ink-faint)', letterSpacing: '0.1em', textTransform: 'uppercase', margin: '8px 0 0 0' }}>
+              {stat.label}
+            </p>
+          </div>
+        ))}
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={stat.title} className="border-slate-200">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-slate-500">
-                  {stat.title}
-                </CardTitle>
-                <div className={cn('p-2 rounded-lg', stat.bgColor)}>
-                  <Icon className={cn('size-4', stat.color)} />
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-slate-900">
-                  {stat.value}
-                </div>
-                <p className="text-xs text-slate-400 mt-1">
-                  {stat.subtitle}
-                </p>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+      {/* Breakdowns */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '16px' }}>
+        {/* Status breakdown */}
+        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--line)', borderRadius: '12px', padding: '24px' }}>
+          <h2 style={{ fontFamily: 'var(--font-mono), monospace', fontSize: '0.7rem', color: 'var(--ink-faint)', letterSpacing: '0.1em', textTransform: 'uppercase', margin: '0 0 16px 0' }}>
+            By Status
+          </h2>
+          {statusBreakdown.map((item) => (
+            <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid var(--line)' }}>
+              <span style={{ fontFamily: 'var(--font-body), sans-serif', fontSize: '0.9rem', color: 'var(--ink-soft)' }}>{item.label}</span>
+              <span style={{ fontFamily: 'var(--font-body), sans-serif', fontWeight: 500, fontSize: '0.9rem', color: item.color }}>{item.value}</span>
+            </div>
+          ))}
+        </div>
 
-      {/* Tables Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Leads */}
-        <Card className="border-slate-200">
-          <CardHeader>
-            <CardTitle className="text-base font-semibold text-slate-900">
-              Leads Terbaru
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="px-0 pb-0">
-            {data.recentLeads.length === 0 ? (
-              <div className="px-6 pb-4 text-sm text-slate-400">
-                Belum ada leads
-              </div>
-            ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Nama</TableHead>
-                    <TableHead>Layanan</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Tanggal</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {data.recentLeads.map((lead) => (
-                    <TableRow key={lead.id}>
-                      <TableCell className="font-medium text-slate-900">
-                        {lead.name}
-                      </TableCell>
-                      <TableCell className="text-slate-500">
-                        {lead.service || '-'}
-                      </TableCell>
-                      <TableCell>
-                        <span
-                          className={cn(
-                            'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium',
-                            statusColors[lead.status] || 'bg-slate-100 text-slate-600'
-                          )}
-                        >
-                          {statusLabels[lead.status] || lead.status}
-                        </span>
-                      </TableCell>
-                      <TableCell className="text-slate-400 text-xs">
-                        {new Date(lead.createdAt).toLocaleDateString('id-ID', {
-                          day: 'numeric',
-                          month: 'short',
-                          year: 'numeric',
-                        })}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            )}
-          </CardContent>
-        </Card>
+        {/* Type breakdown */}
+        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--line)', borderRadius: '12px', padding: '24px' }}>
+          <h2 style={{ fontFamily: 'var(--font-mono), monospace', fontSize: '0.7rem', color: 'var(--ink-faint)', letterSpacing: '0.1em', textTransform: 'uppercase', margin: '0 0 16px 0' }}>
+            By Type
+          </h2>
+          {typeBreakdown.map((item) => (
+            <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid var(--line)' }}>
+              <span style={{ fontFamily: 'var(--font-body), sans-serif', fontSize: '0.9rem', color: 'var(--ink-soft)' }}>{item.label}</span>
+              <span style={{ fontFamily: 'var(--font-body), sans-serif', fontWeight: 500, fontSize: '0.9rem', color: 'var(--ink)' }}>{item.value}</span>
+            </div>
+          ))}
+        </div>
 
-        {/* Recent Projects */}
-        <Card className="border-slate-200">
-          <CardHeader>
-            <CardTitle className="text-base font-semibold text-slate-900">
-              Proyek Terbaru
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="px-0 pb-0">
-            {data.recentProjects.length === 0 ? (
-              <div className="px-6 pb-4 text-sm text-slate-400">
-                Belum ada proyek
-              </div>
-            ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Judul</TableHead>
-                    <TableHead>Klien</TableHead>
-                    <TableHead>Kategori</TableHead>
-                    <TableHead>Status</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {data.recentProjects.map((project) => (
-                    <TableRow key={project.id}>
-                      <TableCell className="font-medium text-slate-900">
-                        {project.title}
-                      </TableCell>
-                      <TableCell className="text-slate-500">
-                        {project.client}
-                      </TableCell>
-                      <TableCell className="text-slate-500">
-                        {project.category}
-                      </TableCell>
-                      <TableCell>
-                        <span
-                          className={cn(
-                            'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium',
-                            project.status === 'published'
-                              ? 'bg-green-100 text-green-700'
-                              : project.status === 'draft'
-                                ? 'bg-amber-100 text-amber-700'
-                                : 'bg-slate-100 text-slate-600'
-                          )}
-                        >
-                          {project.status === 'published' ? 'Dipublikasi' : project.status === 'draft' ? 'Draft' : 'Diarsipkan'}
-                        </span>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            )}
-          </CardContent>
-        </Card>
+        {/* Visibility breakdown */}
+        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--line)', borderRadius: '12px', padding: '24px' }}>
+          <h2 style={{ fontFamily: 'var(--font-mono), monospace', fontSize: '0.7rem', color: 'var(--ink-faint)', letterSpacing: '0.1em', textTransform: 'uppercase', margin: '0 0 16px 0' }}>
+            By Visibility
+          </h2>
+          {visibilityBreakdown.map((item) => (
+            <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid var(--line)' }}>
+              <span style={{ fontFamily: 'var(--font-body), sans-serif', fontSize: '0.9rem', color: 'var(--ink-soft)' }}>{item.label}</span>
+              <span style={{ fontFamily: 'var(--font-body), sans-serif', fontWeight: 500, fontSize: '0.9rem', color: 'var(--ink)' }}>{item.value}</span>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
