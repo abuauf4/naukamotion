@@ -619,19 +619,32 @@ export const studioProjects: StudioProject[] = [
     caseStudy: {
       sections: [
         {
-          heading: { id: "Ikhtisar", en: "Overview" },
+          heading: { id: "Client Datang dengan Data dan Ide", en: "Client Came with Data and an Idea" },
           body: [
             {
-              id: "Client datang dengan sekitar 14.000 data premi kendaraan dan memiliki ide untuk membuat aplikasi yang dapat dengan cepat menampilkan estimasi premi kendaraan. Pengguna cukup memilih merek, tipe, dan tahun kendaraan.",
-              en: "The client came with about 14,000 vehicle premium data records and an idea to build an application that can quickly display vehicle premium estimates. Users simply select the brand, type, and year of the vehicle.",
+              id: "Client datang dengan sekitar 14.000 data premi kendaraan dan memiliki ide untuk membuat aplikasi yang dapat dengan cepat menampilkan estimasi premi kendaraan. Pengguna cukup memilih merek, tipe, dan tahun kendaraan — dan sistem menampilkan estimasi premi.",
+              en: "The client came with about 14,000 vehicle premium data records and an idea to build an application that can quickly display vehicle premium estimates. Users simply select the brand, type, and year of the vehicle — and the system displays the premium estimate.",
             },
             {
-              id: "Tantangannya adalah membuat ribuan data tersebut tidak membebani pengguna. Dibangun engine kalkulator yang membaca pilihan pengguna dan hanya mencari atau menampilkan data yang relevan.",
-              en: "The challenge was to make thousands of data records not burden the user. A calculator engine was built that reads the user's selections and only searches for or displays relevant data.",
+              id: "Konteksnya berbeda dari project e-commerce atau website pemasaran. Di sini, inti produknya adalah data — ribuan baris data premi yang harus dapat diakses dengan cepat dan sederhana oleh pengguna akhir.",
+              en: "The context differs from e-commerce or marketing website projects. Here, the core of the product is data — thousands of rows of premium data that must be accessible quickly and simply by end users.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Ribuan Data Menjadi Pengalaman Sederhana", en: "Thousands of Records Become a Simple Experience" },
+          body: [
+            {
+              id: "Tantangannya adalah membuat ribuan data tersebut tidak membebani pengguna. Tidak ada yang ingin melihat tabel dengan 14.000 baris. Yang pengguna butuh adalah tiga pilihan — merek, tipe, tahun — dan satu angka estimasi premi.",
+              en: "The challenge was to make thousands of data records not burden the user. No one wants to see a table with 14,000 rows. What users need is three selections — brand, type, year — and one premium estimate number.",
             },
             {
-              id: "Dari kebutuhan tersebut terbentuk Jasa Proteksi, sebuah platform kalkulator estimasi premi kendaraan berbasis data.",
-              en: "From that need, Jasa Proteksi was formed — a data-driven vehicle insurance premium estimation calculator platform.",
+              id: "Dibangun engine kalkulator yang membaca pilihan pengguna dan hanya mencari atau menampilkan data yang relevan. Engine ini terpisah dari UI — perhitungan yang sama dapat dipakai ulang di permukaan yang berbeda.",
+              en: "A calculator engine was built that reads the user's selections and only searches for or displays relevant data. This engine is separate from the UI — the same calculation can be reused across different surfaces.",
+            },
+            {
+              id: "Dari kebutuhan tersebut terbentuk Jasa Proteksi — sebuah platform kalkulator estimasi premi kendaraan berbasis data. Bukan company profile, bukan brochure website. Sebuah platform yang produknya adalah kemampuan menghitung estimasi premi dengan cepat dari ribuan data.",
+              en: "From that need, Jasa Proteksi was formed — a data-driven vehicle insurance premium estimation calculator platform. Not a company profile, not a brochure website. A platform whose product is the ability to quickly calculate premium estimates from thousands of records.",
             },
           ],
         },
@@ -669,23 +682,41 @@ export const studioProjects: StudioProject[] = [
     caseStudy: {
       sections: [
         {
-          heading: { id: "Ikhtisar", en: "Overview" },
+          heading: { id: "Masalah yang Sederhana", en: "A Simple Problem" },
           body: [
             {
-              id: "Owner merupakan pemilik toko laptop bekas dan awalnya mempunyai masalah yang sangat sederhana namun spesifik. Ia sering kesulitan mengingat: terakhir beli laptop merk/seri/spek seperti ini dari siapa dan berapa? Terakhir jual spek seperti ini ke siapa dan berapa?",
-              en: "The owner is a used laptop store owner who initially had a very simple but specific problem. He often had trouble remembering: last time I bought a laptop with this brand/series/spec, from whom and for how much? Last time I sold this spec, to whom and for how much?",
+              id: "Owner merupakan pemilik toko laptop bekas dan awalnya mempunyai masalah yang sangat sederhana namun spesifik. Ia sering kesulitan mengingat: terakhir beli laptop merk atau seri atau spek seperti ini dari siapa dan berapa? Terakhir jual spek seperti ini ke siapa dan berapa?",
+              en: "The owner is a used laptop store owner who initially had a very simple but specific problem. He often had trouble remembering: last time I bought a laptop with this brand or series or spec, from whom and for how much? Last time I sold a spec like this, to whom and for how much?",
             },
             {
-              id: "Dari situ dibuat sistem pencarian berdasarkan merk, tipe, dan spesifikasi. Sistem dapat menampilkan history transaksi relevan — pernah dibeli dari seller siapa, kapan, berapa harga beli, pernah dijual ke buyer siapa, kapan, berapa harga jual.",
-              en: "From there, a search system was built based on brand, type, and specifications. The system can display relevant transaction history — bought from which seller, when, at what purchase price, sold to which buyer, when, at what selling price.",
+              id: "Bukan masalah besar yang terdengar seperti kebutuhan ERP. Hanya masalah mengingat — tapi cukup mengganggu operasional toko sehari-hari.",
+              en: "Not a big problem that sounds like an ERP need. Just a remembering problem — but disruptive enough to daily store operations.",
             },
+          ],
+        },
+        {
+          heading: { id: "Pencarian Histori", en: "History Search" },
+          body: [
+            {
+              id: "Dari situ dibuat sistem pencarian berdasarkan merk, tipe, dan spesifikasi. Contoh: Asus, Core i5 Gen 7. Sistem dapat menampilkan history transaksi relevan — pernah dibeli dari Seller A, kapan, berapa harga beli; pernah dibeli dari Seller B, kapan, berapa harga beli; pernah dijual ke Buyer A, kapan, berapa harga jual.",
+              en: "From there, a search system was built based on brand, type, and specifications. Example: Asus, Core i5 Gen 7. The system can display relevant transaction history — bought from Seller A, when, at what purchase price; bought from Seller B, when, at what purchase price; sold to Buyer A, when, at what selling price.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Berkembang Lebih Jauh", en: "Growing Further" },
+          body: [
             {
               id: "Sistem kemudian berkembang lebih jauh. Saat toko membeli barang, admin memasukkan tanggal, merk, tipe, spesifikasi, dan harga beli. Barang tersebut otomatis masuk inventory. Saat barang dijual, transaksi dilakukan melalui kasir, barang keluar dari stok, dan history transaksi tetap tersimpan.",
               en: "The system then grew further. When the store buys an item, admin enters the date, brand, type, specifications, and purchase price. The item automatically enters inventory. When an item is sold, the transaction is processed through the cashier, the item leaves stock, and the transaction history remains saved.",
             },
             {
-              id: "Sistem memiliki history barang, stok barang, daftar buyer, daftar seller, transaksi/kasir, laporan keuangan, modal, omzet, dan profit. Aplikasi mengandung data bisnis asli sehingga tidak menampilkan screenshot atau data client.",
-              en: "The system has item history, stock, buyer list, seller list, transactions/cashier, financial reports, capital, revenue, and profit. The application contains real business data, so no screenshots or client data are displayed.",
+              id: "Sistem memiliki history barang, stok barang, daftar buyer, daftar seller, transaksi atau kasir, laporan keuangan, modal, omzet, dan profit. Berawal dari kebutuhan sederhana untuk mengingat histori harga, sistem berkembang menjadi operational & inventory system untuk toko laptop bekas.",
+              en: "The system has item history, stock, buyer list, seller list, transactions or cashier, financial reports, capital, revenue, and profit. Starting from a simple need to remember price history, the system grew into an operational & inventory system for a used laptop store.",
+            },
+            {
+              id: "Aplikasi mengandung data bisnis asli sehingga tidak menampilkan screenshot atau data client.",
+              en: "The application contains real business data, so no screenshots or client data are displayed.",
             },
           ],
         },
@@ -719,19 +750,28 @@ export const studioProjects: StudioProject[] = [
     caseStudy: {
       sections: [
         {
-          heading: { id: "Ikhtisar", en: "Overview" },
+          heading: { id: "Dari Pengalaman Menggunakan ERP", en: "From Experience Using an ERP" },
           body: [
             {
-              id: "Inventra berasal dari pengalaman pribadi menggunakan ERP setiap hari saat bekerja sebagai admin. Semakin lama ERP digunakan, semakin terlihat menarik bagaimana banyak role bekerja dalam satu sistem, setiap role hanya melihat data atau fungsi yang diperlukan, transaksi saling terhubung, data tidak berbenturan, inventory dan operasional tetap sinkron, dan angka harus tetap konsisten.",
-              en: "Inventra originates from personal experience using an ERP daily while working as an admin. The longer the ERP was used, the more interesting it became how many roles work within one system, each role only sees the data or functions they need, transactions are interconnected, data doesn't conflict, inventory and operations stay in sync, and numbers must remain consistent.",
+              id: "Inventra berasal dari pengalaman pribadi menggunakan ERP setiap hari saat bekerja sebagai admin. Bukan belajar dari buku atau course — belajar dari pemakaian nyata, hari demi hari, selama bertahun-tahun.",
+              en: "Inventra originates from personal experience using an ERP daily while working as an admin. Not learning from books or courses — learning from real usage, day by day, for years.",
             },
             {
-              id: "Selama bekerja, menu, workflow, dan business logic ERP dipelajari sedikit demi sedikit sampai benar-benar memahami alurnya. Setelah resign, pengalaman tersebut menjadi dasar untuk mulai membangun Inventra, ERP versi sendiri, sedikit demi sedikit.",
-              en: "During employment, the ERP's menu, workflow, and business logic were studied bit by bit until the flow was truly understood. After resigning, that experience became the foundation to start building Inventra — a self-built ERP, piece by piece.",
+              id: "Semakin lama ERP digunakan, semakin terlihat menarik bagaimana banyak role bekerja dalam satu sistem, setiap role hanya melihat data atau fungsi yang diperlukan, transaksi saling terhubung, data tidak berbenturan, inventory dan operasional tetap sinkron, dan angka harus tetap konsisten.",
+              en: "The longer the ERP was used, the more interesting it became how many roles work within one system, each role only sees the data or functions they need, transactions are interconnected, data doesn't conflict, inventory and operations stay in sync, and numbers must remain consistent.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Dipahami, Lalu Dibangun Ulang", en: "Understood, Then Rebuilt" },
+          body: [
+            {
+              id: "Selama bekerja, menu, workflow, dan business logic ERP dipelajari sedikit demi sedikit sampai benar-benar memahami alurnya. Bukan sekadar tahu tombolnya — memahami mengapa alur seperti itu, mengapa role A hanya boleh melihat data ini, mengapa transaksi ini harus terhubung dengan transaksi itu.",
+              en: "During employment, the ERP's menu, workflow, and business logic were studied bit by bit until the flow was truly understood. Not just knowing the buttons — understanding why the flow is like that, why role A can only see this data, why this transaction must be connected to that transaction.",
             },
             {
-              id: "Inventra masih dalam pengembangan.",
-              en: "Inventra is still in development.",
+              id: "Setelah resign, pengalaman tersebut menjadi dasar untuk mulai membangun Inventra, ERP versi sendiri, sedikit demi sedikit. Bukan project client, bukan ERP yang sudah production-ready. Personal R&D yang masih dalam pengembangan.",
+              en: "After resigning, that experience became the foundation to start building Inventra — a self-built ERP, piece by piece. Not a client project, not a production-ready ERP. Personal R&D still in development.",
             },
           ],
         },
