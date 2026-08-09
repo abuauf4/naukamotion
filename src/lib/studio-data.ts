@@ -196,15 +196,28 @@ export const studioProjects: StudioProject[] = [
     caseStudy: {
       sections: [
         {
-          heading: { id: "Ikhtisar", en: "Overview" },
+          heading: { id: "Konteks", en: "Context" },
           body: [
             {
-              id: "Geely BSD adalah salah satu sales mobil Geely yang menggunakan website sebagai media pemasaran digital. Website ini bukan website resmi dealer, melainkan landing page yang dibuat untuk membantu sales menjangkau calon customer secara online.",
-              en: "Geely BSD is a car salesperson using a website as a digital marketing medium. This is not an official dealer website, but a landing page built to help sales reach prospective customers online.",
+              id: "Geely BSD adalah salah satu sales mobil Geely yang menggunakan website sebagai salah satu media pemasaran digital. Website ini bukan website resmi dealer — melainkan landing page yang dibuat untuk membantu sales menjangkau calon customer secara online, di luar jam kerja dan di luar showroom fisik.",
+              en: "Geely BSD is a car salesperson using a website as one of their digital marketing channels. This is not an official dealer website — it's a landing page built to help sales reach prospective customers online, outside working hours and beyond the physical showroom.",
             },
             {
-              id: "Website menampilkan model kendaraan Geely yang tersedia, harga, promo, dan informasi produk. Calon customer dapat menjelajahi katalog, memahami opsi yang ada, dan ketika tertarik, langsung menghubungi sales melalui jalur WhatsApp yang terintegrasi.",
-              en: "The website displays available Geely vehicle models, pricing, promotions, and product information. Prospective customers can browse the catalog, understand available options, and when interested, directly contact sales through an integrated WhatsApp channel.",
+              id: "Pola yang sama berlaku untuk semua project di kategori Automotive. Sales mobil membutuhkan kehadiran digital yang dapat bekerja tanpa mereka — menampilkan apa yang mereka tawarkan, menjawab pertanyaan dasar, dan mengarahkan calon customer untuk menghubungi mereka ketika siap.",
+              en: "The same pattern applies to all projects in the Automotive category. Car salespeople need a digital presence that can work without them — displaying what they offer, answering basic questions, and directing prospective customers to contact them when ready.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Yang Dibangun", en: "What Was Built" },
+          body: [
+            {
+              id: "Website menampilkan model kendaraan Geely yang tersedia, lengkap dengan harga, promo, dan informasi produk. Setiap halaman unit dirancang untuk membantu calon customer memahami opsi yang ada tanpa harus bertanya satu per satu kepada sales.",
+              en: "The website displays available Geely vehicle models, complete with pricing, promotions, and product information. Each unit page is designed to help prospective customers understand available options without having to ask sales one by one.",
+            },
+            {
+              id: "Ketika calon customer sudah melihat informasi yang dibutuhkan dan tertarik melanjutkan, website mengarahkan mereka langsung ke sales melalui jalur WhatsApp yang terintegrasi. Tidak ada form panjang yang harus diisi, tidak ada proses yang memperlambat — cukup satu klik dan mereka terhubung dengan sales.",
+              en: "When a prospective customer has seen the information they need and is interested in proceeding, the website directs them straight to sales through an integrated WhatsApp channel. No long forms to fill out, no process that slows things down — just one click and they're connected with sales.",
             },
           ],
         },
@@ -239,15 +252,20 @@ export const studioProjects: StudioProject[] = [
     caseStudy: {
       sections: [
         {
-          heading: { id: "Ikhtisar", en: "Overview" },
+          heading: { id: "Konteks", en: "Context" },
           body: [
             {
-              id: "Suzuki Jakarta Barat adalah sales mobil Suzuki yang menggunakan website sebagai salah satu media pemasaran digital. Website dibuat untuk menampilkan model kendaraan Suzuki, harga, promo, dan informasi produk kepada calon customer.",
-              en: "Suzuki Jakarta Barat is a Suzuki car salesperson using a website as one of their digital marketing channels. The website was built to display Suzuki vehicle models, pricing, promotions, and product information to prospective customers.",
+              id: "Suzuki Jakarta Barat adalah sales mobil Suzuki yang menggunakan website sebagai salah satu media pemasaran digital. Sama seperti project otomotif lainnya, website ini bukan website resmi dealer — melainkan landing page untuk membantu sales menjangkau calon customer secara online.",
+              en: "Suzuki Jakarta Barat is a Suzuki car salesperson using a website as one of their digital marketing channels. Like other automotive projects, this is not an official dealer website — it's a landing page to help sales reach prospective customers online.",
             },
+          ],
+        },
+        {
+          heading: { id: "Yang Dibangun", en: "What Was Built" },
+          body: [
             {
-              id: "Calon customer yang mengunjungi website dapat melihat katalog unit, memahami pilihan yang tersedia, dan ketika siap melanjutkan, langsung terhubung dengan sales melalui WhatsApp.",
-              en: "Prospective customers visiting the website can view the unit catalog, understand available choices, and when ready to proceed, directly connect with sales through WhatsApp.",
+              id: "Website menampilkan model kendaraan Suzuki, harga, promo, dan informasi produk. Calon customer dapat melihat katalog unit, memahami pilihan yang tersedia, dan ketika siap melanjutkan, langsung terhubung dengan sales melalui WhatsApp.",
+              en: "The website displays Suzuki vehicle models, pricing, promotions, and product information. Prospective customers can view the unit catalog, understand available choices, and when ready to proceed, directly connect with sales through WhatsApp.",
             },
           ],
         },
@@ -282,15 +300,20 @@ export const studioProjects: StudioProject[] = [
     caseStudy: {
       sections: [
         {
-          heading: { id: "Ikhtisar", en: "Overview" },
+          heading: { id: "Konteks", en: "Context" },
           body: [
             {
-              id: "Sama dengan project otomotif lainnya, website ini merupakan media pemasaran digital untuk sales Mitsubishi. Website menampilkan model kendaraan Mitsubishi, harga, promo, dan informasi produk.",
-              en: "Like other automotive projects, this website is a digital marketing medium for Mitsubishi sales. The website displays Mitsubishi vehicle models, pricing, promotions, and product information.",
+              id: "Sama dengan project otomotif lainnya, website ini merupakan media pemasaran digital untuk sales Mitsubishi. Bukan website resmi dealer, melainkan landing page yang membantu sales menjangkau calon customer secara online.",
+              en: "Like other automotive projects, this website is a digital marketing medium for Mitsubishi sales. Not an official dealer website, but a landing page that helps sales reach prospective customers online.",
             },
+          ],
+        },
+        {
+          heading: { id: "Yang Dibangun", en: "What Was Built" },
+          body: [
             {
-              id: "Calon customer dapat menjelajahi katalog, menemukan informasi yang dibutuhkan, dan menghubungi sales melalui jalur WhatsApp yang tersedia.",
-              en: "Prospective customers can browse the catalog, find the information they need, and contact sales through the available WhatsApp channel.",
+              id: "Website menampilkan model kendaraan Mitsubishi, harga, promo, dan informasi produk. Calon customer dapat menjelajahi katalog, menemukan informasi yang dibutuhkan, dan menghubungi sales melalui jalur WhatsApp yang tersedia.",
+              en: "The website displays Mitsubishi vehicle models, pricing, promotions, and product information. Prospective customers can browse the catalog, find the information they need, and contact sales through the available WhatsApp channel.",
             },
           ],
         },
@@ -325,15 +348,20 @@ export const studioProjects: StudioProject[] = [
     caseStudy: {
       sections: [
         {
-          heading: { id: "Ikhtisar", en: "Overview" },
+          heading: { id: "Konteks", en: "Context" },
           body: [
             {
-              id: "JAECOO Bintaro adalah sales mobil JAECOO yang menggunakan website sebagai media pemasaran digital. Website menampilkan model kendaraan JAECOO, harga, promo, dan informasi produk.",
-              en: "JAECOO Bintaro is a JAECOO car salesperson using a website as a digital marketing medium. The website displays JAECOO vehicle models, pricing, promotions, and product information.",
+              id: "JAECOO Bintaro adalah sales mobil JAECOO yang menggunakan website sebagai media pemasaran digital. Sama seperti project otomotif lainnya, ini bukan website resmi dealer — melainkan landing page untuk membantu sales menjangkau calon customer secara online.",
+              en: "JAECOO Bintaro is a JAECOO car salesperson using a website as a digital marketing medium. Like other automotive projects, this is not an official dealer website — it's a landing page to help sales reach prospective customers online.",
             },
+          ],
+        },
+        {
+          heading: { id: "Yang Dibangun", en: "What Was Built" },
+          body: [
             {
-              id: "Calon customer dapat melihat katalog unit, memahami opsi yang tersedia, dan menghubungi sales melalui jalur WhatsApp.",
-              en: "Prospective customers can view the unit catalog, understand available options, and contact sales through the WhatsApp channel.",
+              id: "Website menampilkan model kendaraan JAECOO, harga, promo, dan informasi produk. Calon customer dapat melihat katalog unit, memahami opsi yang tersedia, dan menghubungi sales melalui jalur WhatsApp.",
+              en: "The website displays JAECOO vehicle models, pricing, promotions, and product information. Prospective customers can view the unit catalog, understand available options, and contact sales through the WhatsApp channel.",
             },
           ],
         },
