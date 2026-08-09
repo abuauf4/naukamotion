@@ -809,15 +809,24 @@ export const studioProjects: StudioProject[] = [
     caseStudy: {
       sections: [
         {
-          heading: { id: "Ikhtisar", en: "Overview" },
+          heading: { id: "Konteks Kolaborasi", en: "Collaboration Context" },
           body: [
             {
-              id: "Project ini dibuat melalui kolaborasi dengan agency. Scope yang diterima mencakup pengalaman digital untuk bisnis pariwisata Karimun — website destinasi, paket tour, dan jalur pemesanan.",
-              en: "This project was done through collaboration with an agency. The accepted scope covers the digital experience for a Karimun tourism business — destination website, tour packages, and booking channel.",
+              id: "Project ini dibuat melalui kolaborasi dengan agency. Bukan konteks di mana client datang dengan problem — melainkan project delivery di mana scope diterima dari agency dan dikerjakan sesuai kebutuhan.",
+              en: "This project was done through collaboration with an agency. Not a context where the client came with a problem — rather a project delivery where scope was received from the agency and executed according to needs.",
             },
             {
-              id: "Keputusan desain dan implementasi teknis disesuaikan dengan kebutuhan destinasi wisata.",
-              en: "Design decisions and technical implementation were tailored to the needs of a tourism destination.",
+              id: "Scope yang diterima mencakup pengalaman digital untuk bisnis pariwisata Karimun — website destinasi, paket tour, dan jalur pemesanan.",
+              en: "The accepted scope covers the digital experience for a Karimun tourism business — destination website, tour packages, and booking channel.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Yang Dibangun", en: "What Was Built" },
+          body: [
+            {
+              id: "Keputusan desain dan implementasi teknis disesuaikan dengan kebutuhan destinasi wisata. Website menampilkan informasi destinasi, paket tour yang tersedia, dan jalur untuk calon wisatawan menghubungi pengelola.",
+              en: "Design decisions and technical implementation were tailored to the needs of a tourism destination. The website displays destination information, available tour packages, and a channel for prospective tourists to contact the operator.",
             },
           ],
         },
@@ -855,15 +864,20 @@ export const studioProjects: StudioProject[] = [
     caseStudy: {
       sections: [
         {
-          heading: { id: "Ikhtisar", en: "Overview" },
+          heading: { id: "Konteks Kolaborasi", en: "Collaboration Context" },
           body: [
             {
-              id: "Anima Companion adalah brand produk kesehatan hewan. Project dikerjakan melalui kolaborasi dengan agency.",
-              en: "Anima Companion is a pet health product brand. The project was done through collaboration with an agency.",
+              id: "Anima Companion adalah brand produk kesehatan hewan. Project dikerjakan melalui kolaborasi dengan agency — bukan konteks di mana client datang dengan problem yang harus dipecahkan, melainkan project delivery dengan scope yang diterima dari agency.",
+              en: "Anima Companion is a pet health product brand. The project was done through collaboration with an agency — not a context where the client came with a problem to solve, but a project delivery with scope received from the agency.",
             },
+          ],
+        },
+        {
+          heading: { id: "Yang Dibangun", en: "What Was Built" },
+          body: [
             {
-              id: "Pengalaman digital yang dibangun mencakup website brand, penyajian produk, dan jalur customer menuju pembelian.",
-              en: "The digital experience built covers the brand website, product presentation, and the customer path to purchase.",
+              id: "Pengalaman digital yang dibangun mencakup website brand, penyajian produk, dan jalur customer menuju pembelian. Desain dan implementasi disesuaikan dengan karakter brand produk kesehatan hewan.",
+              en: "The digital experience built covers the brand website, product presentation, and the customer path to purchase. Design and implementation were tailored to the character of a pet health product brand.",
             },
           ],
         },
