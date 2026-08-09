@@ -426,6 +426,31 @@ export const studioProjects: StudioProject[] = [
           ],
         },
       ],
+      techStory: {
+        intro: {
+          id: "Karena sistem menghubungkan e-commerce, admin panel, dan inventory dalam satu aplikasi, pemilihan teknologi difokuskan pada konsistensi data dan kecepatan pengembangan.",
+          en: "Because the system connects e-commerce, admin panel, and inventory in one application, technology selection focused on data consistency and development speed.",
+        },
+        details: [
+          {
+            id: "Next.js dipilih karena e-commerce dan admin panel bisa berbagi komponen, logika, dan data dalam satu codebase. Server components menangani query produk dan transaksi, client components menangani interaksi kasir dan keranjang.",
+            en: "Next.js was chosen because e-commerce and admin panel can share components, logic, and data in one codebase. Server components handle product and transaction queries, client components handle cashier and cart interactions.",
+          },
+          {
+            id: "TypeScript digunakan karena sistem ini punya banyak entitas yang saling berhubungan — produk, stok, transaksi, customer, pengeluaran. Type safety memastikan ketika admin memasukkan produk, field yang masuk ke inventory dan e-commerce konsisten.",
+            en: "TypeScript was used because this system has many interconnected entities — products, stock, transactions, customers, expenses. Type safety ensures when admin enters a product, the fields entering inventory and e-commerce are consistent.",
+          },
+          {
+            id: "Prisma membantu mendefinisikan schema untuk produk, inventory, transaksi, dan laporan keuangan secara eksplisit. Relasi antara produk dan stok, transaksi dan customer, pengeluaran dan laporan — semua didefinisikan dengan jelas dan dapat diaudit.",
+            en: "Prisma helps define the schema for products, inventory, transactions, and financial reports explicitly. Relationships between product and stock, transaction and customer, expense and report — all defined clearly and auditable.",
+          },
+          {
+            id: "PostgreSQL dipilih karena sistem ini butuh database relasional. Transaksi yang mengurangi stok, menambah history, dan memperbarui laporan keuangan harus atomik — PostgreSQL menangani ini dengan transaction support yang andal.",
+            en: "PostgreSQL was chosen because this system needs a relational database. Transactions that reduce stock, add history, and update financial reports must be atomic — PostgreSQL handles this with reliable transaction support.",
+          },
+        ],
+        stack: ["Next.js", "TypeScript", "Tailwind CSS", "Prisma", "PostgreSQL"],
+      },
       nextProjectSlug: "jakarta-laptops",
     },
   },
@@ -649,6 +674,35 @@ export const studioProjects: StudioProject[] = [
           ],
         },
       ],
+      techStory: {
+        intro: {
+          id: "Setelah alur sistem terbentuk, kami memilih teknologi yang dapat menjaga proses kalkulasi, data kendaraan, dan antarmuka tetap berada dalam satu aplikasi yang terstruktur.",
+          en: "After the system flow was formed, we chose technologies that could keep the calculation process, vehicle data, and interface within one structured application.",
+        },
+        details: [
+          {
+            id: "Next.js dipilih sebagai fondasi aplikasi karena kemampuannya menangani server-side rendering dan client-side interactivity dalam satu framework. Kalkulator premi perlu cepat dimuat di browser, dan Next.js memungkinkan halaman utama dirender di server sambil tetap menjaga interaktivitas di sisi client.",
+            en: "Next.js was chosen as the application foundation because of its ability to handle server-side rendering and client-side interactivity within one framework. The premium calculator needs to load fast in the browser, and Next.js allows the main page to be rendered on the server while maintaining interactivity on the client side.",
+          },
+          {
+            id: "TypeScript digunakan karena project ini melibatkan banyak struktur data — merek, tipe, tahun, parameter perlindungan, hasil perhitungan. Type safety membantu memastikan bahwa data yang mengalir dari database ke engine kalkulator ke UI konsisten dan tidak ada field yang tertukar.",
+            en: "TypeScript was used because this project involves many data structures — brand, type, year, protection parameters, calculation results. Type safety helps ensure that data flowing from database to calculator engine to UI is consistent and no fields are swapped.",
+          },
+          {
+            id: "Tailwind CSS digunakan untuk antarmuka yang membutuhkan kecepatan iterasi. Kalkulator premi punya banyak state — pilihan merek, tipe, tahun, parameter — dan setiap state perlu menampilkan UI yang berbeda. Tailwind memungkinkan perubahan tampilan tanpa konteks CSS file yang terpisah.",
+            en: "Tailwind CSS was used for an interface that needs iteration speed. The premium calculator has many states — brand, type, year, parameter selections — and each state needs to display different UI. Tailwind allows appearance changes without a separate CSS file context.",
+          },
+          {
+            id: "Prisma membantu mendefinisikan schema dan hubungan data kendaraan secara eksplisit. Dengan 14.000 data premi, struktur tabel yang jelas penting — Prisma memastikan query ke database dapat ditulis dengan type safety dan dapat diaudit.",
+            en: "Prisma helps define the vehicle data schema and relationships explicitly. With 14,000 premium records, clear table structure is important — Prisma ensures database queries can be written with type safety and audited.",
+          },
+          {
+            id: "PostgreSQL dipilih karena project ini membutuhkan database relasional untuk menangani ribuan data kendaraan dengan struktur yang jelas. Relasi antara merek, tipe, tahun, dan premi perlu konsisten — dan PostgreSQL menangani ini dengan baik.",
+            en: "PostgreSQL was chosen because this project needs a relational database to handle thousands of vehicle records with clear structure. Relationships between brand, type, year, and premium need to be consistent — and PostgreSQL handles this well.",
+          },
+        ],
+        stack: ["Next.js", "TypeScript", "Tailwind CSS", "Prisma", "PostgreSQL"],
+      },
       nextProjectSlug: "betawi-laptop",
     },
   },
