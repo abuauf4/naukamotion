@@ -1,15 +1,124 @@
+// ═══════════════════════════════════════════════════════════════
+// Nauka Motion — CMS V2 Schema (PostgreSQL / Neon)
+// ═══════════════════════════════════════════════════════════════
+//
+// Design principles:
+//   - LocalizedText { id, en } → Json column (bilingual)
+//   - Relational tables for admin-editable lists (not JSON arrays)
+//   - Media managed via ProjectMedia (URL + metadata, no binary)
+//   - Articles via Article + ArticleBlock (structured, not single body)
+//   - Enum types for all constrained-value fields (database-enforced)
+//
+// Frontend TIDAK diubah. studio-data.ts tetap source of truth.
+//
+// Project: separation of concerns (3 orthogonal enum dimensions):
+//   status:      draft | published | development   (publication lifecycle)
+//   type:        client | personal | collaboration | internal  (project origin)
+//   visibility:  public | private                  (access control)
+//
+// INVARIANTS (enforced at service/API layer, NOT DB):
+//   - ProjectMedia.sectionId must belong to a CaseStudySection whose
+//     projectSlug == ProjectMedia.projectSlug. Cross-project media-section
+//     links are forbidden. See service layer validation.
+//   NOTE: The invariant above is NOT yet implemented in any service/API.
+//   It MUST be enforced when CRUD routes for ProjectMedia are built.
+//
+// TRANSITIONAL FIELDS (backward compat, to be removed when DB is sole SoT):
+//   - Project.cover       → target: ProjectMedia type=cover
+//   - Project.techStack   → target: ProjectTechnology table
+//   When DB becomes source of truth, admin MUST NOT write to both
+//   transitional field AND its relational counterpart simultaneously.
+//
+// Env vars:
+//   DATABASE_URL  → Neon pooled (runtime)
+//   DIRECT_URL    → Neon direct (migration)
+// ═══════════════════════════════════════════════════════════════
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
-// ══════════════════════════════════════
+// ═════════════════════════════════════════════════
+// ENUMS — database-enforced value constraints
+// ═════════════════════════════════════════════════
+
+/// Publication lifecycle for projects
+enum ProjectStatus {
+  draft
+  published
+  development
+}
+
+/// Project origin — drives badge display and filtering
+enum ProjectType {
+  client
+  personal
+  collaboration
+  internal
+}
+
+/// Access control for projects
+enum ProjectVisibility {
+  public
+  private
+}
+
+/// Category publication status
+enum CategoryStatus {
+  draft
+  published
+}
+
+/// Lead lifecycle status
+enum LeadStatus {
+  new
+  contacted
+  qualified
+  converted
+  lost
+}
+
+/// Article publication status
+enum ArticleStatus {
+  draft
+  published
+}
+
+/// Article block content type
+enum ArticleBlockType {
+  paragraph
+  heading
+  image
+  quote
+  list
+  code
+}
+
+/// Project media type
+enum ProjectMediaType {
+  cover
+  og
+  gallery
+  desktop
+  mobile
+  section
+}
+
+/// Generic publication status for Service, Insight, Testimonial, Faq
+enum PublishStatus {
+  draft
+  published
+}
+
+// ═════════════════════════════════════════════════
 // AUTH
-// ══════════════════════════════════════
+// ═════════════════════════════════════════════════
 
 model Admin {
   id        String   @id @default(cuid())
@@ -21,106 +130,311 @@ model Admin {
   updatedAt DateTime @updatedAt
 }
 
-// ══════════════════════════════════════
-// LEADS — form submissions
-// ══════════════════════════════════════
+// ═════════════════════════════════════════════════
+// LEADS — form submissions dari /contact
+// ═════════════════════════════════════════════════
 
 model Lead {
-  id        String   @id @default(cuid())
+  id        String     @id @default(cuid())
   name      String
   email     String
   phone     String?
   company   String?
-  service   String?  // which service they're interested in
+  service   String?
   message   String?
-  status    String   @default("new") // new, contacted, qualified, converted, lost
-  notes     String?  // internal notes
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  status    LeadStatus @default(new)
+  notes     String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
 }
 
-// ══════════════════════════════════════
-// PROJECTS — portfolio / case studies
-// ══════════════════════════════════════
+// ═════════════════════════════════════════════════
+// CATEGORIES — 7 kategori portfolio
+// slug = identity permanen. index = display label (editable).
+// sortOrder = urutan tampil. status = draft/published.
+// ═════════════════════════════════════════════════
+
+model Category {
+  slug        String         @id // automotive, technology-retail, dll
+  index       String // display label "01", "02" (editable, BUKAN identity)
+  title       String // "Automotive" (tetap English per branding)
+  description Json // LocalizedText { id, en }
+  accent      String // hex color
+  status      CategoryStatus @default(published)
+  sortOrder   Int            @default(0)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  projects Project[]
+
+  @@index([status])
+  @@index([sortOrder])
+}
+
+// ═════════════════════════════════════════════════
+// PROJECTS — portfolio case studies
+//
+// Three orthogonal dimensions (NO mapping between them):
+//   status      (ProjectStatus enum): draft | published | development
+//   type        (ProjectType enum): client | personal | collaboration | internal
+//   visibility  (ProjectVisibility enum): public | private
+//
+// liveUrl nullable — project tanpa domain tetap publishable sebagai case study.
+//
+// TRANSITIONAL FIELDS (marked, to be removed when DB is sole SoT):
+//   cover     — backward compat. Target: ProjectMedia type=cover.
+//   techStack — backward compat JSON array. Target: ProjectTechnology table.
+// ═════════════════════════════════════════════════
 
 model Project {
+  id           String @id @default(cuid())
+  slug         String @unique
+  index        String // display label "01", "02"
+  name         String
+  categorySlug String
+  tagline      Json // LocalizedText { id, en }
+  summary      Json // LocalizedText { id, en }
+  year         String
+  client       String
+  industry     String
+
+  // TRANSITIONAL — target: ProjectMedia type=cover
+  cover String // path /portfolio/*.png (backward compat)
+
+  accent  String // hex color
+  liveUrl String? // nullable — project tanpa domain tetap publishable
+
+  // Publication lifecycle (enum-enforced)
+  status ProjectStatus @default(published)
+
+  // Project origin — drives badge + filter (enum-enforced)
+  type ProjectType @default(client)
+
+  // Access control (enum-enforced)
+  visibility ProjectVisibility @default(public)
+
+  sortOrder Int     @default(0)
+  featured  Boolean @default(false)
+
+  // TRANSITIONAL — target: ProjectTechnology table
+  techStack Json // string[] (backward compat)
+
+  role            Json // LocalizedText { id, en }
+  techIntro       Json? // LocalizedText { id, en } — opening paragraph tech section
+  nextProjectSlug String? // opsional, link ke project berikutnya
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  category     Category            @relation(fields: [categorySlug], references: [slug])
+  sections     CaseStudySection[]
+  technologies ProjectTechnology[]
+  media        ProjectMedia[]
+  testimonials Testimonial[]
+
+  @@index([categorySlug])
+  @@index([status])
+  @@index([type])
+  @@index([visibility])
+  @@index([sortOrder])
+  @@index([featured])
+}
+
+// ═════════════════════════════════════════════════
+// CASE STUDY SECTIONS — flexible sections per project
+// ═════════════════════════════════════════════════
+
+model CaseStudySection {
   id          String   @id @default(cuid())
-  slug        String   @unique
-  title       String
-  client      String
-  category    String
-  description String
-  approach    String?
-  liveUrl     String?
-  image       String?  // path like /portfolio/mitsubishi.png
-  color       String   @default("#0d9488")
-  featured    Boolean  @default(false)
-  order       Int      @default(0)
-  status      String   @default("published") // draft, published, archived
+  projectSlug String
+  sortOrder   Int      @default(0)
+  heading     Json // LocalizedText { id, en }
+  body        Json // LocalizedText[] — array of paragraphs
+  bullets     Json? // LocalizedText[]? — optional bullet points
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  // Relation to client
-  clientId    String?
-  clientRef   Client?  @relation(fields: [clientId], references: [id])
+  project Project        @relation(fields: [projectSlug], references: [slug], onDelete: Cascade)
+  media   ProjectMedia[]
+
+  @@index([projectSlug])
+  @@index([sortOrder])
 }
 
-// ══════════════════════════════════════
-// SERVICES
-// ══════════════════════════════════════
+// ═════════════════════════════════════════════════
+// PROJECT TECHNOLOGY — per-tech with reason, sortable
+// ═════════════════════════════════════════════════
+
+model ProjectTechnology {
+  id          String   @id @default(cuid())
+  projectSlug String
+  name        String // e.g. "Next.js"
+  description Json // LocalizedText { id, en } — alasan penggunaan
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project Project @relation(fields: [projectSlug], references: [slug], onDelete: Cascade)
+
+  @@index([projectSlug])
+  @@index([sortOrder])
+}
+
+// ═════════════════════════════════════════════════
+// PROJECT MEDIA — images per project/section
+//
+// INVARIANT (enforced at service/API layer):
+//   ProjectMedia.sectionId MUST belong to a CaseStudySection whose
+//   projectSlug == ProjectMedia.projectSlug.
+//   Cross-project media-section links are FORBIDDEN.
+//
+//   NOTE: This invariant is NOT yet implemented in any service/API route.
+//   It MUST be enforced when CRUD routes for ProjectMedia are built.
+//   Enforcement procedure:
+//     1. If sectionId provided, fetch CaseStudySection by id.
+//     2. Verify section.projectSlug === ProjectMedia.projectSlug.
+//     3. If mismatch, return 400 "sectionId does not belong to this project".
+// ═════════════════════════════════════════════════
+
+model ProjectMedia {
+  id          String           @id @default(cuid())
+  projectSlug String
+  sectionId   String? // nullable FK to CaseStudySection (see INVARIANT above)
+  type        ProjectMediaType
+  url         String
+  alt         Json? // LocalizedText { id, en } nullable
+  caption     Json? // LocalizedText { id, en } nullable
+  sortOrder   Int              @default(0)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  project Project           @relation(fields: [projectSlug], references: [slug], onDelete: Cascade)
+  section CaseStudySection? @relation(fields: [sectionId], references: [id], onDelete: SetNull)
+
+  @@index([projectSlug])
+  @@index([sectionId])
+  @@index([type])
+  @@index([sortOrder])
+}
+
+// ═════════════════════════════════════════════════
+// ARTICLES V2 — structured content with blocks
+// ═════════════════════════════════════════════════
+
+model Article {
+  id              String        @id @default(cuid())
+  slug            String        @unique
+  title           Json // LocalizedText { id, en }
+  excerpt         Json // LocalizedText { id, en }
+  cover           String? // URL
+  ogImage         String? // URL
+  seoTitle        Json? // LocalizedText { id, en }
+  metaDescription Json? // LocalizedText { id, en }
+  status          ArticleStatus @default(draft)
+  publishedAt     DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  blocks ArticleBlock[]
+
+  @@index([slug])
+  @@index([status])
+  @@index([publishedAt])
+}
+
+// ═════════════════════════════════════════════════
+// ARTICLE BLOCKS — structured content blocks per article
+// ═════════════════════════════════════════════════
+
+model ArticleBlock {
+  id        String           @id @default(cuid())
+  articleId String
+  type      ArticleBlockType
+  content   Json // LocalizedText { id, en } — text content
+  imageUrl  String? // for image type
+  alt       String? // image alt text
+  caption   String? // image caption
+  sortOrder Int              @default(0)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@index([articleId])
+  @@index([sortOrder])
+}
+
+// ═════════════════════════════════════════════════
+// SERVICES — daftar layanan (future use)
+// ═════════════════════════════════════════════════
 
 model Service {
-  id        String   @id @default(cuid())
-  slug      String   @unique
+  id        String        @id @default(cuid())
+  slug      String        @unique
   title     String
   summary   String
-  icon      String   // lucide icon name: Globe, Database, etc.
-  order     Int      @default(0)
-  status    String   @default("published")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  icon      String // lucide icon name
+  order     Int           @default(0)
+  status    PublishStatus @default(published)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([slug])
+  @@index([status])
 }
 
-// ══════════════════════════════════════
-// INSIGHTS — blog / articles
-// ══════════════════════════════════════
+// ═════════════════════════════════════════════════
+// INSIGHTS — legacy table (dipertahankan untuk backward compat)
+// TIDAK digunakan sebagai CMS artikel V2. Gunakan Article + ArticleBlock.
+// ═════════════════════════════════════════════════
 
 model Insight {
-  id          String   @id @default(cuid())
-  slug        String   @unique
+  id          String        @id @default(cuid())
+  slug        String        @unique
   title       String
   excerpt     String
-  body        String   // markdown or HTML content
-  topic       String   // Strategi, Sistem, Otomotif, etc.
-  author      String   @default("Abu Aufa")
+  body        String
+  topic       String
+  author      String        @default("Abu Aufa")
   thumbnail   String?
-  status      String   @default("draft") // draft, published
+  status      PublishStatus @default(draft)
   publishedAt DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([slug])
+  @@index([status])
 }
 
-// ══════════════════════════════════════
-// TESTIMONIALS
-// ══════════════════════════════════════
+// ═════════════════════════════════════════════════
+// TESTIMONIALS — real client testimonials only
+// JANGAN PERNAH seed testimonial dummy/fabricated.
+// ═════════════════════════════════════════════════
 
 model Testimonial {
-  id        String   @id @default(cuid())
-  quote     String
-  author    String
-  role      String?  // jabatan
-  company   String
-  featured  Boolean  @default(false) // main vs supporting
-  order     Int      @default(0)
-  status    String   @default("published")
-  projectId String?  // optional link to project
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String        @id @default(cuid())
+  quote       String
+  author      String
+  role        String?
+  company     String
+  featured    Boolean       @default(false)
+  order       Int           @default(0)
+  status      PublishStatus @default(published)
+  projectSlug String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  project Project? @relation(fields: [projectSlug], references: [slug], onDelete: SetNull)
+
+  @@index([status])
+  @@index([order])
 }
 
-// ══════════════════════════════════════
-// CLIENTS
-// ══════════════════════════════════════
+// ═════════════════════════════════════════════════
+// CLIENTS — client directory (future use)
+// ═════════════════════════════════════════════════
 
 model Client {
   id        String   @id @default(cuid())
@@ -130,31 +444,34 @@ model Client {
   logo      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  projects  Project[]
 }
 
-// ══════════════════════════════════════
-// FAQ
-// ══════════════════════════════════════
+// ═════════════════════════════════════════════════
+// FAQ — frequently asked questions (future use)
+// ═════════════════════════════════════════════════
 
 model Faq {
-  id        String   @id @default(cuid())
+  id        String        @id @default(cuid())
   question  String
   answer    String
-  category  String   @default("general")
-  order     Int      @default(0)
-  status    String   @default("published")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  category  String        @default("general")
+  order     Int           @default(0)
+  status    PublishStatus @default(published)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([category])
+  @@index([order])
 }
 
-// ══════════════════════════════════════
-// SETTINGS — global site config
-// ══════════════════════════════════════
+// ═════════════════════════════════════════════════
+// SETTINGS — global site config (key-value)
+// ═════════════════════════════════════════════════
 
 model Setting {
   id    String @id @default(cuid())
   key   String @unique
   value String
+
+  @@index([key])
 }
