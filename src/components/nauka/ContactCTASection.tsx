@@ -175,7 +175,7 @@ export function ContactCTASection() {
             </svg>
           </Link>
           <a
-            href="https://wa.me/6289662524524"
+            href="https://wa.me/6289662524542"
             target="_blank"
             rel="noopener noreferrer"
             className="nmp-btn nmp-btn-ghost"

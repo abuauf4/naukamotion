@@ -17,7 +17,7 @@ import { useLocale } from "@/lib/locale-context";
  * Bottom: © year, location, "Small movement. Real Impact."
  *
  * Kontak asli (dari instruksi):
- *   WhatsApp: 089662524524 / @naukamotion
+ *   WhatsApp: 089662524542 / @naukamotion
  *   Instagram: @naukamotion
  *   Facebook: @naukamotion
  *   LinkedIn: linkedin.com/in/abu-aufa-734b85418
@@ -75,7 +75,7 @@ export function Footer() {
 
   const connectLinks = [
     { label: "info@nauka.id", href: "mailto:info@nauka.id" },
-    { label: "WhatsApp", href: "https://wa.me/6289662524524" },
+    { label: "WhatsApp", href: "https://wa.me/6289662524542" },
     { label: "Instagram", href: "https://instagram.com/naukamotion" },
     { label: "Facebook", href: "https://facebook.com/naukamotion" },
     { label: "LinkedIn", href: "https://www.linkedin.com/in/abu-aufa-734b85418" },
