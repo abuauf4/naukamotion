@@ -1,23 +1,14 @@
 import type { MetadataRoute } from 'next';
-import {
-  studioCategories,
-  studioProjects,
-  getAllProjectSlugs,
-} from '@/lib/studio-data';
+import { getCategories, getAllProjectSlugs, getPublicProjects } from '@/lib/cms';
 
 const SITE_URL = 'https://motion.nauka.id';
 
 /**
  * sitemap.ts — generate /sitemap.xml
  *
- * Includes:
- * - Homepage
- * - /work (overview)
- * - /work/[category] for each category
- * - /work/[project-slug] for each public project
- * - Secondary pages (about, contact, services, insights, faq, legal)
+ * Uses CMS source selector (default: static = studio-data.ts).
  */
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticPages: MetadataRoute.Sitemap = [
@@ -32,15 +23,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/legal/terms`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
   ];
 
-  const categoryPages: MetadataRoute.Sitemap = studioCategories.map((c) => ({
+  const categories = await getCategories();
+  const allSlugs = await getAllProjectSlugs();
+  const allProjects = await getPublicProjects();
+
+  const categoryPages: MetadataRoute.Sitemap = categories.map((c) => ({
     url: `${SITE_URL}/work/${c.slug}`,
     lastModified: now,
     changeFrequency: 'weekly',
     priority: 0.8,
   }));
 
-  const projectPages: MetadataRoute.Sitemap = getAllProjectSlugs().map((slug) => {
-    const project = studioProjects.find((p) => p.slug === slug);
+  const projectPages: MetadataRoute.Sitemap = allSlugs.map((slug) => {
+    const project = allProjects.find((p) => p.slug === slug);
     return {
       url: `${SITE_URL}/work/${slug}`,
       lastModified: now,

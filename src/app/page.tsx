@@ -9,24 +9,28 @@ import { ContactCTASection } from "@/components/nauka/ContactCTASection";
 import { Footer } from "@/components/nauka/Footer";
 import { ScrollProgress } from "@/components/nauka/ScrollProgress";
 
+// CMS source selector — default is 'static' (studio-data.ts)
+// Set CMS_DATA_SOURCE=database to read from Neon
+import { getCategories, getProjectsByCategory } from "@/lib/cms";
+import type { CategorySlug } from "@/lib/studio-data";
+
 /**
  * Nauka Motion — Homepage (v2)
  *
- * Hierarchy baru:
- *   Navbar
- *   → Hero
- *   → Stats (50+ / 10+ / 6)
- *   → Kategori Saat Ini (6 big editorial cards)
- *   → Capabilities / Yang Kami Bangun
- *   → Cara Kami Bekerja
- *   → Tentang Nauka Motion
- *   → CTA / Mulai Proyek
- *   → Footer
- *
- * Homepage TIDAK menampilkan project satu per satu.
- * Klik kategori → /work/[category] → tampil project di dalamnya.
+ * Server component fetches portfolio data from CMS source selector,
+ * passes serializable props to client components.
  */
-export default function HomePage() {
+export default async function HomePage() {
+  // Fetch categories from CMS (static or database depending on CMS_DATA_SOURCE)
+  const categories = await getCategories();
+
+  // Fetch project counts per category
+  const projectCounts: Record<string, number> = {};
+  for (const cat of categories) {
+    const projects = await getProjectsByCategory(cat.slug as CategorySlug);
+    projectCounts[cat.slug] = projects.length;
+  }
+
   return (
     <div
       style={{
@@ -42,7 +46,10 @@ export default function HomePage() {
       <main style={{ flex: 1, paddingTop: "0" }}>
         <HeroSection />
         <StatsSection />
-        <CategorySection />
+        <CategorySection
+          categories={categories}
+          projectCounts={projectCounts}
+        />
         <CapabilitiesSection />
         <ProcessSection />
         <FounderSection />

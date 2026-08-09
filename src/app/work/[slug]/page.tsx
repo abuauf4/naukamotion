@@ -6,16 +6,19 @@ import { Header } from "@/components/nauka/Header";
 import { Footer } from "@/components/nauka/Footer";
 import { ScrollProgress } from "@/components/nauka/ScrollProgress";
 
-// Single source of truth — studio-data.ts
+// CMS source selector — default is 'static' (studio-data.ts)
 import {
-  studioCategories as cats,
+  getCategories,
   getCategoryBySlug as getCat,
   getProjectBySlug as getProj,
   getProjectsByCategory as getProjs,
   getAllProjectSlugs,
-  type StudioProject,
-  type StudioCategory,
-  type TechStory,
+} from "@/lib/cms";
+import type {
+  StudioProject,
+  StudioCategory,
+  TechStory,
+  CategorySlug,
 } from "@/lib/studio-data";
 
 /**
@@ -32,16 +35,17 @@ import {
 
 type Params = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const cats = await getCategories();
   const catSlugs = cats.map((c) => ({ slug: c.slug }));
-  const projectSlugs = getAllProjectSlugs().map((slug) => ({ slug }));
+  const projectSlugs = (await getAllProjectSlugs()).map((slug) => ({ slug }));
   return [...catSlugs, ...projectSlugs];
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
 
-  const cat = getCat(slug);
+  const cat = await getCat(slug);
   if (cat) {
     return {
       title: `${cat.title} — Kategori Proyek`,
@@ -55,9 +59,10 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     };
   }
 
-  const project = getProj(slug);
+  const project = await getProj(slug);
   if (project) {
-    const title = `${project.name} — ${getCat(project.categorySlug)?.title ?? "Proyek"}`;
+    const projectCat = await getCat(project.categorySlug);
+    const title = `${project.name} — ${projectCat?.title ?? "Proyek"}`;
     const description = project.summary.id;
     return {
       title,
@@ -91,14 +96,18 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 export default async function WorkSlugPage({ params }: Params) {
   const { slug } = await params;
 
-  const cat = getCat(slug);
+  const cat = await getCat(slug);
   if (cat) {
-    return <CategoryView category={cat} />;
+    const projects = await getProjs(cat.slug as CategorySlug);
+    const allCats = await getCategories();
+    return <CategoryView category={cat} projects={projects} allCategories={allCats} />;
   }
 
-  const project = getProj(slug);
+  const project = await getProj(slug);
   if (project) {
-    return <CaseStudyView project={project} />;
+    const category = await getCat(project.categorySlug);
+    const categoryProjects = await getProjs(project.categorySlug);
+    return <CaseStudyView project={project} category={category ?? undefined} categoryProjects={categoryProjects} />;
   }
 
   notFound();
@@ -106,8 +115,15 @@ export default async function WorkSlugPage({ params }: Params) {
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-function CategoryView({ category }: { category: StudioCategory }) {
-  const projects = getProjs(category.slug);
+function CategoryView({
+  category,
+  projects,
+  allCategories,
+}: {
+  category: StudioCategory;
+  projects: StudioProject[];
+  allCategories: StudioCategory[];
+}) {
 
   return (
     <div
@@ -290,7 +306,7 @@ function CategoryView({ category }: { category: StudioCategory }) {
                 flexWrap: "wrap",
               }}
             >
-              {cats
+              {allCategories
                 .filter((c) => c.slug !== category.slug)
                 .map((c) => (
                   <Link
@@ -467,9 +483,15 @@ function ProjectRow({
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-function CaseStudyView({ project }: { project: StudioProject }) {
-  const category = getCat(project.categorySlug);
-  const categoryProjects = getProjs(project.categorySlug);
+function CaseStudyView({
+  project,
+  category,
+  categoryProjects,
+}: {
+  project: StudioProject;
+  category?: StudioCategory;
+  categoryProjects: StudioProject[];
+}) {
   const currentIdx = categoryProjects.findIndex((p) => p.slug === project.slug);
   const nextProject =
     currentIdx >= 0 && currentIdx < categoryProjects.length - 1

@@ -1,22 +1,17 @@
 import Link from "next/link";
-import Image from "next/image";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import {
-  studioCategories,
-  getCategoryBySlug,
-  getProjectsByCategory,
-  type CategorySlug,
-} from "@/lib/studio-data";
 import { Header } from "@/components/nauka/Header";
 import { Footer } from "@/components/nauka/Footer";
 import { ScrollProgress } from "@/components/nauka/ScrollProgress";
 
+// CMS source selector — default is 'static' (studio-data.ts)
+import { getCategories, getProjectsByCategory } from "@/lib/cms";
+import type { CategorySlug } from "@/lib/studio-data";
+
 /**
  * /work — Overview semua kategori.
  *
- * Bukan list project satu per satu. Homepage kategori mengarah ke sini
- * untuk navigasi semua kategori.
+ * Server component fetches from CMS source selector.
  */
 
 export const metadata: Metadata = {
@@ -28,7 +23,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default function WorkOverviewPage() {
+export default async function WorkOverviewPage() {
+  const categories = await getCategories();
+
+  // Fetch project counts per category
+  const categoryData = await Promise.all(
+    categories.map(async (cat) => {
+      const projects = await getProjectsByCategory(cat.slug as CategorySlug);
+      return { cat, projectCount: projects.length };
+    })
+  );
+
   return (
     <div
       style={{
@@ -47,7 +52,7 @@ export default function WorkOverviewPage() {
           <div className="container-wide">
             <p className="eyebrow eyebrow-burnt" style={{ marginBottom: "24px" }}>
               <span style={{ opacity: 0.5 }}>///</span>
-              Kategori Saat Ini — {String(studioCategories.length).padStart(2, "0")}
+              Kategori Saat Ini — {String(categories.length).padStart(2, "0")}
             </p>
             <h1
               style={{
@@ -99,91 +104,88 @@ export default function WorkOverviewPage() {
                 borderTop: "1px solid var(--line)",
               }}
             >
-              {studioCategories.map((cat) => {
-                const projects = getProjectsByCategory(cat.slug as CategorySlug);
-                return (
-                  <Link
-                    key={cat.slug}
-                    href={`/work/${cat.slug}`}
-                    className="nmp-cat-row"
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns:
-                        "minmax(60px, 80px) minmax(0, 2fr) minmax(0, 3fr) minmax(0, 1fr) 80px",
-                      gap: "24px",
-                      alignItems: "center",
-                      padding: "40px 0",
-                      borderBottom: "1px solid var(--line)",
-                      textDecoration: "none",
-                      color: "inherit",
-                      transition: "background 0.2s ease",
-                    }}
-                  >
-                    <span className="nmp-index">{cat.index}</span>
-                    <div>
-                      <h3
-                        style={{
-                          fontFamily: "var(--font-body), sans-serif",
-                          fontWeight: 500,
-                          fontSize: "clamp(1.4rem, 2vw, 1.85rem)",
-                          letterSpacing: "-0.015em",
-                          color: "var(--ink)",
-                          margin: 0,
-                          lineHeight: 1.1,
-                        }}
-                      >
-                        {cat.title}
-                      </h3>
-                    </div>
-                    <p
+              {categoryData.map(({ cat, projectCount }) => (
+                <Link
+                  key={cat.slug}
+                  href={`/work/${cat.slug}`}
+                  className="nmp-cat-row"
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns:
+                      "minmax(60px, 80px) minmax(0, 2fr) minmax(0, 3fr) minmax(0, 1fr) 80px",
+                    gap: "24px",
+                    alignItems: "center",
+                    padding: "40px 0",
+                    borderBottom: "1px solid var(--line)",
+                    textDecoration: "none",
+                    color: "inherit",
+                    transition: "background 0.2s ease",
+                  }}
+                >
+                  <span className="nmp-index">{cat.index}</span>
+                  <div>
+                    <h3
                       style={{
                         fontFamily: "var(--font-body), sans-serif",
-                        fontSize: "0.95rem",
-                        color: "var(--ink-soft)",
-                        lineHeight: 1.5,
+                        fontWeight: 500,
+                        fontSize: "clamp(1.4rem, 2vw, 1.85rem)",
+                        letterSpacing: "-0.015em",
+                        color: "var(--ink)",
                         margin: 0,
-                        maxWidth: "44ch",
+                        lineHeight: 1.1,
                       }}
-                      className="nmp-cat-row-desc"
                     >
-                      {cat.description.id}
-                    </p>
-                    <span
-                      className="studio-meta"
-                      style={{ color: "var(--burnt)" }}
+                      {cat.title}
+                    </h3>
+                  </div>
+                  <p
+                    style={{
+                      fontFamily: "var(--font-body), sans-serif",
+                      fontSize: "0.95rem",
+                      color: "var(--ink-soft)",
+                      lineHeight: 1.5,
+                      margin: 0,
+                      maxWidth: "44ch",
+                    }}
+                    className="nmp-cat-row-desc"
+                  >
+                    {cat.description.id}
+                  </p>
+                  <span
+                    className="studio-meta"
+                    style={{ color: "var(--burnt)" }}
+                  >
+                    {projectCount > 0
+                      ? `${String(projectCount).padStart(2, "0")} proyek`
+                      : "segera"}
+                  </span>
+                  <span
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "flex-end",
+                      color: "var(--ink-soft)",
+                    }}
+                    className="nmp-cat-row-arrow"
+                  >
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 12 12"
+                      fill="none"
+                      aria-hidden="true"
                     >
-                      {projects.length > 0
-                        ? `${String(projects.length).padStart(2, "0")} proyek`
-                        : "segera"}
-                    </span>
-                    <span
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        justifyContent: "flex-end",
-                        color: "var(--ink-soft)",
-                      }}
-                      className="nmp-cat-row-arrow"
-                    >
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 12 12"
-                        fill="none"
-                        aria-hidden="true"
-                      >
-                        <path
-                          d="M2 10L10 2M10 2H4M10 2V8"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-                  </Link>
-                );
-              })}
+                      <path
+                        d="M2 10L10 2M10 2H4M10 2V8"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </Link>
+              ))}
             </div>
           </div>
         </section>

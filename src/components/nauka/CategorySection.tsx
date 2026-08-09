@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useReveal } from "@/hooks/useReveal";
-import { studioCategories, getProjectsByCategory } from "@/lib/studio-data";
 import { useLocale, pickLocal } from "@/lib/locale-context";
+import type { StudioCategory } from "@/lib/studio-data";
 
 const COPY = {
   id: {
@@ -29,12 +29,17 @@ const COPY = {
 /**
  * CategorySection — 6 big editorial cards.
  *
- * Menggantikan konsep "Selected Work — 06".
- * Homepage tidak menampilkan project satu per satu,
- * melainkan kategori yang sudah dikerjakan Nauka Motion.
- * Klik kategori → /work/[category] → tampil project di dalamnya.
+ * Data is received via props from the server component (homepage).
+ * Client component handles presentation + locale + reveal animation only.
+ * Does NOT import from studio-data.ts or CMS modules.
  */
-export function CategorySection() {
+export function CategorySection({
+  categories,
+  projectCounts,
+}: {
+  categories: StudioCategory[];
+  projectCounts: Record<string, number>;
+}) {
   const headerRef = useReveal<HTMLDivElement>();
   const { locale } = useLocale();
   const t = COPY[locale];
@@ -101,8 +106,8 @@ export function CategorySection() {
           }}
           className="nmp-category-grid"
         >
-          {studioCategories.map((cat) => {
-            const count = getProjectsByCategory(cat.slug).length;
+          {categories.map((cat) => {
+            const count = projectCounts[cat.slug] ?? 0;
             return (
               <CategoryCard
                 key={cat.slug}
