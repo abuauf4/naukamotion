@@ -916,15 +916,15 @@ export const studioProjects: StudioProject[] = [
     caseStudy: {
       sections: [
         {
-          heading: { id: "Ikhtisar", en: "Overview" },
+          heading: { id: "Studio Sendiri", en: "The Studio Itself" },
           body: [
             {
-              id: "Website studio Nauka Motion sendiri. Dirancang dengan warm-paper editorial design system, menggabungkan tipografi Instrument Sans, Fraunces, dan JetBrains Mono.",
-              en: "The Nauka Motion studio website itself. Designed with a warm-paper editorial design system, combining Instrument Sans, Fraunces, and JetBrains Mono typography.",
+              id: "Website studio Nauka Motion sendiri. Dirancang dengan warm-paper editorial design system — palet ink black, warm paper, burnt orange — menggabungkan tipografi Instrument Sans untuk body, Fraunces untuk display editorial, dan JetBrains Mono untuk label teknis.",
+              en: "The Nauka Motion studio website itself. Designed with a warm-paper editorial design system — ink black, warm paper, burnt orange palette — combining Instrument Sans for body, Fraunces for editorial display, and JetBrains Mono for technical labels.",
             },
             {
-              id: "Visual system, motion language, dan struktur halaman dikembangkan sebagai eksperimen desain yang juga menginformasikan project client.",
-              en: "The visual system, motion language, and page structure were developed as a design experiment that also informs client projects.",
+              id: "Visual system, motion language, dan struktur halaman dikembangkan sebagai eksperimen desain yang juga menginformasikan project client. Filosofi 'Small movement. Real Impact.' — pergerakan kecil yang tepat sasaran menciptakan perubahan yang lebih bermakna.",
+              en: "The visual system, motion language, and page structure were developed as a design experiment that also informs client projects. The philosophy 'Small movement. Real Impact.' — small, well-targeted movement creates more meaningful change.",
             },
           ],
         },
@@ -959,23 +959,50 @@ export const studioProjects: StudioProject[] = [
     caseStudy: {
       sections: [
         {
-          heading: { id: "Ikhtisar", en: "Overview" },
+          heading: { id: "Pertemuan Beberapa Cita-cita", en: "Where Several Aspirations Meet" },
           body: [
             {
-              id: "Jejak Cahaya menggabungkan cita-cita menjadi penulis, kemampuan sebagai developer, ketertarikan pada sejarah Islam, media pembelajaran, dan dakwah. Kisah pertama yang dikembangkan adalah perjalanan hidup Rasulullah Muhammad, dari konteks sebelum kelahiran sampai wafat.",
-              en: "Jejak Cahaya combines the aspiration to be a writer, developer skills, interest in Islamic history, learning media, and dakwah. The first story developed is the life journey of Prophet Muhammad, from the context before his birth to his passing.",
+              id: "Jejak Cahaya bukan satu cita-cita. Project ini menggabungkan beberapa hal sekaligus: cita-cita menjadi penulis, kemampuan sebagai developer, ketertarikan pada sejarah Islam, media pembelajaran, dan dakwah. Semuanya bertemu di satu tempat.",
+              en: "Jejak Cahaya is not a single aspiration. This project combines several things at once: the aspiration to be a writer, developer skills, interest in Islamic history, learning media, and dakwah. All meeting in one place.",
             },
             {
-              id: "Proses penulisannya dilakukan bab demi bab dengan mencari dan membandingkan sumber yang dianggap paling terpercaya dan paling mendekati, termasuk Al-Qur'an, hadits, dan kitab-kitab sirah tepercaya. Saat ini penulisannya masih berkembang, sekitar Bab 11.",
-              en: "The writing process is done chapter by chapter, searching for and comparing sources considered most trusted and most accurate, including the Qur'an, hadith, and trusted sirah books. The writing is still developing, currently around Chapter 11.",
+              id: "Kisah pertama yang dikembangkan adalah perjalanan hidup Rasulullah Muhammad, dari konteks sebelum kelahiran sampai wafat. Bukan ringkasan biografi — sebuah perjalanan yang dibaca bab demi bab.",
+              en: "The first story developed is the life journey of Prophet Muhammad, from the context before his birth to his passing. Not a biographical summary — a journey read chapter by chapter.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Proses Menulis", en: "The Writing Process" },
+          body: [
+            {
+              id: "Proses penulisannya dilakukan bab demi bab dengan mencari dan membandingkan sumber yang dianggap paling terpercaya dan paling mendekati, termasuk Al-Qur'an, hadits, dan kitab-kitab sirah tepercaya. Bukan mengarang — mencari, membandingkan, lalu menulis dengan sumber yang dapat ditelusuri.",
+              en: "The writing process is done chapter by chapter, searching for and comparing sources considered most trusted and most accurate, including the Qur'an, hadith, and trusted sirah books. Not fabricating — searching, comparing, then writing with traceable sources.",
             },
             {
-              id: "Gaya Jejak Cahaya berbeda dari tulisan sejarah biasa. Narasinya dibuat imersif, seperti sebuah kamera berada dekat dengan peristiwa dan mengajak pembaca membayangkan suasana di sana, tanpa pernah mengklaim narator sebagai saksi sejarah.",
-              en: "Jejak Cahaya's style differs from typical historical writing. The narrative is immersive, as if a camera is close to the events, inviting readers to imagine the atmosphere there, without ever claiming the narrator as a historical witness.",
+              id: "Saat ini penulisannya masih berkembang, sekitar Bab 11. Bukan project yang selesai — project yang terus tumbuh seiring waktu.",
+              en: "The writing is still developing, currently around Chapter 11. Not a finished project — a project that continues to grow over time.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Gaya Bercerita", en: "The Storytelling Style" },
+          body: [
+            {
+              id: "Gaya Jejak Cahaya berbeda dari tulisan sejarah biasa. Narasinya dibuat imersif — seperti sebuah kamera berada dekat dengan peristiwa dan mengajak pembaca membayangkan suasana di sana. Tanpa pernah mengklaim narator sebagai saksi sejarah. Narator ada di sana, tapi jujur tentang posisinya: menceritakan ulang, bukan menyaksikan.",
+              en: "Jejak Cahaya's style differs from typical historical writing. The narrative is immersive — as if a camera is close to the events, inviting readers to imagine the atmosphere there. Without ever claiming the narrator as a historical witness. The narrator is there, but honest about their position: retelling, not witnessing.",
+            },
+          ],
+        },
+        {
+          heading: { id: "Bukan Komersial, Terbuka", en: "Not Commercial, Open" },
+          body: [
+            {
+              id: "Jejak Cahaya bukan platform animasi. Bukan project komersial. Platform juga direncanakan berkembang ke media visual atau video di masa depan, tapi tulisan adalah intinya.",
+              en: "Jejak Cahaya is not an animation platform. Not a commercial project. The platform is also planned to expand into visual or video media in the future, but writing is its core.",
             },
             {
-              id: "Platform juga direncanakan berkembang ke media visual/video. Jejak Cahaya bukan platform animasi, bukan project komersial. Merupakan platform terbuka — siapa pun yang memiliki tujuan serupa dapat ikut berkontribusi dalam pengembangannya.",
-              en: "The platform is also planned to expand into visual/video media. Jejak Cahaya is not an animation platform, not a commercial project. It is an open platform — anyone with a similar goal can contribute to its development.",
+              id: "Merupakan platform terbuka — siapa pun yang memiliki tujuan serupa dapat ikut berkontribusi dalam pengembangannya. Bukan milik satu orang, milik siapa saja yang ingin ikut.",
+              en: "It is an open platform — anyone with a similar goal can contribute to its development. Not owned by one person, owned by anyone who wants to join.",
             },
           ],
         },
