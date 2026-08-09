@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useLocale } from "@/lib/locale-context";
 
 /**
@@ -106,34 +107,23 @@ export function Footer() {
               aria-label="Nauka Motion — home"
               style={{
                 display: "inline-flex",
-                alignItems: "baseline",
-                gap: "8px",
+                alignItems: "center",
                 textDecoration: "none",
                 color: "var(--ink)",
                 marginBottom: "20px",
               }}
             >
-              <span
+              <Image
+                src="/logo-navbar.webp"
+                alt="Nauka Motion"
+                width={140}
+                height={48}
                 style={{
-                  fontFamily: "var(--font-body), sans-serif",
-                  fontWeight: 600,
-                  fontSize: "1.5rem",
-                  letterSpacing: "0.01em",
+                  height: "auto",
+                  width: "auto",
+                  maxHeight: "48px",
                 }}
-              >
-                NAUKA
-              </span>
-              <span
-                style={{
-                  fontFamily: "var(--font-fraunces), serif",
-                  fontStyle: "italic",
-                  fontWeight: 400,
-                  fontSize: "1.5rem",
-                  color: "var(--burnt)",
-                }}
-              >
-                motion
-              </span>
+              />
             </Link>
             <p
               style={{

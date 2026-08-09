@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useTheme } from "@/hooks/useTheme";
 import { LocaleSwitcher } from "@/components/nauka/LocaleSwitcher";
@@ -90,33 +91,23 @@ export function Header() {
           aria-label="Nauka Motion — home"
           style={{
             display: "inline-flex",
-            alignItems: "baseline",
-            gap: "6px",
+            alignItems: "center",
             textDecoration: "none",
             color: "var(--ink)",
           }}
         >
-          <span
+          <Image
+            src="/logo-navbar.webp"
+            alt="Nauka Motion"
+            width={92}
+            height={32}
+            priority
             style={{
-              fontFamily: "var(--font-body), sans-serif",
-              fontWeight: 600,
-              fontSize: "1.05rem",
-              letterSpacing: "0.02em",
+              height: "auto",
+              width: "auto",
+              maxHeight: "32px",
             }}
-          >
-            NAUKA
-          </span>
-          <span
-            style={{
-              fontFamily: "var(--font-fraunces), serif",
-              fontStyle: "italic",
-              fontWeight: 400,
-              fontSize: "1.05rem",
-              color: "var(--burnt)",
-            }}
-          >
-            motion
-          </span>
+          />
         </Link>
 
         {/* Desktop nav */}

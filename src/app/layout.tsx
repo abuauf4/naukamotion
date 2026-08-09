@@ -58,7 +58,9 @@ export const metadata: Metadata = {
   publisher: "Nauka Motion",
   applicationName: "Nauka Motion",
   icons: {
-    icon: "/logo.svg",
+    icon: "/logo-favicon.webp",
+    shortcut: "/logo-favicon.webp",
+    apple: "/logo-favicon.webp",
   },
   openGraph: {
     title: "Nauka Motion — Studio Produk Digital",
@@ -69,12 +71,21 @@ export const metadata: Metadata = {
     type: "website",
     locale: "id_ID",
     alternateLocale: ["en_US"],
+    images: [
+      {
+        url: "/ogimage.webp",
+        width: 1200,
+        height: 630,
+        alt: "Nauka Motion — Studio Produk Digital",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Nauka Motion — Studio Produk Digital",
     description:
       "Kami mengubah kebutuhan bisnis menjadi produk digital yang bekerja.",
+    images: ["/ogimage.webp"],
   },
   alternates: {
     canonical: SITE_URL,
