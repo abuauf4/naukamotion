@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { SectionsEditor } from '@/components/admin/SectionsEditor';
+import { TechnologiesEditor } from '@/components/admin/TechnologiesEditor';
 
 interface ProjectData {
   slug: string;
@@ -329,13 +330,20 @@ export default function AdminProjectEditorPage() {
         </div>
       )}
 
-      {/* Technology tab placeholder */}
+      {/* Technology tab — Technologies editor */}
       {activeTab === 'technology' && (
-        <div style={{ padding: '48px', textAlign: 'center', color: 'var(--ink-faint)' }}>
-          <p style={{ fontFamily: 'var(--font-body), sans-serif', fontSize: '1rem' }}>Technology editor — coming in Milestone 5</p>
-          <p style={{ fontFamily: 'var(--font-mono), monospace', fontSize: '0.7rem', marginTop: '8px' }}>
-            {form.techStack.length} technologies in techStack · {form.techIntro ? 'techIntro set' : 'no techIntro'}
-          </p>
+        <div>
+          {isNew ? (
+            <div style={{ padding: '48px', textAlign: 'center', color: 'var(--ink-faint)' }}>
+              <p style={{ fontFamily: 'var(--font-body), sans-serif', fontSize: '0.95rem' }}>Save the project first, then add technologies.</p>
+            </div>
+          ) : (
+            <TechnologiesEditor
+              projectSlug={slug}
+              initialTechnologies={project?.technologies ?? []}
+              initialTechIntro={project?.techIntro ?? null}
+            />
+          )}
         </div>
       )}
     </main>
