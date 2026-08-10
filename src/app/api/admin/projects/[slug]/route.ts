@@ -14,6 +14,7 @@ export async function GET(request: NextRequest, { params }: Params) {
         category: true,
         sections: { orderBy: { sortOrder: 'asc' } },
         technologies: { orderBy: { sortOrder: 'asc' } },
+        media: { orderBy: [{ type: 'asc' }, { sortOrder: 'asc' }] },
       },
     });
     if (!project) return NextResponse.json({ error: 'Not found' }, { status: 404 });

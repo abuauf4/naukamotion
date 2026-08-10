@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { SectionsEditor } from '@/components/admin/SectionsEditor';
 import { TechnologiesEditor } from '@/components/admin/TechnologiesEditor';
+import { MediaEditor } from '@/components/admin/MediaEditor';
 
 interface ProjectData {
   slug: string;
@@ -41,6 +42,20 @@ interface ProjectData {
     description: { id: string; en: string };
     sortOrder: number;
   }>;
+  media?: Array<{
+    id: string;
+    type: string;
+    url: string;
+    publicId: string | null;
+    width: number | null;
+    height: number | null;
+    format: string | null;
+    bytes: number | null;
+    alt: { id: string; en: string } | null;
+    caption: { id: string; en: string } | null;
+    sortOrder: number;
+    sectionId: string | null;
+  }>;
 }
 
 interface Category { slug: string; title: string; }
@@ -52,7 +67,7 @@ export default function AdminProjectEditorPage() {
   const slug = params.slug as string;
   const isNew = slug === 'new';
 
-  const [activeTab, setActiveTab] = useState<'overview' | 'story' | 'technology'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'story' | 'technology' | 'media'>('overview');
   const [project, setProject] = useState<ProjectData | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [allProjects, setAllProjects] = useState<SimpleProject[]>([]);
@@ -168,7 +183,7 @@ export default function AdminProjectEditorPage() {
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: '4px', marginBottom: '24px', borderBottom: '1px solid var(--line)' }}>
-        {(['overview', 'story', 'technology'] as const).map(tab => (
+        {(['overview', 'story', 'technology', 'media'] as const).map(tab => (
           <button key={tab} onClick={() => setActiveTab(tab)} style={{
             padding: '10px 20px', fontFamily: 'var(--font-body), sans-serif', fontSize: '0.9rem',
             fontWeight: activeTab === tab ? 500 : 400,
@@ -342,6 +357,23 @@ export default function AdminProjectEditorPage() {
               projectSlug={slug}
               initialTechnologies={project?.technologies ?? []}
               initialTechIntro={project?.techIntro ?? null}
+            />
+          )}
+        </div>
+      )}
+
+      {/* Media tab — Media editor */}
+      {activeTab === 'media' && (
+        <div>
+          {isNew ? (
+            <div style={{ padding: '48px', textAlign: 'center', color: 'var(--ink-faint)' }}>
+              <p style={{ fontFamily: 'var(--font-body), sans-serif', fontSize: '0.95rem' }}>Save the project first, then upload media.</p>
+            </div>
+          ) : (
+            <MediaEditor
+              projectSlug={slug}
+              initialMedia={project?.media ?? []}
+              sections={project?.sections ?? []}
             />
           )}
         </div>
