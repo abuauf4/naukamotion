@@ -14,15 +14,12 @@ import type { Prisma } from '@prisma/client';
 
 // ─── Types (re-exported for adapter) ───
 
-export type CategoryWithProjects = Prisma.CategoryGetPayload<{
-  include: { projects: true };
-}>;
-
 export type ProjectWithRelations = Prisma.ProjectGetPayload<{
   include: {
     category: true;
     sections: { orderBy: { sortOrder: 'asc' } };
     technologies: { orderBy: { sortOrder: 'asc' } };
+    media: { orderBy: { sortOrder: 'asc' } };
   };
 }>;
 
@@ -59,6 +56,7 @@ export async function fetchPublicProjects(): Promise<ProjectWithRelations[]> {
       category: true,
       sections: { orderBy: { sortOrder: 'asc' } },
       technologies: { orderBy: { sortOrder: 'asc' } },
+      media: { orderBy: { sortOrder: 'asc' } },
     },
   });
 }
@@ -80,6 +78,7 @@ export async function fetchPublicProjectBySlug(
       category: true,
       sections: { orderBy: { sortOrder: 'asc' } },
       technologies: { orderBy: { sortOrder: 'asc' } },
+      media: { orderBy: { sortOrder: 'asc' } },
     },
   });
 }
@@ -101,6 +100,7 @@ export async function fetchPublicProjectsByCategory(
       category: true,
       sections: { orderBy: { sortOrder: 'asc' } },
       technologies: { orderBy: { sortOrder: 'asc' } },
+      media: { orderBy: { sortOrder: 'asc' } },
     },
   });
 }

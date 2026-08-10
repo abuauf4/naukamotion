@@ -58,12 +58,24 @@ export async function DELETE(request: NextRequest, { params }: Params) {
     // Delete from Cloudinary first (if publicId exists)
     if (existing.publicId) {
       try {
-        const { deleteFromCloudinary } = await import("@/lib/cloudinary"); await deleteFromCloudinary(existing.publicId);
+        const { deleteFromCloudinary } = await import('@/lib/cloudinary');
+        await deleteFromCloudinary(existing.publicId);
       } catch (cloudinaryError) {
         console.error('Cloudinary delete error:', cloudinaryError);
         // If Cloudinary delete fails, still delete DB record but report error
         await prisma.projectMedia.delete({ where: { id } });
         revalidatePath(`/work/${existing.projectSlug}`, 'page');
+        if (existing.type === 'cover' || existing.type === 'og') {
+          const project = await prisma.project.findUnique({
+            where: { slug: existing.projectSlug },
+            select: { categorySlug: true },
+          });
+          revalidatePath('/', 'page');
+          revalidatePath('/work', 'page');
+          if (project?.categorySlug) {
+            revalidatePath(`/work/${project.categorySlug}`, 'page');
+          }
+        }
         return NextResponse.json({
           success: true,
           warning: 'Cloudinary asset deletion failed. DB record removed. Orphaned asset may remain in Cloudinary.',
@@ -74,7 +86,20 @@ export async function DELETE(request: NextRequest, { params }: Params) {
     // Delete from DB
     await prisma.projectMedia.delete({ where: { id } });
 
+    // Revalidate. Cover/OG removal affects cards + metadata site-wide;
+    // other media types only affect the project's own page.
     revalidatePath(`/work/${existing.projectSlug}`, 'page');
+    if (existing.type === 'cover' || existing.type === 'og') {
+      const project = await prisma.project.findUnique({
+        where: { slug: existing.projectSlug },
+        select: { categorySlug: true },
+      });
+      revalidatePath('/', 'page');
+      revalidatePath('/work', 'page');
+      if (project?.categorySlug) {
+        revalidatePath(`/work/${project.categorySlug}`, 'page');
+      }
+    }
 
     return NextResponse.json({ success: true });
   } catch {

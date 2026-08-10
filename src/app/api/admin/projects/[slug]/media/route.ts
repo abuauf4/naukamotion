@@ -126,7 +126,21 @@ export async function POST(request: NextRequest, { params }: Params) {
         },
       });
 
+      // Revalidate all routes that consume project cover or media.
+      // Cover/OG changes affect metadata + cards across the site.
+      // Other media types only affect the project's own page.
       revalidatePath(`/work/${slug}`, 'page');
+      if (type === 'cover' || type === 'og') {
+        const project = await prisma.project.findUnique({
+          where: { slug },
+          select: { categorySlug: true },
+        });
+        revalidatePath('/', 'page');
+        revalidatePath('/work', 'page');
+        if (project?.categorySlug) {
+          revalidatePath(`/work/${project.categorySlug}`, 'page');
+        }
+      }
 
       return NextResponse.json(media, { status: 201 });
     } catch (dbError) {

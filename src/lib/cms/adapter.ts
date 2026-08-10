@@ -147,6 +147,25 @@ export function adaptTechStory(
 }
 
 // ─── Project adapter ───
+//
+// Cover URL resolution (ProjectMedia → transitional Project.cover):
+//   Public cover = first ProjectMedia where type='cover' (sorted by sortOrder)
+//   Fallback      = Project.cover (transitional field, kept for unmigrated projects)
+//
+// This means: once a cover ProjectMedia row exists for a project, the public
+// site renders that Cloudinary URL automatically. Projects without a
+// ProjectMedia cover row keep showing their legacy Project.cover path.
+// We do NOT write uploads back to Project.cover — uploads only create
+// ProjectMedia rows. The transitional field stays as-is until cleaned up
+// in a future phase.
+
+function resolveCoverUrl(
+  dbProject: ProjectWithRelations
+): string {
+  const coverMedia = dbProject.media.find((m) => m.type === 'cover');
+  if (coverMedia && coverMedia.url) return coverMedia.url;
+  return dbProject.cover;
+}
 
 export function adaptProject(
   dbProject: ProjectWithRelations
@@ -154,6 +173,7 @@ export function adaptProject(
   const sections = dbProject.sections.map(adaptSection);
   const techStory = adaptTechStory(dbProject);
   const status = mapStatus(dbProject.status, dbProject.type);
+  const cover = resolveCoverUrl(dbProject);
 
   return {
     slug: dbProject.slug,
@@ -165,7 +185,7 @@ export function adaptProject(
     year: dbProject.year,
     client: dbProject.client,
     industry: dbProject.industry,
-    cover: dbProject.cover,
+    cover,
     accent: dbProject.accent,
     liveUrl: dbProject.liveUrl ?? undefined,
     status,

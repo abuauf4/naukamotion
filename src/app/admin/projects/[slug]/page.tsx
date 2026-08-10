@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { SectionsEditor } from '@/components/admin/SectionsEditor';
 import { TechnologiesEditor } from '@/components/admin/TechnologiesEditor';
@@ -68,6 +68,8 @@ export default function AdminProjectEditorPage() {
   const isNew = slug === 'new';
 
   const [activeTab, setActiveTab] = useState<'overview' | 'story' | 'technology' | 'media'>('overview');
+  const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const tabStripRef = useRef<HTMLDivElement | null>(null);
   const [project, setProject] = useState<ProjectData | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [allProjects, setAllProjects] = useState<SimpleProject[]>([]);
@@ -163,6 +165,25 @@ export default function AdminProjectEditorPage() {
 
   const update = (field: keyof ProjectData, value: unknown) => setForm({ ...form, [field]: value });
 
+  function selectTab(tab: 'overview' | 'story' | 'technology' | 'media') {
+    setActiveTab(tab);
+    // Scroll active tab into view on mobile (no-op on desktop where strip is wider than tabs)
+    requestAnimationFrame(() => {
+      const el = tabRefs.current[tab];
+      const strip = tabStripRef.current;
+      if (!el || !strip) return;
+      const elLeft = el.offsetLeft;
+      const elRight = elLeft + el.offsetWidth;
+      const viewLeft = strip.scrollLeft;
+      const viewRight = viewLeft + strip.clientWidth;
+      if (elLeft < viewLeft) {
+        strip.scrollTo({ left: elLeft - 8, behavior: 'smooth' });
+      } else if (elRight > viewRight) {
+        strip.scrollTo({ left: elRight - strip.clientWidth + 8, behavior: 'smooth' });
+      }
+    });
+  }
+
   return (
     <main style={{ flex: 1, padding: '32px clamp(16px, 4vw, 40px)' }}>
       {/* Header */}
@@ -181,16 +202,49 @@ export default function AdminProjectEditorPage() {
       {error && <div style={{ background: 'rgba(216,90,42,0.1)', border: '1px solid var(--burnt)', borderRadius: '8px', padding: '12px 16px', marginBottom: '16px', fontFamily: 'var(--font-body), sans-serif', fontSize: '0.85rem', color: 'var(--burnt)' }}>{error}</div>}
       {success && <div style={{ background: 'rgba(13,148,136,0.1)', border: '1px solid var(--ink-soft)', borderRadius: '8px', padding: '12px 16px', marginBottom: '16px', fontFamily: 'var(--font-body), sans-serif', fontSize: '0.85rem', color: 'var(--ink-soft)' }}>{success}</div>}
 
-      {/* Tabs */}
-      <div style={{ display: 'flex', gap: '4px', marginBottom: '24px', borderBottom: '1px solid var(--line)' }}>
+      {/* Tabs — horizontally scrollable on mobile, full row on desktop */}
+      <div
+        ref={tabStripRef}
+        className="admin-tab-strip"
+        style={{
+          display: 'flex',
+          gap: '4px',
+          marginBottom: '24px',
+          borderBottom: '1px solid var(--line)',
+          overflowX: 'auto',
+          overflowY: 'hidden',
+          WebkitOverflowScrolling: 'touch',
+          scrollSnapType: 'x proximity',
+          scrollbarWidth: 'none', // Firefox — hide scrollbar
+          msOverflowStyle: 'none', // IE/Edge — hide scrollbar
+          // Allow tabs to be wider than the strip without parent clipping
+          maxWidth: '100%',
+          position: 'relative',
+        }}
+      >
         {(['overview', 'story', 'technology', 'media'] as const).map(tab => (
-          <button key={tab} onClick={() => setActiveTab(tab)} style={{
-            padding: '10px 20px', fontFamily: 'var(--font-body), sans-serif', fontSize: '0.9rem',
-            fontWeight: activeTab === tab ? 500 : 400,
-            color: activeTab === tab ? 'var(--burnt)' : 'var(--ink-soft)',
-            background: 'none', border: 'none', borderBottom: activeTab === tab ? '2px solid var(--burnt)' : '2px solid transparent',
-            cursor: 'pointer', textTransform: 'capitalize', marginBottom: '-1px',
-          }}>{tab}</button>
+          <button
+            key={tab}
+            ref={(el) => { tabRefs.current[tab] = el; }}
+            onClick={() => selectTab(tab)}
+            className={activeTab === tab ? 'admin-tab active' : 'admin-tab'}
+            style={{
+              padding: '10px 20px',
+              fontFamily: 'var(--font-body), sans-serif',
+              fontSize: '0.9rem',
+              fontWeight: activeTab === tab ? 500 : 400,
+              color: activeTab === tab ? 'var(--burnt)' : 'var(--ink-soft)',
+              background: 'none',
+              border: 'none',
+              borderBottom: activeTab === tab ? '2px solid var(--burnt)' : '2px solid transparent',
+              cursor: 'pointer',
+              textTransform: 'capitalize',
+              marginBottom: '-1px',
+              whiteSpace: 'nowrap',
+              flexShrink: 0,
+              scrollSnapAlign: 'start',
+            }}
+          >{tab}</button>
         ))}
       </div>
 
@@ -390,6 +444,12 @@ export default function AdminProjectEditorPage() {
             gap: 20px;
           }
         }
+        /* Hide scrollbar on WebKit/Chromium for the admin tab strip */
+        .admin-tab-strip::-webkit-scrollbar {
+          display: none;
+        }
+        /* On desktop the 4 tabs fit comfortably; no overflow needed.
+           On mobile the strip scrolls horizontally without clipping. */
       `}</style>
     </main>
   );
