@@ -463,3 +463,97 @@
   outline-offset: 2px;
   border-radius: 2px;
 }
+
+/* ━━━━━━ Nauka Motion V2 — Phase 1 additions ━━━━━━ */
+
+/* N mark — theme adaptation via CSS filter.
+   The favicon is RGBA (transparent + black N).
+   Light mode: no filter (black N visible on light bg).
+   Dark mode: invert + brightness to render white N on dark bg. */
+:root {
+  --nmark-filter: brightness(0);
+}
+.dark {
+  --nmark-filter: brightness(0) invert(1);
+}
+
+/* Hero headline — letter-mask reveal.
+   Initial state: clipped to the right (invisible).
+   `.is-visible` (added by HeroMotion client island): clip expands left-to-right. */
+.nauka-hero-line {
+  display: inline-block;
+  clip-path: inset(0 100% 0 0);
+  transform: translateY(0.2em);
+  opacity: 0;
+  transition:
+    clip-path 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.4s ease;
+}
+.nauka-hero-line.is-visible {
+  clip-path: inset(0 0 0 0);
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Desktop / mobile visibility rules for Header. */
+@media (min-width: 768px) {
+  .nauka-header-nav-desktop { display: flex !important; }
+  .nauka-header-cta-desktop { display: inline-flex !important; }
+  .nauka-header-trigger-mobile { display: none !important; }
+}
+@media (max-width: 767px) {
+  .nauka-header-nav-desktop { display: none !important; }
+  .nauka-header-cta-desktop { display: none !important; }
+  .nauka-header-trigger-mobile { display: inline-flex !important; }
+}
+
+/* Nav link hover — typographic, not background. */
+.nauka-nav-link:hover {
+  color: var(--ink);
+}
+
+/* CTA hover — typographic shift, no SaaS card style. */
+.nauka-cta-primary:hover {
+  transform: translateY(-1px);
+}
+.nauka-cta-secondary:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* Phase-2 placeholder — generous minimal sections that read as intentional,
+   not as "coming soon". Just type + spacing. */
+.nauka-phase2-placeholder {
+  padding: "clamp(80px, 14vw, 160px) 0";
+  border-top: 1px solid var(--line);
+}
+.nauka-phase2-placeholder-label {
+  font-family: var(--font-body), sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0 0 24px 0;
+}
+.nauka-phase2-placeholder-heading {
+  font-family: var(--font-fraunces), serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin: 0;
+  max-width: 22ch;
+}
+
+/* Reduced-motion hardening — disable hero mask + opening too. */
+@media (prefers-reduced-motion: reduce) {
+  .nauka-hero-line {
+    clip-path: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    transition: none !important;
+  }
+}

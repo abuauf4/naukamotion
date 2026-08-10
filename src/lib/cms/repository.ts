@@ -119,3 +119,32 @@ export async function fetchAllPublicSlugs(): Promise<string[]> {
   });
   return projects.map((p) => p.slug);
 }
+
+/**
+ * Lightweight category → public-project-count query for the homepage.
+ *
+ * Returns a map of categorySlug → count using a single groupBy query,
+ * avoiding the V1 N+1 pattern where each category triggered a separate
+ * findMany with full relations (sections, technologies, media) just to
+ * compute `.length`.
+ *
+ * Used by the homepage only. Project detail routes still load full
+ * relations via fetchPublicProjectBySlug.
+ */
+export async function fetchPublicProjectCountsByCategory(): Promise<
+  Record<string, number>
+> {
+  const grouped = await prisma.project.groupBy({
+    by: ['categorySlug'],
+    where: {
+      visibility: 'public',
+      status: { not: 'draft' },
+    },
+    _count: { _all: true },
+  });
+  const counts: Record<string, number> = {};
+  for (const row of grouped) {
+    counts[row.categorySlug] = row._count._all;
+  }
+  return counts;
+}

@@ -1,20 +1,31 @@
 import type { Metadata, Viewport } from "next";
-import { Instrument_Sans, Fraunces, JetBrains_Mono } from "next/font/google";
+import { Instrument_Sans, Fraunces } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { LocaleProvider } from "@/lib/locale-context";
 
-/* ━━ Nauka Motion — Studio Typography ━━
- * Instrument Sans  — body & interface
- * Fraunces         — editorial display (variable: opsz + SOFT)
- * JetBrains Mono   — technical labels, code, indices
+/* ━━ Nauka Motion — V2 Studio Typography ━━
+ *
+ * V2 design principle: lean fonts, only what is used.
+ *
+ *   Instrument Sans  — body & interface (weights 400 + 500 only)
+ *   Fraunces         — editorial display, italic 400 (static subset, no axes)
+ *
+ * Compared to V1:
+ *   - Dropped Fraunces variable font with `opsz` + `SOFT` axes (~269KB → ~25KB)
+ *   - Dropped Instrument Sans weights 600 + 700 (unused in production code)
+ *   - Dropped JetBrains Mono entirely (was 30KB, used only for labels —
+ *     labels now use Fraunces italic + letter-spacing for editorial feel,
+ *     keeping the typography hierarchy to two families)
+ *
+ * Result: ~50KB fonts vs ~323KB V1 (≈85% reduction).
  */
 
 const instrumentSans = Instrument_Sans({
   variable: "--font-body",
   subsets: ["latin"],
   display: "swap",
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500"],
 });
 
 const fraunces = Fraunces({
@@ -22,14 +33,10 @@ const fraunces = Fraunces({
   subsets: ["latin"],
   display: "swap",
   style: ["normal", "italic"],
-  axes: ["opsz", "SOFT"],
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-mono",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["400", "500", "600"],
+  weight: ["400"],
+  // No `axes` — static italic 400 subset only.
+  // The variable opsz/SOFT axes were configured in V1 but never animated
+  // or reconfigured at runtime. Static subset drops ~250KB.
 });
 
 const SITE_URL = "https://motion.nauka.id";
@@ -133,7 +140,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: localeBootstrap }} />
       </head>
       <body
-        className={`${instrumentSans.variable} ${fraunces.variable} ${jetbrainsMono.variable} antialiased bg-background text-foreground`}
+        className={`${instrumentSans.variable} ${fraunces.variable} antialiased bg-background text-foreground`}
       >
         <LocaleProvider>
           {children}

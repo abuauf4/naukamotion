@@ -56,6 +56,7 @@ import {
   fetchPublicProjectBySlug,
   fetchPublicProjectsByCategory,
   fetchAllPublicSlugs,
+  fetchPublicProjectCountsByCategory,
 } from './repository';
 import {
   adaptCategory,
@@ -124,4 +125,25 @@ export async function getPublicProjects(): Promise<StudioProject[]> {
   }
   const dbProjects = await fetchPublicProjects();
   return adaptProjects(dbProjects);
+}
+
+/**
+ * Lightweight count of public projects per category.
+ *
+ * For the homepage only — avoids the V1 N+1 + heavy relations pattern.
+ * Single groupBy query returns { [categorySlug]: count }.
+ *
+ * Static-fallback mode derives counts from studio-data.ts in memory.
+ */
+export async function getPublicProjectCountsByCategory(): Promise<
+  Record<string, number>
+> {
+  if (DATA_SOURCE === 'static') {
+    const counts: Record<string, number> = {};
+    for (const cat of studioCategories) {
+      counts[cat.slug] = staticGetProjectsByCategory(cat.slug).length;
+    }
+    return counts;
+  }
+  return fetchPublicProjectCountsByCategory();
 }
