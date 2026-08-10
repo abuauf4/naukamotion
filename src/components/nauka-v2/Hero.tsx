@@ -1,224 +1,161 @@
 /**
- * Hero V2 — typography-led, no video, no fake reel.
+ * Hero V2.1 — typographic poster composition.
  *
- * V2 design principle: typography IS the hero visual.
+ * Redesign rules applied:
+ *   - REMOVE information: no eyebrow, no paragraph, no stats, no dual CTA pills.
+ *     Above-the-fold contains only: wordmark (in header) + ONE dominant
+ *     typographic statement + one tiny editorial accent + one subtle CTA.
+ *   - TYPOGRAPHIC CONTRAST: NAUKA/MOTION in bold grotesk (Instrument Sans 500,
+ *     massive scale, tight tracking). Editorial serif italic (Fraunces) used
+ *     sparingly for the tiny accent only.
+ *   - HERO AS COMPOSITION: asymmetric layout, extreme type scale, grid tension,
+ *     tiny metadata contrasted with huge display type. No cards, no pill cluster.
+ *   - OPENING TRANSFORMS INTO HERO: the entrance animation IS the opening. Letters
+ *     appear in sequence and settle directly into their final hero positions.
+ *     No separate overlay, no fade-out-then-new-hero.
+ *   - ONE CTA: "View Work ↘" / "Lihat Karya ↘" as a text link, not a pill button.
  *
- * Composition:
- *   ┌─ Eyebrow (Fraunces italic, small) — Nauka Motion — Studio
- *   ├─ Headline (Fraunces italic, huge) — short positioning statement
- *   ├─ Sub (Instrument Sans, readable) — supporting paragraph
- *   └─ Two CTAs (typographic, not SaaS buttons)
+ * Server-rendered. The entrance animation is pure CSS keyframes —
+ * HeroMotion (client island) only sets the sessionStorage flag so
+ * internal navigation skips the animation on subsequent visits.
  *
- * Server-rendered. Above-the-fold content is fully visible in the
- * prerendered HTML — no hydration required to read the headline.
- *
- * The motion is a tiny client island (HeroMotion) that:
- *   - Animates the headline letter-mask reveal ONCE on first paint
- *   - Does NOT block rendering (CSS animations with `forwards`)
- *   - Respects prefers-reduced-motion (no animation, content visible)
- *
- * Copy uses existing approved Nauka positioning from V1 (HeroSection)
- * — no new copy invented.
+ * Reduced-motion: CSS disables all entrance animations, content
+ * visible immediately.
  */
 import { HeroMotion } from "./HeroMotion";
 
 const COPY = {
   id: {
-    eyebrow: "Nauka Motion — Studio Produk Digital",
-    headlineLine1: "Kami mengubah kebutuhan bisnis",
-    headlineLine2: "menjadi produk digital",
-    headlineAccent: "yang bekerja.",
-    sub: "Studio independen yang menggabungkan desain, teknologi, dan pemecahan masalah untuk membangun website, platform, dan sistem digital di berbagai industri.",
-    ctaPrimary: "Lihat Karya",
-    ctaSecondary: "Mulai Proyek",
-    meta: "50+ proyek · 7 kategori · sejak 2019",
+    accent: "Studio digital independen — desain, teknologi, pemecahan masalah.",
+    cta: "Lihat Karya",
   },
   en: {
-    eyebrow: "Nauka Motion — Digital Product Studio",
-    headlineLine1: "We turn business needs",
-    headlineLine2: "into digital products",
-    headlineAccent: "that work.",
-    sub: "An independent studio combining design, technology, and problem-solving to build websites, platforms, and digital systems across industries.",
-    ctaPrimary: "View Work",
-    ctaSecondary: "Start a Project",
-    meta: "50+ projects · 7 categories · since 2019",
+    accent: "Independent digital studio — design, technology, problem-solving.",
+    cta: "View Work",
   },
 };
 
 export function Hero({
   locale,
-  projectCount,
-  categoryCount,
 }: {
   locale: "id" | "en";
-  projectCount: number;
-  categoryCount: number;
 }) {
   const t = COPY[locale];
-  const metaStr = locale === "en"
-    ? `${projectCount}+ projects · ${categoryCount} categories`
-    : `${projectCount}+ proyek · ${categoryCount} kategori`;
 
   return (
-    <section
-      className="nauka-hero"
-      style={{
-        // Hero is full viewport on desktop, less on mobile (avoids
-        // covering content with browser chrome).
-        minHeight: "100svh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        paddingTop: "120px",
-        paddingBottom: "80px",
-        position: "relative",
-      }}
-    >
-      <div className="container-wide">
-        {/* Eyebrow — Fraunces italic, small, with leading rule */}
-        <p
-          className="reveal"
-          style={{
-            fontFamily: "var(--font-fraunces), serif",
-            fontStyle: "italic",
-            fontWeight: 400,
-            fontSize: "clamp(0.85rem, 1.4vw, 1rem)",
-            color: "var(--ink-soft)",
-            margin: "0 0 32px 0",
-            letterSpacing: "-0.005em",
-            display: "flex",
-            alignItems: "center",
-            gap: "12px",
-          }}
-        >
-          <span
-            aria-hidden="true"
-            style={{
-              display: "inline-block",
-              width: "32px",
-              height: "1px",
-              background: "var(--ink-faint)",
-            }}
-          />
-          {t.eyebrow}
-        </p>
+    <HeroMotion>
+      <section
+        className="nauka-hero"
+        style={{
+          // Full viewport height — hero IS the first impression.
+          // 100svh uses the small viewport height (mobile-safe).
+          minHeight: "100svh",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          // Push content down slightly below the fixed header.
+          paddingTop: "120px",
+          paddingBottom: "80px",
+          position: "relative",
+        }}
+      >
+        <div className="container-wide">
+          {/* Massive display — NAUKA / MOTION.
+              This IS the hero visual. No image, no video. */}
 
-        {/* Headline — Fraunces italic, huge, mask-revealed by HeroMotion */}
-        <HeroMotion>
+          {/* NAUKA — left-aligned, massive grotesk */}
           <h1
+            className="nauka-hero-display"
+            aria-label="Nauka Motion"
+            style={{
+              fontFamily: "var(--font-body), sans-serif",
+              fontWeight: 500,
+              fontSize: "clamp(3.5rem, 17vw, 13rem)",
+              lineHeight: 0.88,
+              letterSpacing: "-0.045em",
+              color: "var(--ink)",
+              margin: 0,
+            }}
+          >
+            <span className="nauka-hero-word nauka-hero-word-nauka">
+              {"NAUKA".split("").map((ch, i) => (
+                <span
+                  key={i}
+                  className="nauka-hero-letter"
+                  style={{ ["--letter-i" as string]: i } as React.CSSProperties}
+                >
+                  {ch}
+                </span>
+              ))}
+            </span>
+            <br />
+            <span
+              className="nauka-hero-word nauka-hero-word-motion"
+              // Slight horizontal offset on desktop for compositional asymmetry.
+              // On mobile, zero offset — bold stacked type.
+              style={{ display: "inline-block" }}
+            >
+              {"MOTION".split("").map((ch, i) => (
+                <span
+                  key={i}
+                  className="nauka-hero-letter"
+                  style={{ ["--letter-i" as string]: i } as React.CSSProperties}
+                >
+                  {ch}
+                </span>
+              ))}
+            </span>
+          </h1>
+
+          {/* Tiny editorial serif italic accent — positioned asymmetrically.
+              On desktop: pushed to the right side, creating tension with the
+              left-aligned massive type. On mobile: left-aligned, small. */}
+          <p
+            className="nauka-hero-accent"
             style={{
               fontFamily: "var(--font-fraunces), serif",
               fontStyle: "italic",
               fontWeight: 400,
-              fontSize: "clamp(2.4rem, 9vw, 6rem)",
-              lineHeight: 1.02,
-              letterSpacing: "-0.035em",
-              color: "var(--ink)",
-              margin: "0 0 32px 0",
-              maxWidth: "16ch",
+              fontSize: "clamp(0.85rem, 1.3vw, 1rem)",
+              lineHeight: 1.45,
+              color: "var(--ink-soft)",
+              margin: "32px 0 0 0",
+              maxWidth: "34ch",
+              // Desktop: right-aligned for compositional tension.
+              // Mobile: left-aligned (overridden in media query below).
+              marginLeft: "auto",
+              textAlign: "right",
             }}
           >
-            <span className="nauka-hero-line">{t.headlineLine1}</span>
-            <br />
-            <span className="nauka-hero-line">{t.headlineLine2}</span>
-            <br />
-            <span
-              className="nauka-hero-line"
-              style={{ color: "var(--burnt)" }}
-            >
-              {t.headlineAccent}
-            </span>
-          </h1>
-        </HeroMotion>
+            {t.accent}
+          </p>
 
-        {/* Sub paragraph */}
-        <p
-          className="reveal reveal-delay-1"
-          style={{
-            fontFamily: "var(--font-body), sans-serif",
-            fontWeight: 400,
-            fontSize: "clamp(1rem, 1.4vw, 1.15rem)",
-            lineHeight: 1.55,
-            color: "var(--ink-soft)",
-            margin: "0 0 40px 0",
-            maxWidth: "44ch",
-          }}
-        >
-          {t.sub}
-        </p>
-
-        {/* CTAs — typographic, not SaaS buttons */}
-        <div
-          className="reveal reveal-delay-2"
-          style={{
-            display: "flex",
-            gap: "16px",
-            flexWrap: "wrap",
-            alignItems: "center",
-            marginBottom: "48px",
-          }}
-        >
+          {/* Single text CTA — no pill, no border, just typography + arrow.
+              Positioned at the bottom-left of the hero. */}
           <a
             href="/work"
+            className="nauka-hero-cta"
             style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
               fontFamily: "var(--font-body), sans-serif",
               fontWeight: 500,
-              fontSize: "0.95rem",
-              color: "var(--paper)",
-              background: "var(--ink)",
-              textDecoration: "none",
-              padding: "14px 24px",
-              borderRadius: "999px",
-              letterSpacing: "-0.005em",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-              transition: "transform 0.2s ease",
-            }}
-            className="nauka-cta-primary"
-          >
-            {t.ctaPrimary}
-            <span aria-hidden="true">→</span>
-          </a>
-          <a
-            href="/#kontak"
-            style={{
-              fontFamily: "var(--font-body), sans-serif",
-              fontWeight: 400,
-              fontSize: "0.95rem",
+              fontSize: "0.85rem",
               color: "var(--ink)",
               textDecoration: "none",
-              padding: "14px 24px",
-              border: "1px solid var(--line-strong)",
-              borderRadius: "999px",
-              letterSpacing: "-0.005em",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-              transition: "background 0.2s ease, color 0.2s ease",
+              letterSpacing: "0.02em",
+              textTransform: "uppercase",
+              marginTop: "48px",
+              // CTA sits at the bottom-left, separate from the accent
+              // which is at the top-right. Creates diagonal composition.
             }}
-            className="nauka-cta-secondary"
           >
-            {t.ctaSecondary}
+            {t.cta}
+            <span aria-hidden="true" className="nauka-hero-cta-arrow">↘</span>
           </a>
         </div>
-
-        {/* Meta line — bottom of hero */}
-        <p
-          className="reveal reveal-delay-3"
-          style={{
-            fontFamily: "var(--font-body), sans-serif",
-            fontWeight: 400,
-            fontSize: "0.78rem",
-            color: "var(--ink-faint)",
-            margin: 0,
-            letterSpacing: "0.04em",
-            textTransform: "uppercase",
-          }}
-        >
-          {metaStr}
-        </p>
-      </div>
-    </section>
+      </section>
+    </HeroMotion>
   );
 }

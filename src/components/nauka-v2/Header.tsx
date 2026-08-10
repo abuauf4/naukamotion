@@ -1,7 +1,11 @@
 /**
- * Header V2 — minimal, typographic, integrated.
+ * Header V2.1 — minimal, typographic, integrated.
  *
- * V2 design principles:
+ * Redesign rule applied: REMOVE dual CTA pills from above-the-fold.
+ * Header now contains only: N mark + wordmark (left) + nav links (right).
+ * The single CTA ("View Work ↘") lives in the hero, not the header.
+ *
+ * V2 design principles (kept from V2.0):
  *   - Typography IS the navigation. No SaaS navbar look.
  *   - The N mark uses the existing favicon (RGBA, transparent + black N)
  *     with CSS filter to adapt to theme. No new logo asset created.
@@ -9,19 +13,9 @@
  *   - Mobile: wordmark + a single "Menu" trigger that opens an inline panel.
  *
  * Architecture:
- *   - The outer Header element is server-rendered (no `"use client"` here).
+ *   - The outer Header element is server-rendered.
  *   - HeaderInteractive (mobile menu toggle, scrolled state, locale switch)
- *     is the only client island. It receives navItems + locale as props
- *     so the server side can render the visible (non-interactive) parts.
- *
- * Performance:
- *   - V1 Header was a 4-useEffect client component with usePathname +
- *     useTheme + useLocale + scroll listener.
- *   - V2 HeaderInteractive has 2 useEffects (scroll + body-overflow-lock
- *     for mobile menu only). Theme + locale are read server-side via
- *     cookie/header inspection and passed as props where possible.
- *   - The visible nav renders in prerendered HTML (no hydration needed
- *     to see the wordmark + links).
+ *     is the only client island.
  */
 import Link from "next/link";
 import Image from "next/image";
@@ -46,10 +40,9 @@ export function Header({
   locale: "id" | "en";
 }) {
   const navItems = NAV[locale];
-  const ctaLabel = locale === "en" ? "Start a Project" : "Mulai Proyek";
 
   return (
-    <HeaderInteractive navItems={navItems} ctaLabel={ctaLabel} locale={locale}>
+    <HeaderInteractive navItems={navItems} locale={locale}>
       {/* Wordmark — server-rendered, visible before hydration */}
       <Link
         href="/"
@@ -75,10 +68,7 @@ export function Header({
             display: "block",
             width: 22,
             height: 22,
-            // Theme adaptation via CSS filter (handled in globals.css).
-            // Initial filter here as fallback.
-            filter:
-              "var(--nmark-filter, brightness(0))",
+            filter: "var(--nmark-filter, brightness(0))",
           }}
         />
         <span
@@ -95,7 +85,7 @@ export function Header({
         </span>
       </Link>
 
-      {/* Desktop nav — server-rendered, no JS needed for hover/focus */}
+      {/* Desktop nav — server-rendered, no JS needed */}
       <nav
         className="nauka-header-nav-desktop"
         style={{
@@ -123,27 +113,7 @@ export function Header({
           </Link>
         ))}
       </nav>
-
-      {/* Desktop CTA — typographic, not a SaaS button */}
-      <Link
-        href="/#kontak"
-        className="nauka-header-cta-desktop"
-        style={{
-          display: "none",
-          fontFamily: "var(--font-body), sans-serif",
-          fontWeight: 500,
-          fontSize: "0.85rem",
-          color: "var(--ink)",
-          textDecoration: "none",
-          padding: "8px 16px",
-          border: "1px solid var(--line-strong)",
-          borderRadius: "999px",
-          letterSpacing: "-0.005em",
-          transition: "background 0.2s ease, color 0.2s ease",
-        }}
-      >
-        {ctaLabel}
-      </Link>
     </HeaderInteractive>
   );
 }
+

@@ -23,7 +23,7 @@ const { chromium } = require('playwright');
     console.log(`Capturing ${vp.name}...`);
 
     // Capture mid-opening (at 600ms — letters are mid-reveal)
-    await page.goto('http://127.0.0.1:3131/', { waitUntil: 'domcontentloaded' });
+    await page.goto('http://127.0.0.1:3132/', { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(600);
     await page.screenshot({
       path: `/home/z/my-project/download/v2-${vp.name}-00-opening-mid.png`,

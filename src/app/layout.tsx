@@ -132,12 +132,18 @@ export default function RootLayout({
   const themeBootstrap = `try{var t=localStorage.getItem('nauka-theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark');}}catch(e){}`;
   // Inline locale bootstrap — sets <html lang> before paint based on cookie
   const localeBootstrap = `try{var c=document.cookie.split('; ').find(function(x){return x.indexOf('nauka-locale=')===0});var l=c?c.split('=')[1]:'id';document.documentElement.lang=l;}catch(e){}`;
+  // Inline hero bootstrap — adds `is-skipped` class before paint if the
+  // hero entrance animation has already played this session. This prevents
+  // a flash of the intro state on internal navigation. The animation runs
+  // only on the first visit per tab session.
+  const heroBootstrap = `try{if(sessionStorage.getItem('nauka-hero-played')){document.documentElement.classList.add('is-skipped');}}catch(e){}`;
 
   return (
     <html lang="id" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
         <script dangerouslySetInnerHTML={{ __html: localeBootstrap }} />
+        <script dangerouslySetInnerHTML={{ __html: heroBootstrap }} />
       </head>
       <body
         className={`${instrumentSans.variable} ${fraunces.variable} antialiased bg-background text-foreground`}

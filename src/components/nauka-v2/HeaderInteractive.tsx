@@ -29,12 +29,10 @@ export interface NavItem {
 export function HeaderInteractive({
   children,
   navItems,
-  ctaLabel,
   locale,
 }: {
   children: ReactNode;
   navItems: NavItem[];
-  ctaLabel: string;
   locale: "id" | "en";
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -187,22 +185,6 @@ export function HeaderInteractive({
               {item.label}
             </Link>
           ))}
-
-          <Link
-            href="/#kontak"
-            style={{
-              fontFamily: "var(--font-body), sans-serif",
-              fontWeight: 500,
-              fontSize: "0.95rem",
-              color: "var(--ink)",
-              textDecoration: "none",
-              padding: "12px 0",
-              marginTop: "16px",
-              borderBottom: "1px solid var(--line)",
-            }}
-          >
-            {ctaLabel}
-          </Link>
 
           <button
             type="button"

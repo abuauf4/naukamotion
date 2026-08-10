@@ -477,34 +477,105 @@
   --nmark-filter: brightness(0) invert(1);
 }
 
-/* Hero headline — letter-mask reveal.
-   Initial state: clipped to the right (invisible).
-   `.is-visible` (added by HeroMotion client island): clip expands left-to-right. */
-.nauka-hero-line {
+/* ─── V2.1 Hero entrance animation ───
+ *
+ * The opening IS the hero entrance. Letters appear in sequence and
+ * settle directly into their final hero positions. No separate overlay,
+ * no fade-out-then-new-hero.
+ *
+ * Session-gating: the `is-skipped` class is added to <html> by an inline
+ * script in layout.tsx BEFORE first paint (if sessionStorage has the
+ * flag). This prevents a flash of the intro state on internal navigation.
+ *
+ * Reduced-motion: all entrance animations are disabled via @media query.
+ */
+
+/* NAUKA letters — stagger entrance starting at 0ms */
+.nauka-hero-word-nauka .nauka-hero-letter {
   display: inline-block;
-  clip-path: inset(0 100% 0 0);
-  transform: translateY(0.2em);
   opacity: 0;
-  transition:
-    clip-path 0.8s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.4s ease;
+  transform: translateY(0.3em);
+  animation: nauka-hero-letter-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--letter-i, 0) * 50ms);
 }
-.nauka-hero-line.is-visible {
-  clip-path: inset(0 0 0 0);
-  transform: translateY(0);
-  opacity: 1;
+
+/* MOTION letters — stagger entrance starting at 300ms (overlaps with NAUKA) */
+.nauka-hero-word-motion .nauka-hero-letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.3em);
+  animation: nauka-hero-letter-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--letter-i, 0) * 50ms + 300ms);
 }
+
+@keyframes nauka-hero-letter-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Tiny editorial accent — fades in at 800ms */
+.nauka-hero-accent {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: nauka-hero-fade-in 0.4s ease 800ms forwards;
+}
+
+/* Single CTA — fades in at 950ms, arrow shifts slightly */
+.nauka-hero-cta {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: nauka-hero-fade-in 0.4s ease 950ms forwards;
+}
+
+@keyframes nauka-hero-fade-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* CTA arrow — subtle hover shift */
+.nauka-hero-cta-arrow {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+.nauka-hero-cta:hover .nauka-hero-cta-arrow {
+  transform: translate(2px, 2px);
+}
+
+/* Session-skipped state — disables all entrance animations.
+   Added to <html> by layout.tsx inline script before paint. */
+.is-skipped .nauka-hero-letter,
+.is-skipped .nauka-hero-accent,
+.is-skipped .nauka-hero-cta {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Reduced-motion hardening — disable all hero entrance animations. */
+@media (prefers-reduced-motion: reduce) {
+  .nauka-hero-letter,
+  .nauka-hero-accent,
+  .nauka-hero-cta {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ─── Header / nav CSS (unchanged from V2.0) ─── */
 
 /* Desktop / mobile visibility rules for Header. */
 @media (min-width: 768px) {
   .nauka-header-nav-desktop { display: flex !important; }
-  .nauka-header-cta-desktop { display: inline-flex !important; }
   .nauka-header-trigger-mobile { display: none !important; }
 }
 @media (max-width: 767px) {
   .nauka-header-nav-desktop { display: none !important; }
-  .nauka-header-cta-desktop { display: none !important; }
   .nauka-header-trigger-mobile { display: inline-flex !important; }
 }
 
@@ -513,47 +584,4 @@
   color: var(--ink);
 }
 
-/* CTA hover — typographic shift, no SaaS card style. */
-.nauka-cta-primary:hover {
-  transform: translateY(-1px);
-}
-.nauka-cta-secondary:hover {
-  background: var(--ink);
-  color: var(--paper);
-}
-
-/* Phase-2 placeholder — generous minimal sections that read as intentional,
-   not as "coming soon". Just type + spacing. */
-.nauka-phase2-placeholder {
-  padding: "clamp(80px, 14vw, 160px) 0";
-  border-top: 1px solid var(--line);
-}
-.nauka-phase2-placeholder-label {
-  font-family: var(--font-body), sans-serif;
-  font-size: 0.7rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  margin: 0 0 24px 0;
-}
-.nauka-phase2-placeholder-heading {
-  font-family: var(--font-fraunces), serif;
-  font-style: italic;
-  font-weight: 400;
-  font-size: clamp(1.8rem, 5vw, 3rem);
-  line-height: 1.05;
-  letter-spacing: -0.025em;
-  color: var(--ink);
-  margin: 0;
-  max-width: 22ch;
-}
-
-/* Reduced-motion hardening — disable hero mask + opening too. */
-@media (prefers-reduced-motion: reduce) {
-  .nauka-hero-line {
-    clip-path: none !important;
-    transform: none !important;
-    opacity: 1 !important;
-    transition: none !important;
-  }
-}
+/* ─── Phase 2 placeholder (unchanged) ─── */
