@@ -12,18 +12,20 @@ const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
 const apiKey = process.env.CLOUDINARY_API_KEY;
 const apiSecret = process.env.CLOUDINARY_API_SECRET;
 
-if (!cloudName || !apiKey || !apiSecret) {
-  throw new Error(
-    'CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET must be set'
-  );
+// Don't throw at build time — only throw at runtime if actually used without config
+const isConfigured = !!(cloudName && apiKey && apiSecret);
+
+if (isConfigured) {
+  cloudinary.config({
+    cloud_name: cloudName,
+    api_key: apiKey,
+    api_secret: apiSecret,
+    secure: true,
+  });
 }
 
-cloudinary.config({
-  cloud_name: cloudName,
-  api_key: apiKey,
-  api_secret: apiSecret,
-  secure: true,
-});
+// Export flag for runtime checks
+export const isCloudinaryConfigured = isConfigured;
 
 export { cloudinary };
 
@@ -68,6 +70,9 @@ export async function uploadToCloudinary(
   publicId: string,
   folder: string
 ): Promise<CloudinaryUploadResult> {
+  if (!isConfigured) {
+    throw new Error('Cloudinary is not configured. Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET.');
+  }
   return new Promise((resolve, reject) => {
     cloudinary.uploader
       .upload_stream(
@@ -104,6 +109,9 @@ export async function uploadToCloudinary(
  * Delete a Cloudinary asset by public_id.
  */
 export async function deleteFromCloudinary(publicId: string): Promise<void> {
+  if (!isConfigured) {
+    throw new Error('Cloudinary is not configured. Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET.');
+  }
   return new Promise((resolve, reject) => {
     cloudinary.uploader.destroy(publicId, (error, result) => {
       if (error) {
