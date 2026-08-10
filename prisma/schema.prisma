@@ -304,6 +304,11 @@ model ProjectMedia {
   sectionId   String? // nullable FK to CaseStudySection (see INVARIANT above)
   type        ProjectMediaType
   url         String
+  publicId    String? // Cloudinary public_id for asset lifecycle management
+  width       Int? // image width in pixels
+  height      Int? // image height in pixels
+  format      String? // image format: jpg, png, webp, etc.
+  bytes       Int? // file size in bytes
   alt         Json? // LocalizedText { id, en } nullable
   caption     Json? // LocalizedText { id, en } nullable
   sortOrder   Int              @default(0)
@@ -317,6 +322,7 @@ model ProjectMedia {
   @@index([sectionId])
   @@index([type])
   @@index([sortOrder])
+  @@index([publicId])
 }
 
 // ═════════════════════════════════════════════════
