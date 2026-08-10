@@ -24,6 +24,34 @@ interface Section {
   sortOrder: number;
 }
 
+// Staged error shape returned by POST /api/admin/projects/<slug>/media
+// when any stage of the upload pipeline fails.
+//
+// `stage` identifies which step failed:
+//   auth | project_lookup | parse_file | cloudinary_config
+//   | cloudinary_upload | database_save | unknown
+//
+// `cloudinaryConfigured` is the ONLY env-derived signal — boolean only.
+// Secrets (API key, secret, DATABASE_URL, JWT_SECRET) are NEVER exposed
+// by the API.
+interface UploadError {
+  stage: string;
+  error: string;
+  cloudinaryConfigured: boolean;
+}
+
+// Human-readable labels for each pipeline stage, used in the error box
+// so the admin knows which step failed without reading server logs.
+const STAGE_LABELS: Record<string, string> = {
+  auth: 'Auth',
+  project_lookup: 'Project Lookup',
+  parse_file: 'File Validation',
+  cloudinary_config: 'Cloudinary Config',
+  cloudinary_upload: 'Cloudinary Upload',
+  database_save: 'Database Save',
+  unknown: 'Unknown',
+};
+
 const MEDIA_GROUPS = [
   { type: 'cover', label: 'Cover', single: true },
   { type: 'og', label: 'OG Image', single: true },
@@ -45,7 +73,19 @@ export function MediaEditor({
   const [media, setMedia] = useState<MediaItem[]>(initialMedia);
   const [refreshKey, setRefreshKey] = useState(0);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [error, setError] = useState('');
+  // error can be a plain string (delete/reorder failures) or a structured
+  // UploadError (upload pipeline failures from POST /media).
+  const [error, setError] = useState<string | UploadError | null>(null);
+
+  // Helper: set a structured upload error
+  const setUploadError = useCallback((err: UploadError | null) => {
+    setError(err);
+  }, []);
+
+  // Helper: set a plain string error (for delete/reorder)
+  const setStringError = useCallback((msg: string) => {
+    setError(msg || null);
+  }, []);
 
   const refresh = useCallback(async () => {
     try {
@@ -93,17 +133,17 @@ export function MediaEditor({
       const res = await fetch(`/api/admin/media/${id}`, { method: 'DELETE' });
       if (!res.ok) {
         const data = await res.json();
-        setError(data.error || 'Delete failed');
+        setStringError(data.error || 'Delete failed');
         return;
       }
       const result = await res.json();
       if (result.warning) {
-        setError(result.warning);
-        setTimeout(() => setError(''), 5000);
+        setStringError(result.warning);
+        setTimeout(() => setStringError(''), 5000);
       }
       refresh();
     } catch {
-      setError('Delete failed');
+      setStringError('Delete failed');
     }
   }
 
@@ -115,8 +155,46 @@ export function MediaEditor({
           borderRadius: '8px', padding: '12px 16px', marginBottom: '16px',
           fontFamily: 'var(--font-body), sans-serif', fontSize: '0.85rem', color: 'var(--burnt)',
         }}>
-          {error}
-          <button onClick={() => setError('')} style={{ float: 'right', background: 'none', border: 'none', color: 'var(--burnt)', cursor: 'pointer', fontWeight: 600 }}>×</button>
+          {typeof error === 'string' ? (
+            <span>{error}</span>
+          ) : (
+            <div>
+              <div style={{
+                fontFamily: 'var(--font-mono), monospace',
+                fontSize: '0.65rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                marginBottom: '6px',
+                opacity: 0.85,
+              }}>
+                Upload failed at stage: {STAGE_LABELS[error.stage] || error.stage}
+                {!error.cloudinaryConfigured && (
+                  <span style={{ marginLeft: '8px', fontWeight: 600 }}>
+                    · Cloudinary NOT configured
+                  </span>
+                )}
+              </div>
+              <div>{error.error}</div>
+              {!error.cloudinaryConfigured && (
+                <div style={{
+                  marginTop: '6px',
+                  fontSize: '0.75rem',
+                  opacity: 0.85,
+                }}>
+                  Server env vars missing. Set CLOUDINARY_CLOUD_NAME,
+                  CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET in Vercel
+                  Project Settings.
+                </div>
+              )}
+            </div>
+          )}
+          <button
+            onClick={() => setError(null)}
+            style={{
+              float: 'right', background: 'none', border: 'none',
+              color: 'var(--burnt)', cursor: 'pointer', fontWeight: 600,
+            }}
+          >×</button>
         </div>
       )}
 
@@ -199,7 +277,7 @@ export function MediaEditor({
                   sections={sections}
                   label="Replace"
                   onUploaded={refresh}
-                  onError={setError}
+                  onError={setUploadError}
                 />
               ) : (
                 <UploadButton
@@ -208,7 +286,7 @@ export function MediaEditor({
                   sections={sections}
                   label="+ Add Image"
                   onUploaded={refresh}
-                  onError={setError}
+                  onError={setUploadError}
                 />
               )}
             </div>
@@ -241,10 +319,13 @@ function UploadButton({
   sections: Section[];
   label: string;
   onUploaded: () => void;
-  onError: (msg: string) => void;
+  // onError now receives a structured UploadError OR null (to clear).
+  // String-only errors from the legacy path are wrapped client-side.
+  onError: (err: UploadError | null) => void;
 }) {
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
+  const [saved, setSaved] = useState(false);
   const [sectionId, setSectionId] = useState('');
   const [altId, setAltId] = useState('');
   const [altEn, setAltEn] = useState('');
@@ -256,21 +337,32 @@ function UploadButton({
     const file = e.target.files?.[0];
     if (!file) return;
     setPreview(URL.createObjectURL(file));
+    // Clear any prior error when a new file is picked
+    onError(null);
+    setSaved(false);
   }
 
   async function handleUpload() {
     const file = fileRef.current?.files?.[0];
     if (!file) {
-      onError('Please select a file');
+      onError({
+        stage: 'parse_file',
+        error: 'Please select a file',
+        cloudinaryConfigured: true,
+      });
       return;
     }
     if (needsSection && !sectionId) {
-      onError('Please select a section for section media');
+      onError({
+        stage: 'parse_file',
+        error: 'Please select a section for section media',
+        cloudinaryConfigured: true,
+      });
       return;
     }
 
     setUploading(true);
-    onError('');
+    onError(null);
 
     try {
       const formData = new FormData();
@@ -285,25 +377,59 @@ function UploadButton({
         body: formData,
       });
 
+      // Parse JSON regardless of status — both success and failure return JSON
+      const data = await res.json().catch(() => ({}));
+
       if (!res.ok) {
-        const data = await res.json();
-        onError(data.error || 'Upload failed');
+        // Failure — extract structured error if API returned one,
+        // otherwise synthesize an unknown-stage error from data.error
+        const uploadErr: UploadError = {
+          stage: data.stage || 'unknown',
+          error: data.error || `Upload failed (HTTP ${res.status})`,
+          cloudinaryConfigured:
+            typeof data.cloudinaryConfigured === 'boolean'
+              ? data.cloudinaryConfigured
+              : true,
+        };
+        onError(uploadErr);
         setUploading(false);
         return;
       }
 
-      // Reset
-      setPreview(null);
-      setSectionId('');
-      setAltId('');
-      setAltEn('');
-      if (fileRef.current) fileRef.current.value = '';
+      // Success — API returned the persisted ProjectMedia row.
+      // Show "Tersimpan" briefly, then refresh parent list + reset form.
+      // The presence of `data.id` confirms the row was persisted to Neon.
+      if (!data.id) {
+        // Defensive: response was 2xx but no persisted row was returned.
+        onError({
+          stage: 'unknown',
+          error: 'Upload reported success but no persisted media row was returned',
+          cloudinaryConfigured: true,
+        });
+        setUploading(false);
+        return;
+      }
 
-      onUploaded();
+      setUploading(false);
+      setSaved(true);
+      // Brief "Tersimpan" flash, then reset local state and refresh parent
+      setTimeout(() => {
+        setPreview(null);
+        setSectionId('');
+        setAltId('');
+        setAltEn('');
+        if (fileRef.current) fileRef.current.value = '';
+        setSaved(false);
+        onUploaded();
+      }, 1200);
     } catch {
-      onError('Network error during upload');
+      onError({
+        stage: 'unknown',
+        error: 'Network error during upload — could not reach the server',
+        cloudinaryConfigured: true,
+      });
+      setUploading(false);
     }
-    setUploading(false);
   }
 
   return (
@@ -342,24 +468,68 @@ function UploadButton({
           style={{ fontSize: '0.8rem', flex: 1, minWidth: '120px' }}
         />
         {preview && (
-          <div style={{ position: 'relative', width: '60px', height: '45px', borderRadius: '4px', overflow: 'hidden', border: '1px solid var(--line)' }}>
+          <div style={{
+            position: 'relative',
+            width: '60px',
+            height: '45px',
+            borderRadius: '4px',
+            overflow: 'hidden',
+            border: '1px solid var(--line)',
+          }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={preview} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            {/* Status badge overlay — only shown when preview exists */}
+            {!uploading && !saved && (
+              <span style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                background: 'rgba(216,90,42,0.85)',
+                color: 'var(--paper)',
+                fontFamily: 'var(--font-mono), monospace',
+                fontSize: '0.55rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                padding: '1px 4px',
+                textAlign: 'center',
+              }}>
+                Belum tersimpan
+              </span>
+            )}
+            {saved && (
+              <span style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                background: 'rgba(13,148,136,0.9)',
+                color: 'var(--paper)',
+                fontFamily: 'var(--font-mono), monospace',
+                fontSize: '0.55rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                padding: '1px 4px',
+                textAlign: 'center',
+              }}>
+                Tersimpan ✓
+              </span>
+            )}
           </div>
         )}
         <button
           onClick={handleUpload}
-          disabled={uploading || !preview}
+          disabled={uploading || !preview || saved}
           style={{
             padding: '8px 16px', fontFamily: 'var(--font-body), sans-serif', fontWeight: 500,
             fontSize: '0.85rem', color: 'var(--paper)',
-            background: uploading ? 'var(--ink-faint)' : 'var(--ink)',
+            background: uploading || saved ? 'var(--ink-faint)' : 'var(--ink)',
             border: 'none', borderRadius: '6px',
-            cursor: uploading || !preview ? 'not-allowed' : 'pointer',
+            cursor: uploading || !preview || saved ? 'not-allowed' : 'pointer',
             opacity: !preview ? 0.5 : 1,
           }}
         >
-          {uploading ? 'Uploading...' : label}
+          {uploading ? 'Mengunggah...' : saved ? 'Tersimpan ✓' : label}
         </button>
       </div>
 
