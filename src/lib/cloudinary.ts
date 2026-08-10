@@ -64,21 +64,34 @@ export interface CloudinaryUploadResult {
 /**
  * Upload a file buffer to Cloudinary.
  * Server-side only — uses API_SECRET.
+ *
+ * `publicId` MUST include the full folder path (e.g.
+ * "nauka-motion/projects/<slug>/cover/current"). Cloudinary will create
+ * intermediate folders automatically based on the public_id's path segments.
+ *
+ * The `folder` parameter is retained in the signature for backwards
+ * compatibility with existing callers but is NOT passed to the Cloudinary
+ * SDK — see the inline comment inside this function for the rationale.
  */
 export async function uploadToCloudinary(
   fileBuffer: Buffer,
   publicId: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   folder: string
 ): Promise<CloudinaryUploadResult> {
   if (!isConfigured) {
     throw new Error('Cloudinary is not configured. Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET.');
   }
+  // NOTE: do NOT pass `folder` here. The `publicId` parameter already
+  // includes the full folder path (e.g. "nauka-motion/projects/<slug>/cover/current").
+  // Passing `folder` alongside `public_id` causes Cloudinary to prepend the
+  // folder again, resulting in a duplicated path like:
+  //   "nauka-motion/projects/<slug>/cover/nauka-motion/projects/<slug>/cover/current"
   return new Promise((resolve, reject) => {
     cloudinary.uploader
       .upload_stream(
         {
           public_id: publicId,
-          folder: folder,
           resource_type: 'image',
           overwrite: true,
         },

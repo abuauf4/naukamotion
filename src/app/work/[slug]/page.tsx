@@ -35,6 +35,23 @@ import type {
 
 type Params = { params: Promise<{ slug: string }> };
 
+// ─── ISR — required so revalidatePath() actually invalidates the Vercel CDN cache ───
+//
+// Without `revalidate`, this page is pure SSG (statically prerendered at build
+// time). On Vercel, `revalidatePath()` invoked from admin mutations (e.g.
+// ProjectMedia cover upload) does NOT invalidate the CDN edge cache for pure
+// SSG routes — the cached HTML keeps being served indefinitely.
+//
+// Setting `revalidate = 60` makes the page ISR:
+//   - Vercel serves cached HTML but revalidates at most every 60 seconds.
+//   - When `revalidatePath('/work/<slug>', 'page')` is called by the upload
+//     route, the next request triggers a fresh regeneration and the new
+//     Cloudinary cover URL appears within ~60 seconds.
+//
+// This is the minimum change needed to make admin media uploads visible on
+// the public portfolio without a full Vercel redeploy.
+export const revalidate = 60;
+
 export async function generateStaticParams() {
   const cats = await getCategories();
   const catSlugs = cats.map((c) => ({ slug: c.slug }));

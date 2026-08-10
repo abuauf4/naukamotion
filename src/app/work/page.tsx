@@ -14,6 +14,10 @@ import type { CategorySlug } from "@/lib/studio-data";
  * Server component fetches from CMS source selector.
  */
 
+// ISR — required so revalidatePath('/work', 'page') from admin cover/og
+// mutations actually invalidates the Vercel CDN cache for this route.
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "Kategori Proyek",
   description:

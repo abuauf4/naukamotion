@@ -20,6 +20,10 @@ import type { CategorySlug } from "@/lib/studio-data";
  * Server component fetches portfolio data from CMS source selector,
  * passes serializable props to client components.
  */
+// ISR — required so revalidatePath('/', 'page') from admin cover/og
+// mutations actually invalidates the Vercel CDN cache for the homepage.
+export const revalidate = 60;
+
 export default async function HomePage() {
   // Fetch categories from CMS (static or database depending on CMS_DATA_SOURCE)
   const categories = await getCategories();
