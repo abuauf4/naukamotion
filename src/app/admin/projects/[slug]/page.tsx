@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { SectionsEditor } from '@/components/admin/SectionsEditor';
 
 interface ProjectData {
   slug: string;
@@ -26,6 +27,19 @@ interface ProjectData {
   techIntro: { id: string; en: string } | null;
   nextProjectSlug: string | null;
   _count?: { sections: number; technologies: number };
+  sections?: Array<{
+    id: string;
+    sortOrder: number;
+    heading: { id: string; en: string };
+    body: Array<{ id: string; en: string }>;
+    bullets: Array<{ id: string; en: string }> | null;
+  }>;
+  technologies?: Array<{
+    id: string;
+    name: string;
+    description: { id: string; en: string };
+    sortOrder: number;
+  }>;
 }
 
 interface Category { slug: string; title: string; }
@@ -299,13 +313,19 @@ export default function AdminProjectEditorPage() {
         </div>
       )}
 
-      {/* Story tab placeholder */}
+      {/* Story tab — Sections editor */}
       {activeTab === 'story' && (
-        <div style={{ padding: '48px', textAlign: 'center', color: 'var(--ink-faint)' }}>
-          <p style={{ fontFamily: 'var(--font-body), sans-serif', fontSize: '1rem' }}>Case Study Sections editor — coming in Milestone 4</p>
-          <p style={{ fontFamily: 'var(--font-mono), monospace', fontSize: '0.7rem', marginTop: '8px' }}>
-            {project?._count?.sections ?? 0} sections currently exist for this project
-          </p>
+        <div>
+          {isNew ? (
+            <div style={{ padding: '48px', textAlign: 'center', color: 'var(--ink-faint)' }}>
+              <p style={{ fontFamily: 'var(--font-body), sans-serif', fontSize: '0.95rem' }}>Save the project first, then add case study sections.</p>
+            </div>
+          ) : (
+            <SectionsEditor
+              projectSlug={slug}
+              initialSections={project?.sections ?? []}
+            />
+          )}
         </div>
       )}
 
