@@ -56,10 +56,66 @@ export async function getAdminFromRequest(request: Request): Promise<AdminSessio
 }
 
 /**
- * Require admin authentication in API route.
- * Returns admin session or throws a 401 Response.
+ * Verify same-origin / CSRF protection for mutation requests.
+ * Checks that the Origin or Referer header matches the expected site origin.
+ * This prevents cross-site request forgery even with SameSite=lax cookies
+ * (which allow top-level GET navigations from cross-origin).
+ *
+ * For mutation methods (POST, PUT, DELETE, PATCH), the browser sends
+ * an Origin header. We verify it matches our known site URL.
+ */
+export function isSameOrigin(request: Request): boolean {
+  const origin = request.headers.get('origin');
+  const referer = request.headers.get('referer');
+  const host = request.headers.get('host');
+
+  // In production, verify against known site URL
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || `https://${host}`;
+  const allowedOrigins = [siteUrl];
+
+  // Also allow localhost in development
+  if (process.env.NODE_ENV !== 'production') {
+    allowedOrigins.push(`http://${host}`);
+    allowedOrigins.push(`http://localhost:3000`);
+    allowedOrigins.push(`http://localhost:3001`);
+  }
+
+  // Check Origin header (preferred for CSRF)
+  if (origin) {
+    return allowedOrigins.some(allowed => origin === allowed);
+  }
+
+  // Fallback: check Referer header
+  if (referer) {
+    try {
+      const refererUrl = new URL(referer);
+      return allowedOrigins.some(allowed => {
+        const allowedUrl = new URL(allowed);
+        return refererUrl.origin === allowedUrl.origin;
+      });
+    } catch {
+      return false;
+    }
+  }
+
+  // If neither Origin nor Referer present, reject in production
+  // (browsers always send these for cross-origin requests)
+  return process.env.NODE_ENV !== 'production';
+}
+
+/**
+ * Require admin authentication AND same-origin for mutation requests.
+ * Returns admin session or throws an appropriate error Response.
  */
 export async function requireAdmin(request: Request): Promise<AdminSession> {
+  // Check same-origin first (CSRF protection)
+  if (!isSameOrigin(request)) {
+    throw new Response(JSON.stringify({ error: 'Forbidden: cross-origin request' }), {
+      status: 403,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
   const admin = await getAdminFromRequest(request);
   if (!admin) {
     throw new Response(JSON.stringify({ error: 'Unauthorized' }), {

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/cms/db';
-import { getAdminFromRequest } from '@/lib/admin-auth';
+import { requireAdmin } from '@/lib/admin-auth';
 
 export async function GET(request: NextRequest) {
   try {
@@ -37,8 +37,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const admin = await getAdminFromRequest(request);
-    if (!admin) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const admin = await requireAdmin(request);
 
     const body = await request.json();
 

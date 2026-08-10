@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/cms/db';
-import { getAdminFromRequest } from '@/lib/admin-auth';
+import { requireAdmin } from '@/lib/admin-auth';
 
 type Params = { params: Promise<{ id: string }> };
 
 export async function PUT(request: NextRequest, { params }: Params) {
   try {
-    const admin = await getAdminFromRequest(request);
-    if (!admin) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const admin = await requireAdmin(request);
 
     const { id } = await params;
     const body = await request.json();
@@ -37,8 +36,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
 
 export async function DELETE(request: NextRequest, { params }: Params) {
   try {
-    const admin = await getAdminFromRequest(request);
-    if (!admin) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const admin = await requireAdmin(request);
 
     const { id } = await params;
     const existing = await prisma.caseStudySection.findUnique({ where: { id } });
