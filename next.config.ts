@@ -1,14 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: "standalone",
-  // Type errors now block the build — keeps the codebase honest.
-  // All previous TS errors have been resolved (Stage 7 + 8 cleanup).
-  typescript: {
-    ignoreBuildErrors: false,
-  },
-  // Strict mode helps catch issues early in development.
-  reactStrictMode: true,
+  // Vercel handles output automatically — standalone is for custom servers
+  // typescript: {
+  //   ignoreBuildErrors: false,
+  // },
+  // reactStrictMode: true,
   images: {
     remotePatterns: [
       {
