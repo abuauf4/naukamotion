@@ -66,26 +66,26 @@ export default function AdminProjectsPage() {
       </div>
 
       {/* Filters */}
-      <div style={{ display: 'flex', gap: '12px', marginBottom: '24px', flexWrap: 'wrap' }}>
-        <input type="text" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} style={{ flex: 1, minWidth: '150px', padding: '8px 12px', fontFamily: 'var(--font-body), sans-serif', fontSize: '0.85rem', color: 'var(--ink)', background: 'var(--bg)', border: '1px solid var(--line-strong)', borderRadius: '8px', outline: 'none' }} />
-        <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)} style={selectStyle}>
+      <div className="admin-filters">
+        <input type="text" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} className="admin-filter-input" />
+        <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)} className="admin-filter-select">
           <option value="">All Categories</option>
           {categories.map(c => <option key={c.slug} value={c.slug}>{c.title}</option>)}
         </select>
-        <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} style={selectStyle}>
+        <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className="admin-filter-select">
           <option value="">All Status</option>
           <option value="published">Published</option>
           <option value="development">Development</option>
           <option value="draft">Draft</option>
         </select>
-        <select value={filterType} onChange={(e) => setFilterType(e.target.value)} style={selectStyle}>
+        <select value={filterType} onChange={(e) => setFilterType(e.target.value)} className="admin-filter-select">
           <option value="">All Types</option>
           <option value="client">Client</option>
           <option value="personal">Personal</option>
           <option value="collaboration">Collaboration</option>
           <option value="internal">Internal</option>
         </select>
-        <select value={filterVisibility} onChange={(e) => setFilterVisibility(e.target.value)} style={selectStyle}>
+        <select value={filterVisibility} onChange={(e) => setFilterVisibility(e.target.value)} className="admin-filter-select">
           <option value="">All Visibility</option>
           <option value="public">Public</option>
           <option value="private">Private</option>
@@ -125,7 +125,36 @@ export default function AdminProjectsPage() {
           ))}
         </div>
       )}
-      <style>{`.admin-project-row:hover { border-color: var(--burnt) !important; }`}</style>
+      <style>{`
+        .admin-filters {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 8px;
+          margin-bottom: 20px;
+        }
+        .admin-filter-input, .admin-filter-select {
+          width: 100%;
+          padding: 8px 12px;
+          font-family: var(--font-body), sans-serif;
+          font-size: 0.85rem;
+          color: var(--ink);
+          background: var(--bg);
+          border: 1px solid var(--line-strong);
+          border-radius: 8px;
+          outline: none;
+          box-sizing: border-box;
+        }
+        .admin-filter-select { cursor: pointer; }
+        @media (min-width: 769px) {
+          .admin-filters {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+          }
+          .admin-filter-input { flex: 1; min-width: 150px; }
+        }
+        .admin-project-row:hover { border-color: var(--burnt) !important; }
+      `}</style>
     </main>
   );
 }

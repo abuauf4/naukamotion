@@ -181,7 +181,7 @@ export default function AdminProjectEditorPage() {
 
       {/* Overview tab */}
       {activeTab === 'overview' && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
+        <div className="admin-form-grid">
           {/* Slug */}
           <div>
             <label style={labelStyle}>Slug {!isNew && '(permanent)'}</label>
@@ -346,6 +346,19 @@ export default function AdminProjectEditorPage() {
           )}
         </div>
       )}
+      <style>{`
+        .admin-form-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+        @media (min-width: 769px) {
+          .admin-form-grid {
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+          }
+        }
+      `}</style>
     </main>
   );
 }

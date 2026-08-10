@@ -117,7 +117,7 @@ export function TechnologiesEditor({
         </div>
         {hasTechIntro && (
           <>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px', marginBottom: '12px' }}>
               <div>
                 <label style={labelStyle}>Intro (Indonesia)</label>
                 <textarea value={techIntro.id} onChange={(e) => setTechIntro({ ...techIntro, id: e.target.value })} rows={3} style={{ ...inputStyle, marginBottom: 0, resize: 'vertical' }} placeholder="Paragraf pembuka untuk section teknologi..." />
@@ -236,7 +236,7 @@ function TechForm({
           <label style={labelStyle}>Technology Name</label>
           <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Next.js" required style={inputStyle} />
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px' }}>
           <div>
             <label style={labelStyle}>Description (Indonesia)</label>
             <textarea value={descId} onChange={(e) => setDescId(e.target.value)} rows={3} placeholder="Alasan penggunaan (biarkan kosong jika tidak ada)..." style={{ ...inputStyle, marginBottom: 0, resize: 'vertical' }} />

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -20,7 +20,12 @@ const FUTURE_ITEMS = [
 
 export function AdminNav({ adminName }: { adminName: string }) {
   const pathname = usePathname();
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  // Close drawer on route change
+  useEffect(() => {
+    setDrawerOpen(false);
+  }, [pathname]);
 
   function isActive(href: string): boolean {
     if (href === '/admin') return pathname === '/admin';
@@ -34,80 +39,310 @@ export function AdminNav({ adminName }: { adminName: string }) {
 
   return (
     <>
-      {/* Mobile top bar */}
-      <div className="admin-mobile-bar" style={{
-        display: 'none',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '12px 16px',
-        borderBottom: '1px solid var(--line)',
-        background: 'var(--bg-card)',
-        position: 'sticky',
-        top: 0,
-        zIndex: 10,
-      }}>
-        <span style={{ fontFamily: 'var(--font-body), sans-serif', fontWeight: 600, fontSize: '1rem', color: 'var(--ink)' }}>
-          NAUKA <span style={{ fontFamily: 'var(--font-fraunces), serif', fontStyle: 'italic', fontWeight: 400, color: 'var(--burnt)' }}>motion</span>
+      {/* ─── Mobile top bar ─── */}
+      <div className="admin-mobile-topbar">
+        <span className="admin-logo">
+          NAUKA{' '}
+          <span className="admin-logo-accent">motion</span>
         </span>
-        <button onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle menu" style={{ background: 'none', border: '1px solid var(--line-strong)', borderRadius: '8px', padding: '8px', cursor: 'pointer', color: 'var(--ink)' }}>
+        <button
+          onClick={() => setDrawerOpen(!drawerOpen)}
+          aria-label="Toggle menu"
+          className="admin-hamburger"
+        >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            {mobileOpen ? <path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" /> : <path d="M4 6h16M4 12h16M4 18h16" strokeLinecap="round" strokeLinejoin="round" />}
+            {drawerOpen
+              ? <path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
+              : <path d="M4 6h16M4 12h16M4 18h16" strokeLinecap="round" strokeLinejoin="round" />}
           </svg>
         </button>
       </div>
 
-      {/* Mobile dropdown */}
-      {mobileOpen && (
-        <div className="admin-mobile-dropdown" style={{ display: 'none', background: 'var(--bg-card)', borderBottom: '1px solid var(--line)', padding: '12px 16px' }}>
-          {NAV_ITEMS.map((item) => (
-            <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)} style={{ display: 'block', padding: '10px 12px', fontFamily: 'var(--font-body), sans-serif', fontSize: '0.95rem', color: isActive(item.href) ? 'var(--burnt)' : 'var(--ink-soft)', textDecoration: 'none', borderRadius: '8px', marginBottom: '4px', background: isActive(item.href) ? 'rgba(216, 90, 42, 0.08)' : 'transparent' }}>
-              {item.label}
-            </Link>
-          ))}
-          <div style={{ height: '1px', background: 'var(--line)', margin: '12px 0' }} />
-          <div style={{ padding: '8px 12px', fontFamily: 'var(--font-mono), monospace', fontSize: '0.7rem', color: 'var(--ink-faint)' }}>{adminName}</div>
-          <button onClick={handleLogout} style={{ display: 'block', width: '100%', padding: '10px 12px', fontFamily: 'var(--font-body), sans-serif', fontSize: '0.95rem', color: 'var(--burnt)', background: 'none', border: 'none', textAlign: 'left', cursor: 'pointer' }}>Logout</button>
+      {/* ─── Mobile drawer overlay ─── */}
+      {drawerOpen && (
+        <div className="admin-drawer-overlay" onClick={() => setDrawerOpen(false)}>
+          <div className="admin-drawer" onClick={(e) => e.stopPropagation()}>
+            {NAV_ITEMS.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`admin-drawer-link ${isActive(item.href) ? 'active' : ''}`}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d={item.icon} />
+                </svg>
+                {item.label}
+              </Link>
+            ))}
+            <div className="admin-drawer-divider" />
+            <div className="admin-drawer-user">{adminName}</div>
+            <button onClick={handleLogout} className="admin-drawer-logout">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              Logout
+            </button>
+          </div>
         </div>
       )}
 
-      {/* Desktop sidebar */}
-      <aside className="admin-sidebar" style={{ width: '240px', flexShrink: 0, borderRight: '1px solid var(--line)', background: 'var(--bg-card)', padding: '24px 16px', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-        <div style={{ marginBottom: '32px', padding: '0 8px' }}>
-          <span style={{ fontFamily: 'var(--font-body), sans-serif', fontWeight: 600, fontSize: '1.1rem', color: 'var(--ink)' }}>
-            NAUKA <span style={{ fontFamily: 'var(--font-fraunces), serif', fontStyle: 'italic', fontWeight: 400, color: 'var(--burnt)' }}>motion</span>
+      {/* ─── Desktop sidebar ─── */}
+      <aside className="admin-sidebar">
+        <div className="admin-sidebar-header">
+          <span className="admin-logo">
+            NAUKA{' '}
+            <span className="admin-logo-accent">motion</span>
           </span>
-          <p style={{ fontFamily: 'var(--font-mono), monospace', fontSize: '0.6rem', color: 'var(--ink-faint)', letterSpacing: '0.15em', textTransform: 'uppercase', marginTop: '4px' }}>Admin CMS</p>
+          <p className="admin-sidebar-sub">Admin CMS</p>
         </div>
-        <nav style={{ flex: 1 }}>
+        <nav className="admin-sidebar-nav">
           {NAV_ITEMS.map((item) => (
-            <Link key={item.href} href={item.href} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 12px', fontFamily: 'var(--font-body), sans-serif', fontSize: '0.9rem', fontWeight: isActive(item.href) ? 500 : 400, color: isActive(item.href) ? 'var(--burnt)' : 'var(--ink-soft)', textDecoration: 'none', borderRadius: '8px', marginBottom: '4px', background: isActive(item.href) ? 'rgba(216, 90, 42, 0.08)' : 'transparent' }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={item.icon} /></svg>
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`admin-nav-link ${isActive(item.href) ? 'active' : ''}`}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d={item.icon} />
+              </svg>
               {item.label}
             </Link>
           ))}
-          <div style={{ height: '1px', background: 'var(--line)', margin: '16px 0' }} />
-          <p style={{ fontFamily: 'var(--font-mono), monospace', fontSize: '0.6rem', color: 'var(--ink-faint)', letterSpacing: '0.1em', textTransform: 'uppercase', padding: '0 12px', marginBottom: '8px' }}>Coming Soon</p>
+          <div className="admin-sidebar-divider" />
+          <p className="admin-sidebar-label">Coming Soon</p>
           {FUTURE_ITEMS.map((item) => (
-            <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 12px', fontFamily: 'var(--font-body), sans-serif', fontSize: '0.9rem', color: 'var(--ink-faint)', borderRadius: '8px', marginBottom: '4px', opacity: 0.5 }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={item.icon} /></svg>
+            <div key={item.label} className="admin-nav-future">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d={item.icon} />
+              </svg>
               {item.label}
             </div>
           ))}
         </nav>
-        <div style={{ paddingTop: '16px', borderTop: '1px solid var(--line)' }}>
-          <div style={{ padding: '8px 12px', fontFamily: 'var(--font-mono), monospace', fontSize: '0.7rem', color: 'var(--ink-faint)' }}>{adminName}</div>
-          <button onClick={handleLogout} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 12px', fontFamily: 'var(--font-body), sans-serif', fontSize: '0.9rem', color: 'var(--burnt)', background: 'none', border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left' }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+        <div className="admin-sidebar-footer">
+          <div className="admin-sidebar-user">{adminName}</div>
+          <button onClick={handleLogout} className="admin-sidebar-logout">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
             Logout
           </button>
         </div>
       </aside>
 
       <style>{`
+        /* ─── Shared styles ─── */
+        .admin-logo {
+          font-family: var(--font-body), sans-serif;
+          font-weight: 600;
+          font-size: 1rem;
+          color: var(--ink);
+        }
+        .admin-logo-accent {
+          font-family: var(--font-fraunces), serif;
+          font-style: italic;
+          font-weight: 400;
+          color: var(--burnt);
+        }
+
+        /* ─── Mobile topbar (hidden on desktop) ─── */
+        .admin-mobile-topbar {
+          display: none;
+          align-items: center;
+          justify-content: space-between;
+          padding: 12px 16px;
+          border-bottom: 1px solid var(--line);
+          background: var(--bg-card);
+          position: sticky;
+          top: 0;
+          z-index: 50;
+          width: 100%;
+          box-sizing: border-box;
+        }
+        .admin-hamburger {
+          background: none;
+          border: 1px solid var(--line-strong);
+          border-radius: 8px;
+          padding: 8px;
+          cursor: pointer;
+          color: var(--ink);
+          flex-shrink: 0;
+        }
+
+        /* ─── Mobile drawer overlay ─── */
+        .admin-drawer-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.4);
+          z-index: 100;
+          display: none;
+        }
+        .admin-drawer {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 260px;
+          max-width: 80vw;
+          height: 100%;
+          background: var(--bg-card);
+          border-right: 1px solid var(--line);
+          padding: 20px 16px;
+          display: flex;
+          flex-direction: column;
+          box-shadow: 2px 0 12px rgba(0,0,0,0.15);
+          overflow-y: auto;
+        }
+        .admin-drawer-link {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 12px;
+          font-family: var(--font-body), sans-serif;
+          font-size: 0.95rem;
+          font-weight: 400;
+          color: var(--ink-soft);
+          text-decoration: none;
+          border-radius: 8px;
+          margin-bottom: 4px;
+        }
+        .admin-drawer-link.active {
+          font-weight: 500;
+          color: var(--burnt);
+          background: rgba(216, 90, 42, 0.08);
+        }
+        .admin-drawer-divider {
+          height: 1px;
+          background: var(--line);
+          margin: 12px 0;
+        }
+        .admin-drawer-user {
+          padding: 8px 12px;
+          font-family: var(--font-mono), monospace;
+          font-size: 0.7rem;
+          color: var(--ink-faint);
+        }
+        .admin-drawer-logout {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 12px;
+          font-family: var(--font-body), sans-serif;
+          font-size: 0.95rem;
+          color: var(--burnt);
+          background: none;
+          border: none;
+          cursor: pointer;
+          width: 100%;
+          text-align: left;
+        }
+
+        /* ─── Desktop sidebar (hidden on mobile) ─── */
+        .admin-sidebar {
+          width: 240px;
+          flex-shrink: 0;
+          border-right: 1px solid var(--line);
+          background: var(--bg-card);
+          padding: 24px 16px;
+          display: flex;
+          flex-direction: column;
+          min-height: 100vh;
+          box-sizing: border-box;
+        }
+        .admin-sidebar-header {
+          margin-bottom: 32px;
+          padding: 0 8px;
+        }
+        .admin-sidebar-sub {
+          font-family: var(--font-mono), monospace;
+          font-size: 0.6rem;
+          color: var(--ink-faint);
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
+          margin-top: 4px;
+        }
+        .admin-sidebar-nav {
+          flex: 1;
+        }
+        .admin-nav-link {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 10px 12px;
+          font-family: var(--font-body), sans-serif;
+          font-size: 0.9rem;
+          font-weight: 400;
+          color: var(--ink-soft);
+          text-decoration: none;
+          border-radius: 8px;
+          margin-bottom: 4px;
+        }
+        .admin-nav-link.active {
+          font-weight: 500;
+          color: var(--burnt);
+          background: rgba(216, 90, 42, 0.08);
+        }
+        .admin-sidebar-divider {
+          height: 1px;
+          background: var(--line);
+          margin: 16px 0;
+        }
+        .admin-sidebar-label {
+          font-family: var(--font-mono), monospace;
+          font-size: 0.6rem;
+          color: var(--ink-faint);
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          padding: 0 12px;
+          margin-bottom: 8px;
+        }
+        .admin-nav-future {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 10px 12px;
+          font-family: var(--font-body), sans-serif;
+          font-size: 0.9rem;
+          color: var(--ink-faint);
+          border-radius: 8px;
+          margin-bottom: 4px;
+          opacity: 0.5;
+        }
+        .admin-sidebar-footer {
+          padding-top: 16px;
+          border-top: 1px solid var(--line);
+        }
+        .admin-sidebar-user {
+          padding: 8px 12px;
+          font-family: var(--font-mono), monospace;
+          font-size: 0.7rem;
+          color: var(--ink-faint);
+        }
+        .admin-sidebar-logout {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 10px 12px;
+          font-family: var(--font-body), sans-serif;
+          font-size: 0.9rem;
+          color: var(--burnt);
+          background: none;
+          border: none;
+          cursor: pointer;
+          width: 100%;
+          text-align: left;
+        }
+
+        /* ─── Mobile breakpoint ─── */
         @media (max-width: 768px) {
-          .admin-sidebar { display: none !important; }
-          .admin-mobile-bar { display: flex !important; }
-          .admin-mobile-dropdown { display: block !important; }
+          .admin-mobile-topbar {
+            display: flex;
+          }
+          .admin-drawer-overlay {
+            display: block;
+          }
+          .admin-sidebar {
+            display: none;
+          }
         }
       `}</style>
     </>

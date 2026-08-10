@@ -206,11 +206,12 @@ function SectionForm({
   }
 
   return (
+    <>
     <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid var(--line)' }}>
       {error && <div style={{ color: 'var(--burnt)', fontSize: '0.8rem', marginBottom: '12px' }}>{error}</div>}
 
       {/* Heading */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
+      <div className="admin-section-heading-grid">
         <div>
           <label style={labelStyle}>Heading (ID)</label>
           <input type="text" value={heading.id} onChange={(e) => setHeading({ ...heading, id: e.target.value })} placeholder="Masalah" style={inputStyle} />
@@ -228,7 +229,7 @@ function SectionForm({
           <button onClick={() => setBody([...body, { id: '', en: '' }])} style={{ padding: '4px 10px', fontSize: '0.75rem', background: 'var(--bg-soft)', border: '1px solid var(--line)', borderRadius: '4px', cursor: 'pointer', color: 'var(--ink-soft)' }}>+ Paragraph</button>
         </div>
         {body.map((para, i) => (
-          <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '8px', marginBottom: '8px' }}>
+          <div key={i} className="admin-paragraph-row">
             <textarea value={para.id} onChange={(e) => { const b = [...body]; b[i] = { ...b[i], id: e.target.value }; setBody(b); }} placeholder="Paragraf ID..." rows={2} style={{ ...inputStyle, marginBottom: 0, resize: 'vertical' }} />
             <textarea value={para.en} onChange={(e) => { const b = [...body]; b[i] = { ...b[i], en: e.target.value }; setBody(b); }} placeholder="Paragraph EN..." rows={2} style={{ ...inputStyle, marginBottom: 0, resize: 'vertical' }} />
             <button onClick={() => setBody(body.filter((_, idx) => idx !== i))} disabled={body.length <= 1} style={{ padding: '4px 8px', fontSize: '0.75rem', background: 'var(--bg-soft)', border: '1px solid var(--line)', borderRadius: '4px', cursor: body.length <= 1 ? 'not-allowed' : 'pointer', color: 'var(--burnt)', opacity: body.length <= 1 ? 0.4 : 1 }}>×</button>
@@ -248,7 +249,7 @@ function SectionForm({
           )}
         </div>
         {hasBullets && bullets.map((bullet, i) => (
-          <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '8px', marginBottom: '8px' }}>
+          <div key={i} className="admin-bullet-row">
             <input type="text" value={bullet.id} onChange={(e) => { const b = [...bullets]; b[i] = { ...b[i], id: e.target.value }; setBullets(b); }} placeholder="Bullet ID..." style={{ ...inputStyle, marginBottom: 0 }} />
             <input type="text" value={bullet.en} onChange={(e) => { const b = [...bullets]; b[i] = { ...b[i], en: e.target.value }; setBullets(b); }} placeholder="Bullet EN..." style={{ ...inputStyle, marginBottom: 0 }} />
             <button onClick={() => setBullets(bullets.filter((_, idx) => idx !== i))} disabled={bullets.length <= 1} style={{ padding: '4px 8px', fontSize: '0.75rem', background: 'var(--bg-soft)', border: '1px solid var(--line)', borderRadius: '4px', cursor: bullets.length <= 1 ? 'not-allowed' : 'pointer', color: 'var(--burnt)', opacity: bullets.length <= 1 ? 0.4 : 1 }}>×</button>
@@ -262,5 +263,7 @@ function SectionForm({
         <button onClick={handleSave} disabled={saving} style={{ padding: '8px 16px', fontFamily: 'var(--font-body), sans-serif', fontWeight: 500, fontSize: '0.85rem', color: 'var(--paper)', background: saving ? 'var(--ink-faint)' : 'var(--ink)', border: 'none', borderRadius: '6px', cursor: saving ? 'not-allowed' : 'pointer' }}>{saving ? 'Saving...' : 'Save Section'}</button>
       </div>
     </div>
+    <style>{`.admin-section-heading-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 16px; } .admin-paragraph-row, .admin-bullet-row { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 8px; } @media (min-width: 600px) { .admin-section-heading-grid { grid-template-columns: 1fr 1fr; } .admin-paragraph-row, .admin-bullet-row { grid-template-columns: 1fr 1fr auto; } }`}</style>
+    </>
   );
 }

@@ -62,16 +62,16 @@ export default async function AdminDashboardPage() {
         Dashboard
       </h1>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px', marginBottom: '40px' }}>
+      <div className="admin-stats-grid">
         {stats.map((stat) => (
-          <div key={stat.label} style={{ background: 'var(--bg-card)', border: '1px solid var(--line)', borderRadius: '12px', padding: '24px' }}>
-            <p style={{ fontFamily: 'var(--font-fraunces), serif', fontStyle: 'italic', fontSize: '2.5rem', color: 'var(--ink)', margin: 0, lineHeight: 1 }}>{stat.value}</p>
-            <p style={{ fontFamily: 'var(--font-mono), monospace', fontSize: '0.7rem', color: 'var(--ink-faint)', letterSpacing: '0.1em', textTransform: 'uppercase', margin: '8px 0 0 0' }}>{stat.label}</p>
+          <div key={stat.label} className="admin-stat-card">
+            <p className="admin-stat-value">{stat.value}</p>
+            <p className="admin-stat-label">{stat.label}</p>
           </div>
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '16px' }}>
+      <div className="admin-breakdown-grid">
         <div style={{ background: 'var(--bg-card)', border: '1px solid var(--line)', borderRadius: '12px', padding: '24px' }}>
           <h2 style={{ fontFamily: 'var(--font-mono), monospace', fontSize: '0.7rem', color: 'var(--ink-faint)', letterSpacing: '0.1em', textTransform: 'uppercase', margin: '0 0 16px 0' }}>By Status</h2>
           {statusBreakdown.map((item) => (
@@ -102,6 +102,59 @@ export default async function AdminDashboardPage() {
           ))}
         </div>
       </div>
+      <style>{`
+        .admin-stats-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
+          margin-bottom: 32px;
+        }
+        .admin-stat-card {
+          background: var(--bg-card);
+          border: 1px solid var(--line);
+          border-radius: 12px;
+          padding: 20px;
+          overflow: hidden;
+        }
+        .admin-stat-value {
+          font-family: var(--font-fraunces), serif;
+          font-style: italic;
+          font-size: 2rem;
+          color: var(--ink);
+          margin: 0;
+          line-height: 1;
+        }
+        .admin-stat-label {
+          font-family: var(--font-mono), monospace;
+          font-size: 0.65rem;
+          color: var(--ink-faint);
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          margin: 8px 0 0 0;
+          word-break: break-word;
+        }
+        .admin-breakdown-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+        @media (min-width: 769px) {
+          .admin-stats-grid {
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+          }
+          .admin-stat-value {
+            font-size: 2.5rem;
+          }
+          .admin-stat-label {
+            font-size: 0.7rem;
+          }
+          .admin-breakdown-grid {
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+          }
+        }
+      `}</style>
     </main>
   );
 }
