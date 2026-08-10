@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/cms/db';
 import { requireAdmin } from '@/lib/admin-auth';
-import { uploadToCloudinary, buildCloudinaryFolder, buildPublicId } from '@/lib/cloudinary';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
@@ -82,7 +81,8 @@ export async function POST(request: NextRequest, { params }: Params) {
       });
     }
 
-    // Upload to Cloudinary
+    // Upload to Cloudinary (dynamic import to avoid build-time issues)
+    const { uploadToCloudinary, buildCloudinaryFolder, buildPublicId } = await import('@/lib/cloudinary');
     const fileBuffer = Buffer.from(await file.arrayBuffer());
     const folder = buildCloudinaryFolder(slug, type);
     const publicId = buildPublicId(slug, type, !isSingleAsset);

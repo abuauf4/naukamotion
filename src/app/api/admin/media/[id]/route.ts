@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/cms/db';
 import { requireAdmin } from '@/lib/admin-auth';
-import { deleteFromCloudinary } from '@/lib/cloudinary';
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -59,7 +58,7 @@ export async function DELETE(request: NextRequest, { params }: Params) {
     // Delete from Cloudinary first (if publicId exists)
     if (existing.publicId) {
       try {
-        await deleteFromCloudinary(existing.publicId);
+        const { deleteFromCloudinary } = await import("@/lib/cloudinary"); await deleteFromCloudinary(existing.publicId);
       } catch (cloudinaryError) {
         console.error('Cloudinary delete error:', cloudinaryError);
         // If Cloudinary delete fails, still delete DB record but report error
