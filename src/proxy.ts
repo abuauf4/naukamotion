@@ -18,7 +18,9 @@ async function isValidToken(token: string): Promise<boolean> {
   }
 }
 
-export async function middleware(request: NextRequest) {
+// Next.js 16: proxy.ts replaces middleware.ts
+// https://nextjs.org/docs/messages/middleware-to-proxy
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Protect /api/admin/* routes — return 401 if not authenticated
