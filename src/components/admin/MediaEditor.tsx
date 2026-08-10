@@ -1,3 +1,4 @@
+// Cloudinary Media CMS
 'use client';
 
 import { useState, useCallback, useRef } from 'react';
