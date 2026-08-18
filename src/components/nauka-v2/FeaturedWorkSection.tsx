@@ -47,7 +47,7 @@ export function FeaturedWorkSection({ projects, locale }: { projects: FeaturedPr
   const progress = useSpring(scrollYProgress, { stiffness: 90, damping: 28, mass: 0.3 });
   const copy = locale === "en"
     ? { label: "01 — Selected work", heading: "Things we helped move.", viewAll: "View all work", scroll: "Scroll through the work" }
-    : { label: "01 — Karya pilihan", heading: "Hal-hal yang kami bantu bergerak.", viewAll: "Lihat semua karya", scroll: "Scroll untuk melihat karya" };
+    : { label: "01 — Karya pilihan", heading: "SMALL MOVEMENT. REAL IMPACT.", viewAll: "Lihat semua karya", scroll: "Scroll untuk melihat karya" };
 
   return (
     <section ref={ref} id="karya" className="nauka-featured-section nauka-film-reel">

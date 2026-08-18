@@ -783,7 +783,7 @@
 .nauka-film-header .nauka-text-link { justify-self: end; }
 .nauka-film-scroll-label { font: .6rem var(--font-mono), monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
 .nauka-film-title-wrap { position: relative; z-index: 4; display: flex; align-items: end; justify-content: space-between; gap: 24px; margin: clamp(28px, 5vh, 70px) 0 0 8%; }
-.nauka-film-title { max-width: 8ch; margin: 0; font-size: clamp(3.8rem, 9vw, 9.5rem); line-height: .8; letter-spacing: -.09em; font-weight: 500; }
+.nauka-film-title { max-width: 12ch; margin: 0; font-size: clamp(2.8rem, 6vw, 6rem); line-height: .88; letter-spacing: -.075em; font-weight: 500; }
 .nauka-film-counter { padding-bottom: 6px; color: var(--burnt); font: .68rem var(--font-mono), monospace; letter-spacing: .14em; }
 .nauka-film-stage { position: absolute; inset: 24% 0 8%; }
 .nauka-film-axis { position: absolute; left: 50%; top: -12%; bottom: -8%; width: 1px; background: linear-gradient(var(--burnt), transparent 88%); opacity: .55; }
@@ -810,7 +810,7 @@
   .nauka-film-header { grid-template-columns: 1fr auto; }
   .nauka-film-scroll-label { display: none; }
   .nauka-film-title-wrap { margin-left: 0; margin-top: 34px; }
-  .nauka-film-title { max-width: 7ch; font-size: clamp(3.2rem, 15vw, 6rem); }
+  .nauka-film-title { max-width: 10ch; font-size: clamp(2.4rem, 10vw, 4.5rem); }
   .nauka-film-stage { inset: 37% 0 10%; }
   .nauka-film-axis { left: 72%; }
   .nauka-film-frame, .nauka-film-frame-2, .nauka-film-frame-3 { left: 0; top: 0; width: 92vw; }
