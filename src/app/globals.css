@@ -213,6 +213,32 @@
   padding-right: clamp(20px, 5vw, 80px);
 }
 
+/* Official Nauka Motion lockup. The source artwork is white/silver; the
+   filter keeps it legible on both warm paper and ink themes. */
+.nauka-brand-logo {
+  display: inline-flex;
+  align-items: center;
+  width: clamp(126px, 13vw, 178px);
+  flex: 0 0 auto;
+  text-decoration: none;
+}
+
+.nauka-brand-logo-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: brightness(0);
+  transition: filter 0.25s ease, opacity 0.25s ease;
+}
+
+.dark .nauka-brand-logo-image {
+  filter: none;
+}
+
+.nauka-footer-logo {
+  width: clamp(180px, 27vw, 310px);
+}
+
 .eyebrow {
   font-family: var(--font-mono), monospace;
   font-size: 0.72rem;

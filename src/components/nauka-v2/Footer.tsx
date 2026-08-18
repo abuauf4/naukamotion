@@ -11,6 +11,7 @@
  * Existing approved Nauka positioning is reused.
  */
 import Link from "next/link";
+import { BrandLogo } from "./BrandLogo";
 
 export function Footer({
   locale,
@@ -58,20 +59,7 @@ export function Footer({
             marginBottom: "64px",
           }}
         >
-          <h2
-            style={{
-              fontFamily: "var(--font-fraunces), serif",
-              fontStyle: "italic",
-              fontWeight: 400,
-              fontSize: "clamp(2.4rem, 8vw, 5rem)",
-              lineHeight: 1,
-              letterSpacing: "-0.035em",
-              color: "var(--ink)",
-              margin: 0,
-            }}
-          >
-            Nauka Motion
-          </h2>
+          <BrandLogo className="nauka-footer-logo" />
           <p
             style={{
               fontFamily: "var(--font-body), sans-serif",

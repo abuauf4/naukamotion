@@ -18,8 +18,8 @@
  *     is the only client island.
  */
 import Link from "next/link";
-import Image from "next/image";
 import { HeaderInteractive } from "./HeaderInteractive";
+import { BrandLogo } from "./BrandLogo";
 
 const NAV = {
   id: [
@@ -43,47 +43,8 @@ export function Header({
 
   return (
     <HeaderInteractive navItems={navItems} locale={locale}>
-      {/* Wordmark — server-rendered, visible before hydration */}
-      <Link
-        href="/"
-        aria-label="Nauka Motion — home"
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "10px",
-          textDecoration: "none",
-          color: "var(--ink)",
-        }}
-      >
-        {/* N mark — uses existing favicon (RGBA transparent + black N).
-            CSS filter adapts to theme. NOT a new logo asset. */}
-        <Image
-          src="/logo-favicon.webp"
-          alt=""
-          width={28}
-          height={28}
-          priority
-          className="nauka-nmark"
-          style={{
-            display: "block",
-            width: 22,
-            height: 22,
-            filter: "var(--nmark-filter, brightness(0))",
-          }}
-        />
-        <span
-          style={{
-            fontFamily: "var(--font-fraunces), serif",
-            fontStyle: "italic",
-            fontWeight: 400,
-            fontSize: "1.1rem",
-            letterSpacing: "-0.02em",
-            lineHeight: 1,
-          }}
-        >
-          Nauka Motion
-        </span>
-      </Link>
+      {/* Official lockup — transparent asset, theme-aware contrast. */}
+      <BrandLogo priority />
 
       {/* Desktop nav — server-rendered, no JS needed */}
       <nav
