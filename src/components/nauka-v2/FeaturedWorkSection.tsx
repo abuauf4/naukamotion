@@ -10,10 +10,16 @@ export function FeaturedWorkSection({ projects, locale }: { projects: FeaturedPr
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const progress = useSpring(scrollYProgress, { stiffness: 80, damping: 26, mass: 0.35 });
-  const topX = useTransform(progress, [0, 0.5, 1], ["12%", "0%", "-11%"]);
-  const bottomX = useTransform(progress, [0, 0.5, 1], ["-10%", "0%", "12%"]);
-  const topRotate = useTransform(progress, [0, 0.5, 1], [-1.6, -0.3, 1.1]);
-  const bottomRotate = useTransform(progress, [0, 0.5, 1], [1.5, 0.2, -1.1]);
+  // The two planes share one focal area, like a small editorial reel.
+  // Keep travel restrained so the images feel carried by the scroll, not dragged.
+  const topX = useTransform(progress, [0, 0.5, 1], ["16vw", "0vw", "-18vw"]);
+  const bottomX = useTransform(progress, [0, 0.5, 1], ["-16vw", "0vw", "18vw"]);
+  const topRotate = useTransform(progress, [0, 0.5, 1], [-2.2, -0.2, 1.5]);
+  const bottomRotate = useTransform(progress, [0, 0.5, 1], [1.9, 0.2, -1.4]);
+  const topY = useTransform(progress, [0, 0.5, 1], ["-1.5%", "2%", "5%"]);
+  const bottomY = useTransform(progress, [0, 0.5, 1], ["7%", "3%", "-2%"]);
+  const topTilt = useTransform(progress, [0, 0.5, 1], [-3.5, 0, 2.5]);
+  const bottomTilt = useTransform(progress, [0, 0.5, 1], [2.5, 0, -3.5]);
   const copy = locale === "en"
     ? { label: "01 — Selected work", viewAll: "View all work" }
     : { label: "01 — Karya pilihan", viewAll: "Lihat semua karya" };
@@ -32,7 +38,12 @@ export function FeaturedWorkSection({ projects, locale }: { projects: FeaturedPr
             <motion.div
               key={project.slug}
               className={`nauka-film-frame nauka-film-frame-${index + 1}`}
-              style={{ x: index === 0 ? topX : bottomX, rotate: index === 0 ? topRotate : bottomRotate } as MotionStyle}
+              style={{
+                x: index === 0 ? topX : bottomX,
+                y: index === 0 ? topY : bottomY,
+                rotate: index === 0 ? topRotate : bottomRotate,
+                rotateY: index === 0 ? topTilt : bottomTilt,
+              } as MotionStyle}
             >
               <Link href={`/work/${project.slug}`} className="nauka-film-link" aria-label={locale === "en" ? "View selected work" : "Lihat karya pilihan"}>
                 <div className="nauka-film-image-wrap">
