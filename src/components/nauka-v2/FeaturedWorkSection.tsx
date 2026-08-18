@@ -41,6 +41,36 @@ function FilmFrame({ project, index, progress, locale }: {
   );
 }
 
+function MobilePreviewStack({ projects, progress, locale }: {
+  projects: FeaturedProject[];
+  progress: MotionValue<number>;
+  locale: "id" | "en";
+}) {
+  const topX = useTransform(progress, [0, 0.55, 1], ["-5%", "-1%", "-8%"]);
+  const bottomX = useTransform(progress, [0, 0.55, 1], ["5%", "1%", "8%"]);
+  const topRotate = useTransform(progress, [0, 0.5, 1], [2.5, 0, -2]);
+  const bottomRotate = useTransform(progress, [0, 0.5, 1], [-2, 0, 2.5]);
+
+  return (
+    <div className="nauka-mobile-preview" aria-label={locale === "en" ? "Project previews" : "Preview project"}>
+      {projects.slice(0, 2).map((project, index) => (
+        <motion.div
+          key={project.slug}
+          className={`nauka-mobile-preview-frame nauka-mobile-preview-frame-${index + 1}`}
+          style={{ x: index === 0 ? topX : bottomX, rotateY: index === 0 ? topRotate : bottomRotate, "--project-accent": project.accent } as MotionStyle}
+        >
+          <Link href={`/work/${project.slug}`} className="nauka-mobile-preview-link">
+            <div className="nauka-mobile-preview-image">
+              <Image src={project.cover} alt={project.name} fill sizes="68vw" />
+              <span>{project.name}</span>
+            </div>
+          </Link>
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
 export function FeaturedWorkSection({ projects, locale }: { projects: FeaturedProject[]; locale: "id" | "en" }) {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
@@ -62,7 +92,7 @@ export function FeaturedWorkSection({ projects, locale }: { projects: FeaturedPr
             <h2 className="nauka-film-title">{copy.heading}</h2>
             <span className="nauka-film-counter">01 — 0{Math.min(projects.length, 3)}</span>
           </div>
-          {projects.length > 0 ? (
+          {projects.length > 0 && !projects[0].isPreview ? (
             <div className="nauka-film-stage">
               <div className="nauka-film-axis" aria-hidden="true" />
               {projects.slice(0, 3).map((project, index) => (
@@ -70,7 +100,10 @@ export function FeaturedWorkSection({ projects, locale }: { projects: FeaturedPr
               ))}
             </div>
           ) : (
-            <div className="nauka-empty-featured"><p>{locale === "en" ? "Featured work is being curated." : "Karya pilihan sedang dikurasi."}</p></div>
+            <div className="nauka-empty-featured">
+              <p>{locale === "en" ? "Projects we have made." : "Project yg telah dibuat"}</p>
+              <MobilePreviewStack projects={projects} progress={progress} locale={locale} />
+            </div>
           )}
           <div className="nauka-film-footer"><span>NAUKA MOTION / REEL 01</span><span>03 — {locale === "en" ? "Selected frames" : "Frame pilihan"}</span></div>
         </div>

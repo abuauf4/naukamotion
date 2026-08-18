@@ -54,6 +54,7 @@ import {
   fetchCategoryBySlug,
   fetchPublicProjects,
   fetchFeaturedProjects,
+  fetchPublicPreviewProjects,
   fetchPublicProjectBySlug,
   fetchPublicProjectsByCategory,
   fetchAllPublicSlugs,
@@ -81,6 +82,7 @@ export type FeaturedProject = {
   year: string;
   cover: string;
   accent: string;
+  isPreview?: boolean;
 };
 
 // ─── Public API ───
@@ -160,7 +162,8 @@ export async function getFeaturedProjects(): Promise<FeaturedProject[]> {
   }
 
   const projects = await fetchFeaturedProjects();
-  return projects.map((project) => ({
+  const sourceProjects = projects.length >= 2 ? projects : await fetchPublicPreviewProjects();
+  return sourceProjects.map((project) => ({
     slug: project.slug,
     index: project.index,
     name: project.name,
@@ -170,6 +173,7 @@ export async function getFeaturedProjects(): Promise<FeaturedProject[]> {
     year: project.year,
     cover: project.media[0]?.url ?? project.cover,
     accent: project.accent,
+    isPreview: projects.length < 2,
   }));
 }
 

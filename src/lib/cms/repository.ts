@@ -109,6 +109,35 @@ export async function fetchFeaturedProjects(): Promise<FeaturedProjectRecord[]> 
   });
 }
 
+/** Lightweight fallback frames for the mobile homepage showcase. */
+export async function fetchPublicPreviewProjects(): Promise<FeaturedProjectRecord[]> {
+  return prisma.project.findMany({
+    where: {
+      visibility: 'public',
+      status: { not: 'draft' },
+    },
+    orderBy: { sortOrder: 'asc' },
+    take: 2,
+    select: {
+      slug: true,
+      index: true,
+      name: true,
+      categorySlug: true,
+      tagline: true,
+      year: true,
+      cover: true,
+      accent: true,
+      category: { select: { title: true } },
+      media: {
+        where: { type: 'cover' },
+        orderBy: { sortOrder: 'asc' },
+        take: 1,
+        select: { url: true },
+      },
+    },
+  });
+}
+
 /**
  * Fetch a single public project by slug.
  * Returns null if not found, private, or draft.
