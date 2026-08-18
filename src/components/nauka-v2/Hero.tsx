@@ -132,29 +132,32 @@ export function Hero({
 
           {/* Single text CTA — no pill, no border, just typography + arrow.
               Positioned at the bottom-left of the hero. */}
-          <a
-            href="/work"
-            className="nauka-hero-cta"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-              fontFamily: "var(--font-body), sans-serif",
-              fontWeight: 500,
-              fontSize: "0.85rem",
-              color: "var(--ink)",
-              textDecoration: "none",
-              letterSpacing: "0.02em",
-              textTransform: "uppercase",
-              marginTop: "48px",
-              // CTA sits at the bottom-left, separate from the accent
-              // which is at the top-right. Creates diagonal composition.
-            }}
-          >
-            {t.cta}
-            <span aria-hidden="true" className="nauka-hero-cta-arrow">↘</span>
-          </a>
+          <div className="nauka-hero-bottomline">
+            <a
+              href="/work"
+              className="nauka-hero-cta"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                fontFamily: "var(--font-body), sans-serif",
+                fontWeight: 500,
+                fontSize: "0.85rem",
+                color: "var(--ink)",
+                textDecoration: "none",
+                letterSpacing: "0.02em",
+                textTransform: "uppercase",
+                marginTop: "48px",
+              }}
+            >
+              {t.cta}
+              <span aria-hidden="true" className="nauka-hero-cta-arrow">↘</span>
+            </a>
+            <span className="nauka-hero-coordinate">06°12&apos;S / 106°49&apos;E</span>
+            <span className="nauka-hero-scroll">Scroll to explore <span aria-hidden="true">↓</span></span>
+          </div>
         </div>
+        <div className="nauka-hero-side-note" aria-hidden="true">Independent digital studio · 2026</div>
       </section>
     </HeroMotion>
   );

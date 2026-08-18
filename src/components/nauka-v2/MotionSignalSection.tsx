@@ -27,6 +27,9 @@ export function MotionSignalSection({ locale }: { locale: "id" | "en" }) {
           <motion.span style={{ x: xTwo, scale }} className="nauka-signal-word nauka-signal-word-b">MOTION</motion.span>
           <motion.span style={{ x: xOne, rotate: reverseRotate, scale }} className="nauka-signal-word nauka-signal-word-c">IMPACT</motion.span>
         </div>
+        <motion.div className="nauka-signal-crosshair" style={{ scale, rotate: reverseRotate }} aria-hidden="true"><span /><span /></motion.div>
+        <div className="nauka-signal-stamp" aria-hidden="true">N / 001<br />SMALL MOVEMENT<br />REAL IMPACT</div>
+        <div className="nauka-signal-index" aria-hidden="true">02 / 05</div>
         <p className="nauka-signal-end">{copy.end} <span>↘</span></p>
       </div>
     </section>

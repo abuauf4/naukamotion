@@ -699,4 +699,52 @@
   .nauka-project-overlay-name { opacity: 1; transform: none; }
 }
 
+/* ─── Cinematic direction pass ─── */
+.nauka-hero { overflow: hidden; }
+.nauka-hero::before { content: ""; position: absolute; inset: 96px clamp(20px, 5vw, 80px) 28px; border: 1px solid var(--line); pointer-events: none; }
+.nauka-hero::after { content: ""; position: absolute; left: 50%; top: 96px; bottom: 28px; width: 1px; background: var(--line); opacity: .45; pointer-events: none; }
+.nauka-hero-bottomline { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; border-top: 1px solid var(--line-strong); margin-top: clamp(52px, 8vw, 110px); position: relative; z-index: 1; }
+.nauka-hero-coordinate, .nauka-hero-scroll, .nauka-hero-side-note { font-family: var(--font-mono), monospace; font-size: .63rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
+.nauka-hero-coordinate { justify-self: center; margin-top: 48px; }
+.nauka-hero-scroll { justify-self: end; margin-top: 48px; }
+.nauka-hero-scroll span { color: var(--burnt); font-size: 1rem; margin-left: 8px; }
+.nauka-hero-side-note { position: absolute; right: clamp(28px, 6vw, 92px); top: 50%; writing-mode: vertical-rl; transform: rotate(180deg); z-index: 1; }
+.nauka-featured-kicker, .nauka-featured-title, .nauka-featured-stage { position: relative; z-index: 1; }
+.nauka-featured-section { position: relative; }
+.nauka-featured-section::before { content: "WORK / 001"; position: absolute; top: clamp(28px, 5vw, 70px); right: clamp(20px, 5vw, 80px); font: .62rem var(--font-mono), monospace; letter-spacing: .14em; color: var(--ink-faint); }
+.nauka-project-card { transition: transform .6s cubic-bezier(.22,1,.36,1); }
+.nauka-project-card-1:hover { transform: translate(10px, -10px); }
+.nauka-project-card-2:hover { transform: translate(-10px, 10px); }
+.nauka-project-card-3:hover { transform: translate(10px, -8px); }
+.nauka-project-image-wrap::after { content: ""; position: absolute; inset: 0; background: linear-gradient(135deg, transparent 55%, color-mix(in srgb, var(--project-accent, var(--burnt)) 38%, transparent)); mix-blend-mode: multiply; opacity: .45; transition: opacity .5s ease; pointer-events: none; }
+.nauka-project-card:hover .nauka-project-image-wrap::after { opacity: .12; }
+.nauka-signal { isolation: isolate; }
+.nauka-signal::before { content: "NAUKA / SIGNAL"; position: absolute; top: 32px; right: clamp(20px, 5vw, 80px); z-index: 2; font: .63rem var(--font-mono), monospace; letter-spacing: .14em; color: #f3f0e980; }
+.nauka-signal-grid { background-size: clamp(48px, 7vw, 108px) clamp(48px, 7vw, 108px); }
+.nauka-signal-words { z-index: 1; }
+.nauka-signal-word { text-shadow: 0 0 60px #0008; }
+.nauka-signal-word-b { -webkit-text-stroke: 1px var(--burnt); color: transparent; }
+.nauka-signal-crosshair { position: absolute; z-index: 3; left: 50%; top: 50%; width: clamp(120px, 18vw, 280px); aspect-ratio: 1; border: 1px solid #c8e64199; border-radius: 50%; transform-origin: center; pointer-events: none; }
+.nauka-signal-crosshair::before, .nauka-signal-crosshair::after, .nauka-signal-crosshair span { content: ""; position: absolute; background: #c8e64199; }
+.nauka-signal-crosshair::before { width: 100%; height: 1px; top: 50%; left: 0; }
+.nauka-signal-crosshair::after { height: 100%; width: 1px; left: 50%; top: 0; }
+.nauka-signal-crosshair span:first-child { width: 10px; height: 10px; border-radius: 50%; top: calc(50% - 5px); left: calc(50% - 5px); background: var(--lime); }
+.nauka-signal-stamp { position: absolute; right: 5%; top: 62%; z-index: 3; color: #f3f0e980; font: .6rem/1.5 var(--font-mono), monospace; letter-spacing: .12em; transform: rotate(-8deg); }
+.nauka-signal-index { position: absolute; left: 0; bottom: 7%; z-index: 3; color: var(--lime); font: .65rem var(--font-mono), monospace; letter-spacing: .15em; }
+@media (max-width: 767px) {
+  .nauka-hero::before { inset: 82px 18px 18px; }
+  .nauka-hero::after, .nauka-hero-side-note { display: none; }
+  .nauka-hero-bottomline { grid-template-columns: 1fr 1fr; }
+  .nauka-hero-coordinate { display: none; }
+  .nauka-hero-scroll { grid-column: 2; }
+  .nauka-featured-section::before { top: 24px; right: 20px; }
+  .nauka-project-card-1:hover, .nauka-project-card-2:hover, .nauka-project-card-3:hover { transform: none; }
+  .nauka-signal-crosshair { left: 45%; top: 49%; }
+  .nauka-signal-stamp { right: 8%; top: 70%; }
+  .nauka-signal-index { left: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nauka-project-card, .nauka-project-image-wrap::after { transition: none; }
+}
+
 /* ─── Phase 2 placeholder (kept for archived routes) ─── */
