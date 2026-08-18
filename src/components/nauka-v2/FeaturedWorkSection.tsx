@@ -16,14 +16,14 @@ export function FeaturedWorkSection({
   return (
     <section id="karya" className="nauka-featured-section">
       <div className="container-wide">
-        <div className="nauka-section-intro">
+        <div className="nauka-featured-kicker">
           <p className="nauka-section-label">{copy.label}</p>
-          <h2>{copy.heading}</h2>
           <Link href="/work" className="nauka-text-link">{copy.viewAll} <span aria-hidden="true">↗</span></Link>
         </div>
+        <h2 className="nauka-featured-title">{copy.heading}</h2>
 
         {projects.length > 0 ? (
-          <div className="nauka-featured-grid">
+          <div className="nauka-featured-stage">
             {projects.map((project, index) => (
               <Link
                 key={project.slug}
@@ -36,26 +36,22 @@ export function FeaturedWorkSection({
                     src={project.cover}
                     alt={project.name}
                     fill
-                    sizes={index === 0 ? "(max-width: 768px) 100vw, 68vw" : "(max-width: 768px) 100vw, 32vw"}
+                    sizes={index === 0 ? "(max-width: 768px) 100vw, 84vw" : "(max-width: 768px) 100vw, 34vw"}
                     className="nauka-project-image"
                   />
                   <span className="nauka-project-index">{project.index}</span>
                   <span className="nauka-project-arrow" aria-hidden="true">↗</span>
+                  <span className="nauka-project-overlay-name">{project.name}</span>
                 </div>
                 <div className="nauka-project-meta">
-                  <div>
-                    <h3>{project.name}</h3>
-                    <p>{project.tagline[locale]}</p>
-                  </div>
+                  <div><h3>{project.name}</h3><p>{project.tagline[locale]}</p></div>
                   <span>{project.categoryTitle} · {project.year}</span>
                 </div>
               </Link>
             ))}
           </div>
         ) : (
-          <div className="nauka-empty-featured">
-            <p>{locale === "en" ? "Featured work is being curated." : "Karya pilihan sedang dikurasi."}</p>
-          </div>
+          <div className="nauka-empty-featured"><p>{locale === "en" ? "Featured work is being curated." : "Karya pilihan sedang dikurasi."}</p></div>
         )}
       </div>
     </section>

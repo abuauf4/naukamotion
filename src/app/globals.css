@@ -660,4 +660,43 @@
   .nauka-signal-grid, .nauka-signal-word { animation: none !important; }
 }
 
+/* ─── Art-directed portfolio pass ─── */
+.nauka-featured-section { padding-top: clamp(130px, 19vw, 280px); padding-bottom: clamp(110px, 17vw, 250px); }
+.nauka-featured-kicker { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--line); padding-top: 16px; }
+.nauka-featured-title { max-width: 10ch; margin: clamp(40px, 7vw, 100px) 0 clamp(70px, 10vw, 150px) 11%; font-size: clamp(3.2rem, 9.5vw, 10rem); line-height: .84; letter-spacing: -.085em; font-weight: 500; }
+.nauka-featured-stage { position: relative; min-height: min(1350px, 98vw); }
+.nauka-featured-stage .nauka-project-card { position: absolute; }
+.nauka-featured-stage .nauka-project-card-1 { width: min(80vw, 1080px); left: 0; top: 0; z-index: 2; }
+.nauka-featured-stage .nauka-project-card-2 { width: min(35vw, 470px); right: 1%; top: 35%; z-index: 3; }
+.nauka-featured-stage .nauka-project-card-3 { width: min(38vw, 510px); left: 14%; top: 68%; z-index: 1; }
+.nauka-featured-stage .nauka-project-image-wrap { aspect-ratio: 1.35; }
+.nauka-featured-stage .nauka-project-card-1 .nauka-project-image-wrap { aspect-ratio: 1.45; }
+.nauka-project-overlay-name { position: absolute; left: 4%; bottom: 4%; color: #fff; font-size: clamp(2rem, 5vw, 5.5rem); letter-spacing: -.07em; line-height: .86; text-shadow: 0 2px 24px #0008; opacity: 0; transform: translateY(14px); transition: opacity .45s ease, transform .45s ease; }
+.nauka-project-card:hover .nauka-project-overlay-name { opacity: 1; transform: translateY(0); }
+.nauka-featured-stage .nauka-project-meta { border-bottom: 0; padding-top: 14px; }
+.nauka-featured-stage .nauka-project-card-2 .nauka-project-meta, .nauka-featured-stage .nauka-project-card-3 .nauka-project-meta { display: none; }
+.nauka-signal { min-height: 175vh; }
+.nauka-signal-content { min-height: 175vh; }
+.nauka-signal-words { inset: 25% -16% auto; gap: .05em; }
+.nauka-signal-word { will-change: transform; animation: none; }
+.nauka-signal-word-a { transform: translateX(-12%) rotate(-5deg); }
+.nauka-signal-word-b { transform: translateX(12%); }
+.nauka-signal-word-c { transform: translateX(-6%) rotate(5deg); }
+@media (max-width: 767px) {
+  .nauka-featured-title { margin-left: 0; max-width: 8ch; }
+  .nauka-featured-stage { min-height: auto; display: flex; flex-direction: column; gap: 50px; }
+  .nauka-featured-stage .nauka-project-card { position: relative; inset: auto; width: 100%; }
+  .nauka-featured-stage .nauka-project-card-2, .nauka-featured-stage .nauka-project-card-3 { width: 82%; }
+  .nauka-featured-stage .nauka-project-card-2 { align-self: flex-end; }
+  .nauka-featured-stage .nauka-project-card-3 { align-self: flex-start; }
+  .nauka-featured-stage .nauka-project-card-2 .nauka-project-meta, .nauka-featured-stage .nauka-project-card-3 .nauka-project-meta { display: flex; }
+  .nauka-project-overlay-name { opacity: 1; transform: none; font-size: 2.2rem; }
+  .nauka-signal { min-height: 135vh; }
+  .nauka-signal-content { min-height: 135vh; }
+  .nauka-signal-words { inset: 30% -45% auto; font-size: 29vw; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nauka-project-overlay-name { opacity: 1; transform: none; }
+}
+
 /* ─── Phase 2 placeholder (kept for archived routes) ─── */
