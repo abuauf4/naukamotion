@@ -23,7 +23,13 @@ export function FeaturedWorkSection({
         <h2 className="nauka-featured-title">{copy.heading}</h2>
 
         {projects.length > 0 ? (
-          <div className="nauka-featured-stage">
+          <div className="nauka-featured-scene">
+            <div className="nauka-featured-rail" aria-hidden="true">
+              <span className="nauka-featured-rail-line" />
+              <span>Selected / 03</span>
+              <span className="nauka-featured-rail-mark">↘</span>
+            </div>
+            <div className="nauka-featured-stage">
             {projects.map((project, index) => (
               <Link
                 key={project.slug}
@@ -49,6 +55,7 @@ export function FeaturedWorkSection({
                 </div>
               </Link>
             ))}
+            </div>
           </div>
         ) : (
           <div className="nauka-empty-featured"><p>{locale === "en" ? "Featured work is being curated." : "Karya pilihan sedang dikurasi."}</p></div>

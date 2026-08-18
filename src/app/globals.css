@@ -747,4 +747,28 @@
   .nauka-project-card, .nauka-project-image-wrap::after { transition: none; }
 }
 
+/* ─── Editorial film-sequence layer ─── */
+.nauka-featured-scene { position: relative; }
+.nauka-featured-rail { position: absolute; left: -2px; top: 0; bottom: 0; width: 24px; display: flex; flex-direction: column; align-items: center; gap: 18px; color: var(--ink-faint); font: .58rem var(--font-mono), monospace; letter-spacing: .12em; text-transform: uppercase; writing-mode: vertical-rl; z-index: 4; }
+.nauka-featured-rail-line { width: 1px; flex: 1; min-height: 120px; background: linear-gradient(to bottom, transparent, var(--burnt) 18%, var(--line-strong) 82%, transparent); }
+.nauka-featured-rail-mark { color: var(--burnt); font-size: 1rem; writing-mode: horizontal-tb; }
+.nauka-featured-stage::before { content: ""; position: absolute; left: 50%; top: -4%; bottom: 0; width: 1px; background: var(--line); opacity: .38; pointer-events: none; }
+.nauka-featured-stage .nauka-project-card { clip-path: inset(0); }
+.nauka-featured-stage .nauka-project-card::before { content: ""; position: absolute; inset: 0; z-index: 4; border: 1px solid transparent; pointer-events: none; transition: border-color .5s ease, inset .5s cubic-bezier(.22,1,.36,1); }
+.nauka-featured-stage .nauka-project-card:hover::before { inset: 10px; border-color: #fff8; }
+.nauka-project-card-1 .nauka-project-image-wrap { filter: contrast(1.04); }
+.nauka-project-card-2 .nauka-project-image-wrap, .nauka-project-card-3 .nauka-project-image-wrap { box-shadow: 18px 22px 0 color-mix(in srgb, var(--project-accent, var(--burnt)) 22%, transparent); }
+.nauka-signal { border-top: 1px solid #ffffff33; }
+.nauka-signal::after { content: "SCENE / 02"; position: absolute; left: clamp(20px, 5vw, 80px); bottom: 32px; z-index: 3; color: #f3f0e980; font: .63rem var(--font-mono), monospace; letter-spacing: .14em; }
+@media (max-width: 767px) {
+  .nauka-featured-rail { display: none; }
+  .nauka-featured-stage::before { display: none; }
+  .nauka-featured-stage .nauka-project-card:hover::before { inset: 0; border-color: transparent; }
+  .nauka-project-card-2 .nauka-project-image-wrap, .nauka-project-card-3 .nauka-project-image-wrap { box-shadow: 10px 12px 0 color-mix(in srgb, var(--project-accent, var(--burnt)) 22%, transparent); }
+  .nauka-signal::after { left: 20px; bottom: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nauka-featured-stage .nauka-project-card::before { transition: none; }
+}
+
 /* ─── Phase 2 placeholder (kept for archived routes) ─── */
