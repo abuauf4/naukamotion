@@ -53,6 +53,7 @@ import {
   fetchAllCategories,
   fetchCategoryBySlug,
   fetchPublicProjects,
+  fetchFeaturedProjects,
   fetchPublicProjectBySlug,
   fetchPublicProjectsByCategory,
   fetchAllPublicSlugs,
@@ -69,6 +70,18 @@ import type {
   StudioProject,
   CategorySlug,
 } from '../studio-data';
+
+export type FeaturedProject = {
+  slug: string;
+  index: string;
+  name: string;
+  categorySlug: string;
+  categoryTitle: string;
+  tagline: { id: string; en: string };
+  year: string;
+  cover: string;
+  accent: string;
+};
 
 // ─── Public API ───
 
@@ -125,6 +138,39 @@ export async function getPublicProjects(): Promise<StudioProject[]> {
   }
   const dbProjects = await fetchPublicProjects();
   return adaptProjects(dbProjects);
+}
+
+export async function getFeaturedProjects(): Promise<FeaturedProject[]> {
+  if (DATA_SOURCE === 'static') {
+    return studioProjects
+      .filter((project) => project.status !== 'draft')
+      .sort((a, b) => a.order - b.order)
+      .slice(0, 3)
+      .map((project) => ({
+        slug: project.slug,
+        index: project.index,
+        name: project.name,
+        categorySlug: project.categorySlug,
+        categoryTitle: studioCategories.find((category) => category.slug === project.categorySlug)?.title ?? project.categorySlug,
+        tagline: project.tagline,
+        year: project.year,
+        cover: project.cover,
+        accent: project.accent,
+      }));
+  }
+
+  const projects = await fetchFeaturedProjects();
+  return projects.map((project) => ({
+    slug: project.slug,
+    index: project.index,
+    name: project.name,
+    categorySlug: project.categorySlug,
+    categoryTitle: project.category.title,
+    tagline: project.tagline as { id: string; en: string },
+    year: project.year,
+    cover: project.media[0]?.url ?? project.cover,
+    accent: project.accent,
+  }));
 }
 
 /**

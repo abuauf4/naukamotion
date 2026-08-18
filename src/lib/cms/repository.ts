@@ -23,6 +23,26 @@ export type ProjectWithRelations = Prisma.ProjectGetPayload<{
   };
 }>;
 
+export type FeaturedProjectRecord = Prisma.ProjectGetPayload<{
+  select: {
+    slug: true;
+    index: true;
+    name: true;
+    categorySlug: true;
+    tagline: true;
+    year: true;
+    cover: true;
+    accent: true;
+    category: { select: { title: true } };
+    media: {
+      where: { type: 'cover' };
+      orderBy: { sortOrder: 'asc' };
+      take: 1;
+      select: { url: true };
+    };
+  };
+}>;
+
 // ─── Category queries ───
 
 export async function fetchAllCategories(): Promise<
@@ -57,6 +77,34 @@ export async function fetchPublicProjects(): Promise<ProjectWithRelations[]> {
       sections: { orderBy: { sortOrder: 'asc' } },
       technologies: { orderBy: { sortOrder: 'asc' } },
       media: { orderBy: { sortOrder: 'asc' } },
+    },
+  });
+}
+
+export async function fetchFeaturedProjects(): Promise<FeaturedProjectRecord[]> {
+  return prisma.project.findMany({
+    where: {
+      featured: true,
+      visibility: 'public',
+      status: { not: 'draft' },
+    },
+    orderBy: { sortOrder: 'asc' },
+    select: {
+      slug: true,
+      index: true,
+      name: true,
+      categorySlug: true,
+      tagline: true,
+      year: true,
+      cover: true,
+      accent: true,
+      category: { select: { title: true } },
+      media: {
+        where: { type: 'cover' },
+        orderBy: { sortOrder: 'asc' },
+        take: 1,
+        select: { url: true },
+      },
     },
   });
 }
