@@ -8,6 +8,7 @@ Situs diposisikan sebagai studio developer independen yang menjual jasa website,
 
 - Desain charcoal, off-white, dan orange, dengan tipografi Instrument Sans dan Fraunces yang dibundel lokal.
 - Homepage menghubungkan layanan, karya, alasan bekerja bersama Nauka, proses pengerjaan, FAQ, dan diskusi proyek.
+- Showcase hero memakai screenshot JAECOO MAM Fatmawati dan NaCash Household yang diberikan pemilik, dengan proporsi asli dan aset WebP lokal. Pemilihan showcase hero tidak bergantung pada urutan proyek unggulan CMS.
 - Halaman layanan menjelaskan keluaran proyek; halaman portofolio, kategori, detail proyek, studio, dan kontak memakai sistem visual yang sama.
 - NaCash mendapat halaman produk internal dengan screenshot asli aplikasi Fashion, berlabel data contoh.
 - Navigasi mobile, tautan lompat ke konten, fokus keyboard, reduced motion, dan pergantian bahasa Indonesia/Inggris.
@@ -61,3 +62,11 @@ Screenshot berikut berasal dari build produksi lokal dengan data CMS fallback.
 - [Homepage mobile](previews/home-mobile.webp)
 - [Layanan mobile](previews/services-mobile.webp)
 - [Kontak mobile](previews/contact-mobile.webp)
+
+## Status deployment saat pembaruan hero
+
+Commit relaunch `53f6e33` sudah berada di `main`, namun GitHub belum menampilkan status Vercel untuk commit itu. Penulis GitHub serta email author/committer sesuai dengan commit terdahulu yang berhasil deploy; keduanya menggunakan commit unsigned.
+
+Konektor Vercel tidak dapat membaca proyek di scope `naukacreativedigital-1948s-projects`: API mengembalikan `403 Not authorized`. Karena itu, koneksi Git, riwayat build terbaru, serta pemicu deploy otomatis belum dapat diverifikasi melalui konektor. Ini merupakan batas akses pemeriksaan, bukan bukti penyebab kegagalan autodeploy.
+
+Jika perlu memicu build dari akun pemilik, buka proyek `naukamotion` → Deployments → Create Deployment dan pilih branch `main` atau SHA commit terbaru. Cara ini membuat deployment dari kode terbaru; menu Redeploy pada deployment lama membangun ulang commit deployment lama. Panduan resmi: <https://vercel.com/docs/git#creating-a-deployment-from-a-git-reference>.

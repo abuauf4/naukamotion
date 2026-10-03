@@ -49,7 +49,7 @@ export default async function HomePage() {
             __html: JSON.stringify(schema).replace(/</g, "\\u003c"),
           }}
         />
-        <HomeHero locale={locale} project={featuredProjects[0]} />
+        <HomeHero locale={locale} />
         <ServiceSection locale={locale} />
         <WorkSection locale={locale} projects={featuredProjects} />
         <TrustSection locale={locale} />

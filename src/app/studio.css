@@ -402,11 +402,11 @@ select {
 }
 .nm-browser-image {
   position: relative;
-  aspect-ratio: 1.7;
-  background: #e6e9e3;
+  aspect-ratio: 1.6;
+  background: #151d24;
 }
 .nm-browser-image img {
-  object-fit: cover;
+  object-fit: contain;
 }
 .nm-browser-empty {
   min-height: 220px;

@@ -21,13 +21,7 @@ import {
 import type { Locale } from "@/lib/server-locale";
 import type { FeaturedProject } from "@/lib/cms";
 
-export function HomeHero({
-  locale,
-  project,
-}: {
-  locale: Locale;
-  project?: FeaturedProject;
-}) {
+export function HomeHero({ locale }: { locale: Locale }) {
   const id = locale === "id";
   return (
     <section className="nm-hero">
@@ -97,33 +91,23 @@ export function HomeHero({
                 <i />
                 <i />
               </span>
-              <span>{project?.name ?? "Nauka Motion"}</span>
+              <span>JAECOO MAM Fatmawati</span>
               <Layers3 size={13} />
             </div>
-            {project ? (
-              <div className="nm-browser-image">
-                <Image
-                  src={project.cover}
-                  alt={`Preview ${project.name}`}
-                  fill
-                  sizes="(max-width: 767px) 90vw, 43vw"
-                  priority
-                  unoptimized
-                />
-              </div>
-            ) : (
-              <div className="nm-browser-empty">
-                <Code2 size={36} />
-                <span>
-                  {id
-                    ? "Website & sistem untuk bisnis Anda"
-                    : "Websites & systems for your business"}
-                </span>
-                <Link href="/work">
-                  {id ? "Jelajahi karya" : "Explore work"}
-                </Link>
-              </div>
-            )}
+            <div className="nm-browser-image">
+              <Image
+                src="/showcase/jaecoo-fatmawati.webp"
+                alt={
+                  id
+                    ? "Tampilan website JAECOO MAM Fatmawati dengan showcase J8"
+                    : "JAECOO MAM Fatmawati website showcasing the J8"
+                }
+                fill
+                sizes="(max-width: 767px) 90vw, 43vw"
+                priority
+                unoptimized
+              />
+            </div>
             <div className="nm-browser-caption">
               <span>{id ? "WEBSITE & WEB APP" : "WEBSITES & WEB APPS"}</span>
               <span>
@@ -134,17 +118,23 @@ export function HomeHero({
           <Link
             href="/work/nacash"
             className="nm-phone-preview"
-            aria-label={id ? "Lihat produk NaCash" : "Explore NaCash"}
+            aria-label={
+              id ? "Lihat produk NaCash Household" : "Explore NaCash Household"
+            }
           >
             <Image
-              src="/showcase/nacash-dashboard.webp"
-              alt="Tampilan aplikasi NaCash Fashion: penjualan, stok, dan laporan"
-              width={390}
-              height={844}
+              src="/showcase/nacash-household.webp"
+              alt={
+                id
+                  ? "Tampilan NaCash Household: dana aman, ringkasan bulanan, dan menu keuangan"
+                  : "NaCash Household: available funds, monthly overview, and finance tools"
+              }
+              width={739}
+              height={1536}
               priority
               unoptimized
             />
-            <span className="nm-phone-caption">NaCash · Android</span>
+            <span className="nm-phone-caption">NaCash Household</span>
           </Link>
           <div className="nm-build-note">
             <Code2 size={18} />
