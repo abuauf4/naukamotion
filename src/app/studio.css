@@ -626,11 +626,8 @@ select {
   background: var(--bg-soft);
 }
 .nm-work-visual > img {
-  object-fit: cover;
-  transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.3, 1);
-}
-.nm-work-card:hover .nm-work-visual > img {
-  transform: scale(1.035);
+  object-fit: contain;
+  object-position: center;
 }
 .nm-work-caption {
   display: flex;
