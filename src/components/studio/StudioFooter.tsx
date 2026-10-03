@@ -17,7 +17,6 @@ export function StudioFooter({ locale = "id" }: { locale?: Locale }) {
                 width={768}
                 height={265}
                 sizes="185px"
-                unoptimized
               />
             </Link>
             <p>

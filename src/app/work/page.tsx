@@ -85,7 +85,6 @@ export default async function WorkPage() {
                   alt="Antarmuka NaCash Fashion"
                   width={390}
                   height={844}
-                  unoptimized
                 />
               </div>
               <div className="nm-work-caption">

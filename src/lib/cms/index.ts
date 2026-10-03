@@ -1,4 +1,5 @@
 import { cache } from "react";
+import { unstable_cache } from "next/cache";
 /**
  * CMS Source Selector
  *
@@ -86,6 +87,19 @@ export type FeaturedProject = {
   isPreview?: boolean;
 };
 
+// Only public showcase data is shared across requests. Locale and admin data
+// remain request-specific. Existing admin revalidatePath calls invalidate it.
+const cachedFeaturedProjects = unstable_cache(
+  fetchFeaturedProjects,
+  ["studio-featured-v2"],
+  { revalidate: 60 },
+);
+const cachedPreviewProjects = unstable_cache(
+  fetchPublicPreviewProjects,
+  ["studio-preview-v2"],
+  { revalidate: 60 },
+);
+
 // ─── Public API ───
 
 async function getCategoriesUncached(): Promise<StudioCategory[]> {
@@ -166,9 +180,9 @@ async function getFeaturedProjectsUncached(): Promise<FeaturedProject[]> {
       }));
   }
 
-  const projects = await fetchFeaturedProjects();
+  const projects = await cachedFeaturedProjects();
   const sourceProjects =
-    projects.length >= 2 ? projects : await fetchPublicPreviewProjects();
+    projects.length >= 2 ? projects : await cachedPreviewProjects();
   return sourceProjects.map((project) => ({
     slug: project.slug,
     index: project.index,

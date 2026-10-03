@@ -1,0 +1,166 @@
+{
+  "/logo-navbar-transparent.png": [
+    {
+      "width": 320,
+      "src": "/optimized/logo-navbar-transparent-320.webp"
+    },
+    {
+      "width": 640,
+      "src": "/optimized/logo-navbar-transparent-640.webp"
+    },
+    {
+      "width": 768,
+      "src": "/optimized/logo-navbar-transparent-768.webp"
+    }
+  ],
+  "/showcase/jaecoo-fatmawati.webp": [
+    {
+      "width": 320,
+      "src": "/optimized/showcase-jaecoo-fatmawati-320.webp"
+    },
+    {
+      "width": 640,
+      "src": "/optimized/showcase-jaecoo-fatmawati-640.webp"
+    },
+    {
+      "width": 960,
+      "src": "/optimized/showcase-jaecoo-fatmawati-960.webp"
+    },
+    {
+      "width": 1280,
+      "src": "/optimized/showcase-jaecoo-fatmawati-1280.webp"
+    }
+  ],
+  "/showcase/nacash-dashboard.webp": [
+    {
+      "width": 320,
+      "src": "/optimized/showcase-nacash-dashboard-320.webp"
+    },
+    {
+      "width": 390,
+      "src": "/optimized/showcase-nacash-dashboard-390.webp"
+    }
+  ],
+  "/showcase/nacash-household.webp": [
+    {
+      "width": 320,
+      "src": "/optimized/showcase-nacash-household-320.webp"
+    },
+    {
+      "width": 640,
+      "src": "/optimized/showcase-nacash-household-640.webp"
+    },
+    {
+      "width": 739,
+      "src": "/optimized/showcase-nacash-household-739.webp"
+    }
+  ],
+  "/portfolio/geely-pluit.png": [
+    {
+      "width": 320,
+      "src": "/optimized/portfolio-geely-pluit-320.webp"
+    },
+    {
+      "width": 640,
+      "src": "/optimized/portfolio-geely-pluit-640.webp"
+    },
+    {
+      "width": 960,
+      "src": "/optimized/portfolio-geely-pluit-960.webp"
+    },
+    {
+      "width": 1280,
+      "src": "/optimized/portfolio-geely-pluit-1280.webp"
+    }
+  ],
+  "/portfolio/ghazy-computer.png": [
+    {
+      "width": 320,
+      "src": "/optimized/portfolio-ghazy-computer-320.webp"
+    },
+    {
+      "width": 640,
+      "src": "/optimized/portfolio-ghazy-computer-640.webp"
+    },
+    {
+      "width": 960,
+      "src": "/optimized/portfolio-ghazy-computer-960.webp"
+    },
+    {
+      "width": 1280,
+      "src": "/optimized/portfolio-ghazy-computer-1280.webp"
+    }
+  ],
+  "/portfolio/jasaprotect.png": [
+    {
+      "width": 320,
+      "src": "/optimized/portfolio-jasaprotect-320.webp"
+    },
+    {
+      "width": 640,
+      "src": "/optimized/portfolio-jasaprotect-640.webp"
+    },
+    {
+      "width": 960,
+      "src": "/optimized/portfolio-jasaprotect-960.webp"
+    },
+    {
+      "width": 1280,
+      "src": "/optimized/portfolio-jasaprotect-1280.webp"
+    }
+  ],
+  "/portfolio/mitsubishi.png": [
+    {
+      "width": 320,
+      "src": "/optimized/portfolio-mitsubishi-320.webp"
+    },
+    {
+      "width": 640,
+      "src": "/optimized/portfolio-mitsubishi-640.webp"
+    },
+    {
+      "width": 960,
+      "src": "/optimized/portfolio-mitsubishi-960.webp"
+    },
+    {
+      "width": 1280,
+      "src": "/optimized/portfolio-mitsubishi-1280.webp"
+    }
+  ],
+  "/portfolio/nauka-gadget.png": [
+    {
+      "width": 320,
+      "src": "/optimized/portfolio-nauka-gadget-320.webp"
+    },
+    {
+      "width": 640,
+      "src": "/optimized/portfolio-nauka-gadget-640.webp"
+    },
+    {
+      "width": 960,
+      "src": "/optimized/portfolio-nauka-gadget-960.webp"
+    },
+    {
+      "width": 1280,
+      "src": "/optimized/portfolio-nauka-gadget-1280.webp"
+    }
+  ],
+  "/portfolio/nauka-kostay.png": [
+    {
+      "width": 320,
+      "src": "/optimized/portfolio-nauka-kostay-320.webp"
+    },
+    {
+      "width": 640,
+      "src": "/optimized/portfolio-nauka-kostay-640.webp"
+    },
+    {
+      "width": 960,
+      "src": "/optimized/portfolio-nauka-kostay-960.webp"
+    },
+    {
+      "width": 1280,
+      "src": "/optimized/portfolio-nauka-kostay-1280.webp"
+    }
+  ]
+}

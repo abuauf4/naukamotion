@@ -64,7 +64,6 @@ export function StudioHeader() {
             height={265}
             sizes="155px"
             priority
-            unoptimized
           />
         </Link>
         <nav

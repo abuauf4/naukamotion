@@ -203,7 +203,8 @@ select {
   color: var(--ink);
   background: rgba(16, 23, 22, 0.94);
   border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(16px);
+  /* Opaque enough for readability without a scroll-time GPU blur. */
+  backdrop-filter: none;
 }
 .nm-header-inner {
   height: 86px;

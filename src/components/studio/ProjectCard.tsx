@@ -28,7 +28,6 @@ export function ProjectCard({
           alt={`Preview ${project.name}`}
           fill
           sizes="(max-width: 640px) 92vw, 44vw"
-          unoptimized
         />
       </div>
       <div className="nm-work-caption">

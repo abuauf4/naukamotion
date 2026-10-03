@@ -9,17 +9,17 @@
  *   - status != 'draft' (exclude drafts)
  */
 
-import { prisma } from './db';
-import type { Prisma } from '@prisma/client';
+import { prisma } from "./db";
+import type { Prisma, Category } from "@prisma/client";
 
 // ─── Types (re-exported for adapter) ───
 
 export type ProjectWithRelations = Prisma.ProjectGetPayload<{
   include: {
     category: true;
-    sections: { orderBy: { sortOrder: 'asc' } };
-    technologies: { orderBy: { sortOrder: 'asc' } };
-    media: { orderBy: { sortOrder: 'asc' } };
+    sections: { orderBy: { sortOrder: "asc" } };
+    technologies: { orderBy: { sortOrder: "asc" } };
+    media: { orderBy: { sortOrder: "asc" } };
   };
 }>;
 
@@ -35,8 +35,8 @@ export type FeaturedProjectRecord = Prisma.ProjectGetPayload<{
     accent: true;
     category: { select: { title: true } };
     media: {
-      where: { type: 'cover' };
-      orderBy: { sortOrder: 'asc' };
+      where: { type: "cover" };
+      orderBy: { sortOrder: "asc" };
       take: 1;
       select: { url: true };
     };
@@ -45,17 +45,15 @@ export type FeaturedProjectRecord = Prisma.ProjectGetPayload<{
 
 // ─── Category queries ───
 
-export async function fetchAllCategories(): Promise<
-  Prisma.CategoryGetPayload<{}>[]
-> {
+export async function fetchAllCategories(): Promise<Category[]> {
   return prisma.category.findMany({
-    orderBy: { sortOrder: 'asc' },
+    orderBy: { sortOrder: "asc" },
   });
 }
 
 export async function fetchCategoryBySlug(
-  slug: string
-): Promise<Prisma.CategoryGetPayload<{}> | null> {
+  slug: string,
+): Promise<Category | null> {
   return prisma.category.findUnique({ where: { slug } });
 }
 
@@ -63,32 +61,45 @@ export async function fetchCategoryBySlug(
 
 /**
  * Fetch all public projects (visibility=public, status != draft).
- * Includes category, sections, and technologies.
+ * Includes category and one cover; full stories are loaded only on detail pages.
  */
 export async function fetchPublicProjects(): Promise<ProjectWithRelations[]> {
-  return prisma.project.findMany({
+  const projects = await prisma.project.findMany({
     where: {
-      visibility: 'public',
-      status: { not: 'draft' },
+      visibility: "public",
+      status: { not: "draft" },
     },
-    orderBy: { sortOrder: 'asc' },
+    orderBy: { sortOrder: "asc" },
     include: {
       category: true,
-      sections: { orderBy: { sortOrder: 'asc' } },
-      technologies: { orderBy: { sortOrder: 'asc' } },
-      media: { orderBy: { sortOrder: 'asc' } },
+      media: {
+        where: { type: "cover" },
+        orderBy: { sortOrder: "asc" },
+        take: 1,
+      },
     },
   });
+  // Listing cards never render case-study sections, technology stories or galleries.
+  // The detail query below still fetches the complete project.
+  return projects.map((project) => ({
+    ...project,
+    sections: [],
+    technologies: [],
+    techIntro: null,
+  }));
 }
 
-export async function fetchFeaturedProjects(): Promise<FeaturedProjectRecord[]> {
+export async function fetchFeaturedProjects(): Promise<
+  FeaturedProjectRecord[]
+> {
   return prisma.project.findMany({
     where: {
       featured: true,
-      visibility: 'public',
-      status: { not: 'draft' },
+      visibility: "public",
+      status: { not: "draft" },
     },
-    orderBy: { sortOrder: 'asc' },
+    orderBy: { sortOrder: "asc" },
+    take: 3,
     select: {
       slug: true,
       index: true,
@@ -100,8 +111,8 @@ export async function fetchFeaturedProjects(): Promise<FeaturedProjectRecord[]> 
       accent: true,
       category: { select: { title: true } },
       media: {
-        where: { type: 'cover' },
-        orderBy: { sortOrder: 'asc' },
+        where: { type: "cover" },
+        orderBy: { sortOrder: "asc" },
         take: 1,
         select: { url: true },
       },
@@ -110,13 +121,15 @@ export async function fetchFeaturedProjects(): Promise<FeaturedProjectRecord[]> 
 }
 
 /** Lightweight fallback frames for the mobile homepage showcase. */
-export async function fetchPublicPreviewProjects(): Promise<FeaturedProjectRecord[]> {
+export async function fetchPublicPreviewProjects(): Promise<
+  FeaturedProjectRecord[]
+> {
   return prisma.project.findMany({
     where: {
-      visibility: 'public',
-      status: { not: 'draft' },
+      visibility: "public",
+      status: { not: "draft" },
     },
-    orderBy: { sortOrder: 'asc' },
+    orderBy: { sortOrder: "asc" },
     take: 2,
     select: {
       slug: true,
@@ -129,8 +142,8 @@ export async function fetchPublicPreviewProjects(): Promise<FeaturedProjectRecor
       accent: true,
       category: { select: { title: true } },
       media: {
-        where: { type: 'cover' },
-        orderBy: { sortOrder: 'asc' },
+        where: { type: "cover" },
+        orderBy: { sortOrder: "asc" },
         take: 1,
         select: { url: true },
       },
@@ -143,19 +156,19 @@ export async function fetchPublicPreviewProjects(): Promise<FeaturedProjectRecor
  * Returns null if not found, private, or draft.
  */
 export async function fetchPublicProjectBySlug(
-  slug: string
+  slug: string,
 ): Promise<ProjectWithRelations | null> {
   return prisma.project.findFirst({
     where: {
       slug,
-      visibility: 'public',
-      status: { not: 'draft' },
+      visibility: "public",
+      status: { not: "draft" },
     },
     include: {
       category: true,
-      sections: { orderBy: { sortOrder: 'asc' } },
-      technologies: { orderBy: { sortOrder: 'asc' } },
-      media: { orderBy: { sortOrder: 'asc' } },
+      sections: { orderBy: { sortOrder: "asc" } },
+      technologies: { orderBy: { sortOrder: "asc" } },
+      media: { orderBy: { sortOrder: "asc" } },
     },
   });
 }
@@ -164,22 +177,32 @@ export async function fetchPublicProjectBySlug(
  * Fetch public projects for a specific category.
  */
 export async function fetchPublicProjectsByCategory(
-  categorySlug: string
+  categorySlug: string,
 ): Promise<ProjectWithRelations[]> {
-  return prisma.project.findMany({
+  const projects = await prisma.project.findMany({
     where: {
       categorySlug,
-      visibility: 'public',
-      status: { not: 'draft' },
+      visibility: "public",
+      status: { not: "draft" },
     },
-    orderBy: { sortOrder: 'asc' },
+    orderBy: { sortOrder: "asc" },
     include: {
       category: true,
-      sections: { orderBy: { sortOrder: 'asc' } },
-      technologies: { orderBy: { sortOrder: 'asc' } },
-      media: { orderBy: { sortOrder: 'asc' } },
+      media: {
+        where: { type: "cover" },
+        orderBy: { sortOrder: "asc" },
+        take: 1,
+      },
     },
   });
+  // Listing cards never render case-study sections, technology stories or galleries.
+  // The detail query below still fetches the complete project.
+  return projects.map((project) => ({
+    ...project,
+    sections: [],
+    technologies: [],
+    techIntro: null,
+  }));
 }
 
 /**
@@ -188,11 +211,11 @@ export async function fetchPublicProjectsByCategory(
 export async function fetchAllPublicSlugs(): Promise<string[]> {
   const projects = await prisma.project.findMany({
     where: {
-      visibility: 'public',
-      status: { not: 'draft' },
+      visibility: "public",
+      status: { not: "draft" },
     },
     select: { slug: true },
-    orderBy: { sortOrder: 'asc' },
+    orderBy: { sortOrder: "asc" },
   });
   return projects.map((p) => p.slug);
 }
@@ -212,10 +235,10 @@ export async function fetchPublicProjectCountsByCategory(): Promise<
   Record<string, number>
 > {
   const grouped = await prisma.project.groupBy({
-    by: ['categorySlug'],
+    by: ["categorySlug"],
     where: {
-      visibility: 'public',
-      status: { not: 'draft' },
+      visibility: "public",
+      status: { not: "draft" },
     },
     _count: { _all: true },
   });

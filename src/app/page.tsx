@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { StudioHeader } from "@/components/studio/StudioHeader";
 import { StudioFooter } from "@/components/studio/StudioFooter";
 import {
@@ -15,11 +16,13 @@ import { studioContact } from "@/lib/studio-offering";
 
 export const revalidate = 60;
 
+async function FeaturedWork({ locale }: { locale: "id" | "en" }) {
+  const projects = await getFeaturedProjects();
+  return <WorkSection locale={locale} projects={projects} />;
+}
+
 export default async function HomePage() {
-  const [featuredProjects, locale] = await Promise.all([
-    getFeaturedProjects(),
-    getLocale(),
-  ]);
+  const locale = await getLocale();
   const schema = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
@@ -51,7 +54,19 @@ export default async function HomePage() {
         />
         <HomeHero locale={locale} />
         <ServiceSection locale={locale} />
-        <WorkSection locale={locale} projects={featuredProjects} />
+        <Suspense
+          fallback={
+            <section
+              className="nm-section"
+              aria-busy="true"
+              aria-label={locale === "id" ? "Memuat karya" : "Loading work"}
+            >
+              <div className="nm-container" style={{ minHeight: 640 }} />
+            </section>
+          }
+        >
+          <FeaturedWork locale={locale} />
+        </Suspense>
         <TrustSection locale={locale} />
         <ProcessSection locale={locale} />
         <FaqSection locale={locale} />

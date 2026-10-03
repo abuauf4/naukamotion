@@ -3,7 +3,6 @@ import localFont from "next/font/local";
 import "./globals.css";
 import "./studio.css";
 import { getLocale } from "@/lib/server-locale";
-import { Toaster } from "@/components/ui/sonner";
 import { LocaleProvider } from "@/lib/locale-context";
 
 // Bundled Latin fonts keep builds independent of Google Fonts availability.
@@ -147,7 +146,6 @@ export default async function RootLayout({
         className={`${instrumentSans.variable} ${fraunces.variable} antialiased bg-background text-foreground`}
       >
         <LocaleProvider initialLocale={locale}>{children}</LocaleProvider>
-        <Toaster />
       </body>
     </html>
   );

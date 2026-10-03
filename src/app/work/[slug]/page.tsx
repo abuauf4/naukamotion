@@ -170,7 +170,6 @@ export default async function WorkDetailPage({ params }: Props) {
               fill
               sizes="(max-width: 640px) 92vw, 90vw"
               priority
-              unoptimized
             />
           </div>
           <div className="nm-case-layout">

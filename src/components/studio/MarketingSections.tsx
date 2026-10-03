@@ -105,7 +105,6 @@ export function HomeHero({ locale }: { locale: Locale }) {
                 fill
                 sizes="(max-width: 767px) 90vw, 43vw"
                 priority
-                unoptimized
               />
             </div>
             <div className="nm-browser-caption">
@@ -131,8 +130,8 @@ export function HomeHero({ locale }: { locale: Locale }) {
               }
               width={739}
               height={1536}
+              sizes="(max-width: 767px) 28vw, 15vw"
               priority
-              unoptimized
             />
             <span className="nm-phone-caption">NaCash Household</span>
           </Link>
@@ -318,7 +317,6 @@ export function WorkSection({
                 width={390}
                 height={844}
                 sizes="200px"
-                unoptimized
               />
             </div>
             <div className="nm-work-caption">
@@ -350,7 +348,6 @@ export function WorkSection({
                   alt={`Preview proyek ${project.name}`}
                   fill
                   sizes="(max-width: 767px) 92vw, 44vw"
-                  unoptimized
                 />
               </div>
               <div className="nm-work-caption">
