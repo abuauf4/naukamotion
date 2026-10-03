@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 
 /**
  * LocaleContext — client-side locale state.
@@ -32,37 +38,31 @@ const LocaleContext = createContext<LocaleContextValue | null>(null);
 const COOKIE_NAME = "nauka-locale";
 const STORAGE_KEY = "nauka-locale";
 
-export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("id");
+export function LocaleProvider({
+  children,
+  initialLocale = "id",
+}: {
+  children: ReactNode;
+  initialLocale?: Locale;
+}) {
+  const [locale, setLocaleState] = useState<Locale>(initialLocale);
 
-  // Initialize from cookie/localStorage on mount
   useEffect(() => {
-    const fromCookie = document.cookie
-      .split("; ")
-      .find((c) => c.startsWith(`${COOKIE_NAME}=`))
-      ?.split("=")[1] as Locale | undefined;
+    setLocaleState(initialLocale);
+    document.documentElement.lang = initialLocale;
+  }, [initialLocale]);
 
-    const fromStorage =
-      typeof window !== "undefined"
-        ? (localStorage.getItem(STORAGE_KEY) as Locale | null)
-        : null;
-
-    const initial = fromCookie || fromStorage || "id";
-    if (initial === "en" || initial === "id") {
-      setLocaleState(initial);
+  const setLocale = (next: Locale) => {
+    setLocaleState(next);
+    document.documentElement.lang = next;
+    try {
+      localStorage.setItem(STORAGE_KEY, next);
+      document.cookie = `${COOKIE_NAME}=${next}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
+    } catch {
+      /* Language remains usable when storage is unavailable. */
     }
-  }, []);
-
-  // Update <html lang> + persist when locale changes
-  useEffect(() => {
-    document.documentElement.lang = locale;
-    localStorage.setItem(STORAGE_KEY, locale);
-    // Cookie untuk server-side reading (generateMetadata)
-    document.cookie = `${COOKIE_NAME}=${locale}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
-  }, [locale]);
-
-  const setLocale = (next: Locale) => setLocaleState(next);
-  const toggle = () => setLocaleState((prev) => (prev === "id" ? "en" : "id"));
+  };
+  const toggle = () => setLocale(locale === "id" ? "en" : "id");
 
   return (
     <LocaleContext.Provider value={{ locale, setLocale, toggle }}>
@@ -90,7 +90,7 @@ export function useLocale(): LocaleContextValue {
  */
 export function pickLocal<T extends { id: string; en: string }>(
   text: T,
-  locale: Locale
+  locale: Locale,
 ): string {
   return locale === "en" ? text.en : text.id;
 }

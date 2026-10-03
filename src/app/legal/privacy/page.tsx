@@ -22,7 +22,7 @@ const sections = [
     heading: "Data yang Kami Kumpulkan",
     body: [
       "Kami mengumpulkan informasi yang Anda berikan secara sukarela melalui form kontak atau brief proyek, yaitu: nama, email, nomor telepon/WhatsApp, nama perusahaan, jenis proyek, budget, timeline, dan pesan/cerita singkat.",
-      "Selain itu, kami dapat mengumpulkan data analitik anonim (halaman yang dikunjungi, durasi sesi, perangkat yang digunakan) melalui layanan analitik pihak ketiga untuk memahami bagaimana Situs digunakan.",
+      "Pilihan bahasa disimpan melalui cookie dan penyimpanan lokal browser. Jika Anda memilih melanjutkan percakapan ke WhatsApp atau email, data yang Anda kirim mengikuti layanan tersebut.",
     ],
   },
   {
@@ -42,14 +42,14 @@ const sections = [
   {
     heading: "Hak Anda",
     body: [
-      "Anda berhak untuk meminta akses, koreksi, atau penghapusan data pribadi yang Anda berikan kepada kami. Untuk menggunakan hak ini, hubungi kami melalui email di naukamotion@gmail.com.",
+      "Anda berhak untuk meminta akses, koreksi, atau penghapusan data pribadi yang Anda berikan kepada kami. Untuk menggunakan hak ini, hubungi kami melalui email di info@nauka.id.",
       "Anda juga berhak menarik persetujuan Anda untuk pengumpulan data di masa mendatang dengan berhenti menggunakan form kontak kami.",
     ],
   },
   {
     heading: "Cookie",
     body: [
-      "Situs ini menggunakan cookie untuk menyimpan preferensi pengguna (tema terang/gelap, bahasa) dan untuk analitik. Anda dapat mengatur browser untuk menolak cookie, namun beberapa fitur Situs mungkin tidak berfungsi dengan baik.",
+      "Situs menggunakan cookie untuk pilihan bahasa dan sesi login admin. Preferensi tampilan dapat tersimpan di penyimpanan lokal browser. Anda dapat mengatur browser untuk menolak atau menghapus penyimpanan tersebut.",
     ],
   },
   {
@@ -61,7 +61,7 @@ const sections = [
   {
     heading: "Kontak",
     body: [
-      "Jika Anda memiliki pertanyaan tentang Kebijakan Privasi ini, hubungi kami melalui email: naukamotion@gmail.com.",
+      "Jika Anda memiliki pertanyaan tentang Kebijakan Privasi ini, hubungi kami melalui email: info@nauka.id.",
     ],
   },
 ];
@@ -79,7 +79,7 @@ export default function PrivacyPolicyPage() {
       <ScrollProgress />
       <Header />
 
-      <main style={{ flex: 1, paddingTop: "120px" }}>
+      <main id="main-content" style={{ flex: 1, paddingTop: "120px" }}>
         <section style={{ paddingBottom: "60px" }}>
           <div className="container-wide">
             <p className="eyebrow eyebrow-burnt" style={{ marginBottom: "24px" }}>

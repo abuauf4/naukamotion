@@ -65,7 +65,7 @@ const sections = [
   {
     heading: "Kontak",
     body: [
-      "Untuk pertanyaan tentang Syarat dan Ketentuan ini, hubungi: naukamotion@gmail.com.",
+      "Untuk pertanyaan tentang Syarat dan Ketentuan ini, hubungi: info@nauka.id.",
     ],
   },
 ];
@@ -83,7 +83,7 @@ export default function TermsPage() {
       <ScrollProgress />
       <Header />
 
-      <main style={{ flex: 1, paddingTop: "120px" }}>
+      <main id="main-content" style={{ flex: 1, paddingTop: "120px" }}>
         <section style={{ paddingBottom: "60px" }}>
           <div className="container-wide">
             <p className="eyebrow eyebrow-burnt" style={{ marginBottom: "24px" }}>

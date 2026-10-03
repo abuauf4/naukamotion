@@ -1,222 +1,118 @@
-import Link from "next/link";
 import type { Metadata } from "next";
-import { Header } from "@/components/nauka/Header";
-import { Footer } from "@/components/nauka/Footer";
-import { ScrollProgress } from "@/components/nauka/ScrollProgress";
+import Link from "next/link";
+import Image from "next/image";
+import { StudioHeader } from "@/components/studio/StudioHeader";
+import { StudioFooter } from "@/components/studio/StudioFooter";
+import { ProjectCTA } from "@/components/studio/MarketingSections";
+import { ProjectCard } from "@/components/studio/ProjectCard";
+import { getCategories, getPublicProjects } from "@/lib/cms";
+import { getLocale } from "@/lib/server-locale";
 
-// CMS source selector — default is 'static' (studio-data.ts)
-import { getCategories, getProjectsByCategory } from "@/lib/cms";
-import type { CategorySlug } from "@/lib/studio-data";
-
-/**
- * /work — Overview semua kategori.
- *
- * Server component fetches from CMS source selector.
- */
-
-// ISR — required so revalidatePath('/work', 'page') from admin cover/og
-// mutations actually invalidates the Vercel CDN cache for this route.
 export const revalidate = 60;
-
 export const metadata: Metadata = {
-  title: "Kategori Proyek",
+  title: "Portofolio Website & Aplikasi",
   description:
-    "Industri dan jenis proyek yang telah dikerjakan Nauka Motion — otomotif, retail teknologi, asuransi, brand konsumen, pariwisata, dan Nauka Labs.",
-  alternates: {
-    canonical: "/work",
-  },
+    "Jelajahi website, aplikasi, dan sistem yang dibangun Nauka Motion untuk otomotif, retail, asuransi, serta produk internal NaCash.",
+  alternates: { canonical: "/work" },
 };
 
-export default async function WorkOverviewPage() {
-  const categories = await getCategories();
-
-  // Fetch project counts per category
-  const categoryData = await Promise.all(
-    categories.map(async (cat) => {
-      const projects = await getProjectsByCategory(cat.slug as CategorySlug);
-      return { cat, projectCount: projects.length };
-    })
-  );
-
+export default async function WorkPage() {
+  const [categories, projects, locale] = await Promise.all([
+    getCategories(),
+    getPublicProjects(),
+    getLocale(),
+  ]);
+  const id = locale === "id";
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        background: "var(--bg)",
-      }}
-    >
-      <ScrollProgress />
-      <Header />
-
-      <main style={{ flex: 1, paddingTop: "120px" }}>
-        {/* Header */}
-        <section style={{ paddingBottom: "80px" }}>
-          <div className="container-wide">
-            <p className="eyebrow eyebrow-burnt" style={{ marginBottom: "24px" }}>
-              <span style={{ opacity: 0.5 }}>///</span>
-              Kategori Saat Ini — {String(categories.length).padStart(2, "0")}
+    <div className="nm-page">
+      <StudioHeader />
+      <main id="main-content" className="nm-subpage">
+        <div className="nm-container">
+          <div className="nm-page-intro">
+            <p className="nm-eyebrow">
+              NAUKA MOTION / {id ? "PORTOFOLIO" : "PORTFOLIO"}
             </p>
-            <h1
-              style={{
-                fontFamily: "var(--font-body), sans-serif",
-                fontWeight: 500,
-                fontSize: "clamp(2.5rem, 7vw, 5rem)",
-                lineHeight: 1.02,
-                letterSpacing: "-0.03em",
-                color: "var(--ink)",
-                margin: 0,
-                maxWidth: "16ch",
-              }}
-            >
-              Industri dan jenis proyek yang telah kami{" "}
-              <span
-                style={{
-                  fontFamily: "var(--font-fraunces), serif",
-                  fontStyle: "italic",
-                  fontWeight: 400,
-                  color: "var(--burnt)",
-                }}
-              >
-                kerjakan
-              </span>
-              .
+            <h1>
+              {id ? (
+                <>
+                  Beragam kebutuhan.
+                  <br />
+                  <span>Karya dengan tujuan.</span>
+                </>
+              ) : (
+                <>
+                  Different needs.
+                  <br />
+                  <span>Work with a purpose.</span>
+                </>
+              )}
             </h1>
-            <p
-              style={{
-                fontFamily: "var(--font-body), sans-serif",
-                fontSize: "1.15rem",
-                color: "var(--ink-soft)",
-                lineHeight: 1.55,
-                margin: "32px 0 0 0",
-                maxWidth: "52ch",
-              }}
-            >
-              Beberapa industri dan jenis proyek yang telah kami kerjakan sejauh
-              ini. Kategori ini akan terus berkembang seiring perjalanan Nauka
-              Motion.
+            <p>
+              {id
+                ? "Website untuk bisnis, sistem untuk operasional, dan produk yang kami kembangkan sendiri. Buka setiap proyek untuk melihat cerita serta pendekatannya."
+                : "Business websites, operational systems, and products we develop in-house. Explore each project to see its story and approach."}
             </p>
           </div>
-        </section>
-
-        {/* Category list */}
-        <section style={{ paddingBottom: "120px" }}>
-          <div className="container-wide">
-            <div
-              style={{
-                borderTop: "1px solid var(--line)",
-              }}
-            >
-              {categoryData.map(({ cat, projectCount }) => (
-                <Link
-                  key={cat.slug}
-                  href={`/work/${cat.slug}`}
-                  className="nmp-cat-row"
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns:
-                      "minmax(60px, 80px) minmax(0, 2fr) minmax(0, 3fr) minmax(0, 1fr) 80px",
-                    gap: "24px",
-                    alignItems: "center",
-                    padding: "40px 0",
-                    borderBottom: "1px solid var(--line)",
-                    textDecoration: "none",
-                    color: "inherit",
-                    transition: "background 0.2s ease",
-                  }}
-                >
-                  <span className="nmp-index">{cat.index}</span>
-                  <div>
-                    <h3
-                      style={{
-                        fontFamily: "var(--font-body), sans-serif",
-                        fontWeight: 500,
-                        fontSize: "clamp(1.4rem, 2vw, 1.85rem)",
-                        letterSpacing: "-0.015em",
-                        color: "var(--ink)",
-                        margin: 0,
-                        lineHeight: 1.1,
-                      }}
-                    >
-                      {cat.title}
-                    </h3>
-                  </div>
-                  <p
-                    style={{
-                      fontFamily: "var(--font-body), sans-serif",
-                      fontSize: "0.95rem",
-                      color: "var(--ink-soft)",
-                      lineHeight: 1.5,
-                      margin: 0,
-                      maxWidth: "44ch",
-                    }}
-                    className="nmp-cat-row-desc"
-                  >
-                    {cat.description.id}
+          <nav
+            className="nm-work-filters"
+            aria-label={id ? "Kategori portofolio" : "Portfolio categories"}
+          >
+            <Link href="/work" aria-current="page">
+              {id ? "Semua karya" : "All work"}
+            </Link>
+            {categories.map((c) => (
+              <Link key={c.slug} href={`/work/${c.slug}`}>
+                {c.title}
+              </Link>
+            ))}
+          </nav>
+          <div className="nm-work-grid nm-project-grid">
+            <Link className="nm-work-card" href="/work/nacash">
+              <div className="nm-work-visual nm-app-visual">
+                <div className="nm-app-wordmark">
+                  <span>PRODUK NAUKA</span>
+                  <strong>
+                    NaCash<span>by Nauka</span>
+                  </strong>
+                  <p>
+                    {id
+                      ? "Kasir & keuangan dalam satu ekosistem."
+                      : "Point of sale & finance in one ecosystem."}
                   </p>
-                  <span
-                    className="studio-meta"
-                    style={{ color: "var(--burnt)" }}
-                  >
-                    {projectCount > 0
-                      ? `${String(projectCount).padStart(2, "0")} proyek`
-                      : "segera"}
+                </div>
+                <Image
+                  src="/showcase/nacash-dashboard.webp"
+                  alt="Antarmuka NaCash Fashion"
+                  width={390}
+                  height={844}
+                  unoptimized
+                />
+              </div>
+              <div className="nm-work-caption">
+                <div>
+                  <span>
+                    {id
+                      ? "Produk internal · Android"
+                      : "In-house product · Android"}
                   </span>
-                  <span
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      justifyContent: "flex-end",
-                      color: "var(--ink-soft)",
-                    }}
-                    className="nmp-cat-row-arrow"
-                  >
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 12 12"
-                      fill="none"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M2 10L10 2M10 2H4M10 2V8"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
-                </Link>
-              ))}
-            </div>
+                  <h3>NaCash</h3>
+                  <p>
+                    {id
+                      ? "Kasir, stok, dan pencatatan keuangan."
+                      : "Point of sale, inventory, and finance tracking."}
+                  </p>
+                </div>
+                <span className="nm-project-number">N</span>
+              </div>
+            </Link>
+            {projects.map((p) => (
+              <ProjectCard key={p.slug} project={p} locale={locale} />
+            ))}
           </div>
-        </section>
+        </div>
+        <ProjectCTA locale={locale} />
       </main>
-
-      <Footer />
-
-      <style>{`
-        .nmp-cat-row:hover {
-          background: var(--paper-warm);
-        }
-        .nmp-cat-row:hover .nmp-cat-row-arrow {
-          color: var(--burnt);
-          transform: translateX(2px);
-        }
-        .nmp-cat-row-arrow {
-          transition: transform 0.25s ease, color 0.25s ease;
-        }
-        @media (max-width: 1024px) {
-          .nmp-cat-row {
-            grid-template-columns: 60px minmax(0, 1fr) 40px !important;
-          }
-          .nmp-cat-row-desc {
-            display: none !important;
-          }
-        }
-      `}</style>
+      <StudioFooter locale={locale} />
     </div>
   );
 }

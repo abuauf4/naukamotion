@@ -1,42 +1,43 @@
 import type { Metadata, Viewport } from "next";
-import { Instrument_Sans, Fraunces } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
+import "./studio.css";
+import { getLocale } from "@/lib/server-locale";
 import { Toaster } from "@/components/ui/sonner";
 import { LocaleProvider } from "@/lib/locale-context";
 
-/* ━━ Nauka Motion — V2 Studio Typography ━━
- *
- * V2 design principle: lean fonts, only what is used.
- *
- *   Instrument Sans  — body & interface (weights 400 + 500 only)
- *   Fraunces         — editorial display, italic 400 (static subset, no axes)
- *
- * Compared to V1:
- *   - Dropped Fraunces variable font with `opsz` + `SOFT` axes (~269KB → ~25KB)
- *   - Dropped Instrument Sans weights 600 + 700 (unused in production code)
- *   - Dropped JetBrains Mono entirely (was 30KB, used only for labels —
- *     labels now use Fraunces italic + letter-spacing for editorial feel,
- *     keeping the typography hierarchy to two families)
- *
- * Result: ~50KB fonts vs ~323KB V1 (≈85% reduction).
- */
-
-const instrumentSans = Instrument_Sans({
+// Bundled Latin fonts keep builds independent of Google Fonts availability.
+const instrumentSans = localFont({
   variable: "--font-body",
-  subsets: ["latin"],
   display: "swap",
-  weight: ["400", "500"],
+  src: [
+    {
+      path: "../../public/fonts/instrument-sans-latin-400-normal.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/instrument-sans-latin-500-normal.woff2",
+      weight: "500",
+      style: "normal",
+    },
+  ],
 });
-
-const fraunces = Fraunces({
+const fraunces = localFont({
   variable: "--font-fraunces",
-  subsets: ["latin"],
   display: "swap",
-  style: ["normal", "italic"],
-  weight: ["400"],
-  // No `axes` — static italic 400 subset only.
-  // The variable opsz/SOFT axes were configured in V1 but never animated
-  // or reconfigured at runtime. Static subset drops ~250KB.
+  src: [
+    {
+      path: "../../public/fonts/fraunces-latin-400-normal.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/fraunces-latin-400-italic.woff2",
+      weight: "400",
+      style: "italic",
+    },
+  ],
 });
 
 const SITE_URL = "https://motion.nauka.id";
@@ -44,14 +45,17 @@ const SITE_URL = "https://motion.nauka.id";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Nauka Motion — Studio Produk Digital",
+    default: "Nauka Motion — Jasa Website & Aplikasi Android",
     template: "%s — Nauka Motion",
   },
   description:
-    "Nauka Motion menggabungkan desain, teknologi, dan pemecahan masalah untuk membangun website, platform, dan sistem digital di berbagai industri.",
+    "Jasa pembuatan website, aplikasi Android, dan sistem bisnis oleh Nauka Motion. Desain sesuai brand, lingkup jelas, dan progres yang bisa Anda tinjau.",
   keywords: [
     "Nauka Motion",
-    "studio produk digital",
+    "jasa pembuatan website",
+    "jasa pembuatan aplikasi Android",
+    "developer website Jakarta",
+    "sistem bisnis custom",
     "website development",
     "web application",
     "business system",
@@ -70,9 +74,9 @@ export const metadata: Metadata = {
     apple: "/logo-favicon.webp",
   },
   openGraph: {
-    title: "Nauka Motion — Studio Produk Digital",
+    title: "Nauka Motion — Jasa Website & Aplikasi Android",
     description:
-      "Kami mengubah kebutuhan bisnis menjadi produk digital yang bekerja. Website, platform, dan sistem digital di berbagai industri.",
+      "Website, aplikasi Android, dan sistem bisnis yang dibangun sesuai kebutuhan Anda. Jelajahi karya dan diskusikan ide Anda bersama Nauka Motion.",
     url: SITE_URL,
     siteName: "Nauka Motion",
     type: "website",
@@ -83,23 +87,19 @@ export const metadata: Metadata = {
         url: "/ogimage.webp",
         width: 1200,
         height: 630,
-        alt: "Nauka Motion — Studio Produk Digital",
+        alt: "Nauka Motion — Jasa Website & Aplikasi Android",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nauka Motion — Studio Produk Digital",
+    title: "Nauka Motion — Jasa Website & Aplikasi Android",
     description:
       "Kami mengubah kebutuhan bisnis menjadi produk digital yang bekerja.",
     images: ["/ogimage.webp"],
   },
   alternates: {
     canonical: SITE_URL,
-    languages: {
-      "id-ID": SITE_URL,
-      "en-US": `${SITE_URL}/en`,
-    },
   },
   robots: {
     index: true,
@@ -117,17 +117,15 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#F3F0E9" },
-    { media: "(prefers-color-scheme: dark)", color: "#0E0D0C" },
-  ],
+  themeColor: "#101716",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
   // Inline theme bootstrap — prevents flash, respects stored preference
   const themeBootstrap = `try{var t=localStorage.getItem('nauka-theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark');}}catch(e){}`;
   // Inline locale bootstrap — sets <html lang> before paint based on cookie
@@ -139,7 +137,7 @@ export default function RootLayout({
   const heroBootstrap = `try{if(sessionStorage.getItem('nauka-hero-played')){document.documentElement.classList.add('is-skipped');}}catch(e){}`;
 
   return (
-    <html lang="id" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
         <script dangerouslySetInnerHTML={{ __html: localeBootstrap }} />
@@ -148,9 +146,7 @@ export default function RootLayout({
       <body
         className={`${instrumentSans.variable} ${fraunces.variable} antialiased bg-background text-foreground`}
       >
-        <LocaleProvider>
-          {children}
-        </LocaleProvider>
+        <LocaleProvider initialLocale={locale}>{children}</LocaleProvider>
         <Toaster />
       </body>
     </html>

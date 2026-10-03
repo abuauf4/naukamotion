@@ -1,0 +1,495 @@
+{
+  "checks": [
+    {
+      "route": "/",
+      "viewport": 1440,
+      "status": 200,
+      "width": 1440,
+      "scroll": 1440,
+      "heading": "Website & aplikasi.Dibangun untukbisnis Anda.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/services",
+      "viewport": 1440,
+      "status": 200,
+      "width": 1440,
+      "scroll": 1440,
+      "heading": "Produk digital untuklangkah bisnis berikutnya.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/work",
+      "viewport": 1440,
+      "status": 200,
+      "width": 1440,
+      "scroll": 1440,
+      "heading": "Beragam kebutuhan.Karya dengan tujuan.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/work/automotive",
+      "viewport": 1440,
+      "status": 200,
+      "width": 1440,
+      "scroll": 1440,
+      "heading": "Automotive.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/work/geely-bsd",
+      "viewport": 1440,
+      "status": 200,
+      "width": 1440,
+      "scroll": 1440,
+      "heading": "Geely BSD.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/work/nacash",
+      "viewport": 1440,
+      "status": 200,
+      "width": 1440,
+      "scroll": 1440,
+      "heading": "NaCash.Dibuat untuk kerja sehari-hari.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/contact?service=android",
+      "viewport": 1440,
+      "status": 200,
+      "width": 1440,
+      "scroll": 1440,
+      "heading": "Langkah pertama?Ceritakan idenya.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/about",
+      "viewport": 1440,
+      "status": 200,
+      "width": 1440,
+      "scroll": 1440,
+      "heading": "Ide yang dipikirkan.Produk yang dikerjakan.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/faq",
+      "viewport": 1440,
+      "status": 200,
+      "width": 1440,
+      "scroll": 1440,
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/legal/privacy",
+      "viewport": 1440,
+      "status": 200,
+      "width": 1440,
+      "scroll": 1440,
+      "heading": "Kebijakan Privasi",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/legal/terms",
+      "viewport": 1440,
+      "status": 200,
+      "width": 1440,
+      "scroll": 1440,
+      "heading": "Syarat & Ketentuan",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/insights",
+      "viewport": 1440,
+      "status": 200,
+      "width": 1440,
+      "scroll": 1440,
+      "heading": "Wawasan dari Nauka Motion",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/",
+      "viewport": 768,
+      "status": 200,
+      "width": 768,
+      "scroll": 768,
+      "heading": "Website & aplikasi.Dibangun untukbisnis Anda.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/services",
+      "viewport": 768,
+      "status": 200,
+      "width": 768,
+      "scroll": 768,
+      "heading": "Produk digital untuklangkah bisnis berikutnya.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/work",
+      "viewport": 768,
+      "status": 200,
+      "width": 768,
+      "scroll": 768,
+      "heading": "Beragam kebutuhan.Karya dengan tujuan.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/work/automotive",
+      "viewport": 768,
+      "status": 200,
+      "width": 768,
+      "scroll": 768,
+      "heading": "Automotive.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/work/geely-bsd",
+      "viewport": 768,
+      "status": 200,
+      "width": 768,
+      "scroll": 768,
+      "heading": "Geely BSD.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/work/nacash",
+      "viewport": 768,
+      "status": 200,
+      "width": 768,
+      "scroll": 768,
+      "heading": "NaCash.Dibuat untuk kerja sehari-hari.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/contact?service=android",
+      "viewport": 768,
+      "status": 200,
+      "width": 768,
+      "scroll": 768,
+      "heading": "Langkah pertama?Ceritakan idenya.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/about",
+      "viewport": 768,
+      "status": 200,
+      "width": 768,
+      "scroll": 768,
+      "heading": "Ide yang dipikirkan.Produk yang dikerjakan.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/faq",
+      "viewport": 768,
+      "status": 200,
+      "width": 768,
+      "scroll": 768,
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/legal/privacy",
+      "viewport": 768,
+      "status": 200,
+      "width": 768,
+      "scroll": 768,
+      "heading": "Kebijakan Privasi",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/legal/terms",
+      "viewport": 768,
+      "status": 200,
+      "width": 768,
+      "scroll": 768,
+      "heading": "Syarat & Ketentuan",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/insights",
+      "viewport": 768,
+      "status": 200,
+      "width": 768,
+      "scroll": 768,
+      "heading": "Wawasan dari Nauka Motion",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/",
+      "viewport": 390,
+      "status": 200,
+      "width": 390,
+      "scroll": 390,
+      "heading": "Website & aplikasi.Dibangun untukbisnis Anda.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/services",
+      "viewport": 390,
+      "status": 200,
+      "width": 390,
+      "scroll": 390,
+      "heading": "Produk digital untuklangkah bisnis berikutnya.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/work",
+      "viewport": 390,
+      "status": 200,
+      "width": 390,
+      "scroll": 390,
+      "heading": "Beragam kebutuhan.Karya dengan tujuan.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/work/automotive",
+      "viewport": 390,
+      "status": 200,
+      "width": 390,
+      "scroll": 390,
+      "heading": "Automotive.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/work/geely-bsd",
+      "viewport": 390,
+      "status": 200,
+      "width": 390,
+      "scroll": 390,
+      "heading": "Geely BSD.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/work/nacash",
+      "viewport": 390,
+      "status": 200,
+      "width": 390,
+      "scroll": 390,
+      "heading": "NaCash.Dibuat untuk kerja sehari-hari.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/contact?service=android",
+      "viewport": 390,
+      "status": 200,
+      "width": 390,
+      "scroll": 390,
+      "heading": "Langkah pertama?Ceritakan idenya.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/about",
+      "viewport": 390,
+      "status": 200,
+      "width": 390,
+      "scroll": 390,
+      "heading": "Ide yang dipikirkan.Produk yang dikerjakan.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/faq",
+      "viewport": 390,
+      "status": 200,
+      "width": 390,
+      "scroll": 390,
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/legal/privacy",
+      "viewport": 390,
+      "status": 200,
+      "width": 390,
+      "scroll": 390,
+      "heading": "Kebijakan Privasi",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/legal/terms",
+      "viewport": 390,
+      "status": 200,
+      "width": 390,
+      "scroll": 390,
+      "heading": "Syarat & Ketentuan",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/insights",
+      "viewport": 390,
+      "status": 200,
+      "width": 390,
+      "scroll": 390,
+      "heading": "Wawasan dari Nauka Motion",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/",
+      "viewport": 320,
+      "status": 200,
+      "width": 320,
+      "scroll": 320,
+      "heading": "Website & aplikasi.Dibangun untukbisnis Anda.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/services",
+      "viewport": 320,
+      "status": 200,
+      "width": 320,
+      "scroll": 320,
+      "heading": "Produk digital untuklangkah bisnis berikutnya.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/work",
+      "viewport": 320,
+      "status": 200,
+      "width": 320,
+      "scroll": 320,
+      "heading": "Beragam kebutuhan.Karya dengan tujuan.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/work/automotive",
+      "viewport": 320,
+      "status": 200,
+      "width": 320,
+      "scroll": 320,
+      "heading": "Automotive.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/work/geely-bsd",
+      "viewport": 320,
+      "status": 200,
+      "width": 320,
+      "scroll": 320,
+      "heading": "Geely BSD.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/work/nacash",
+      "viewport": 320,
+      "status": 200,
+      "width": 320,
+      "scroll": 320,
+      "heading": "NaCash.Dibuat untuk kerja sehari-hari.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/contact?service=android",
+      "viewport": 320,
+      "status": 200,
+      "width": 320,
+      "scroll": 320,
+      "heading": "Langkah pertama?Ceritakan idenya.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/about",
+      "viewport": 320,
+      "status": 200,
+      "width": 320,
+      "scroll": 320,
+      "heading": "Ide yang dipikirkan.Produk yang dikerjakan.",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/faq",
+      "viewport": 320,
+      "status": 200,
+      "width": 320,
+      "scroll": 320,
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/legal/privacy",
+      "viewport": 320,
+      "status": 200,
+      "width": 320,
+      "scroll": 320,
+      "heading": "Kebijakan Privasi",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/legal/terms",
+      "viewport": 320,
+      "status": 200,
+      "width": 320,
+      "scroll": 320,
+      "heading": "Syarat & Ketentuan",
+      "brokenImages": [],
+      "overlay": false
+    },
+    {
+      "route": "/insights",
+      "viewport": 320,
+      "status": 200,
+      "width": 320,
+      "scroll": 320,
+      "heading": "Wawasan dari Nauka Motion",
+      "brokenImages": [],
+      "overlay": false
+    }
+  ],
+  "errors": [],
+  "interactions": {
+    "menuOpened": true,
+    "menuClosed": true,
+    "englishWorked": true,
+    "localePersisted": true,
+    "servicePrefilled": true,
+    "honestFailure": true,
+    "retainedBrief": true,
+    "whatsappFallback": true,
+    "successUI": true,
+    "inboxProtected": true
+  },
+  "source": "Explicit static CMS preview; no production credentials",
+  "actualFailureStatus": 503
+}

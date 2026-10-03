@@ -23,7 +23,7 @@ export default function InsightsPage() {
       <ScrollProgress />
       <Header />
 
-      <main style={{ flex: 1, paddingTop: "120px" }}>
+      <main id="main-content" style={{ flex: 1, paddingTop: "120px" }}>
         {/* Hero */}
         <section style={{ paddingBottom: "60px" }}>
           <div className="container-wide">
