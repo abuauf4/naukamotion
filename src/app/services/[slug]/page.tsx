@@ -58,6 +58,7 @@ export default async function ServicePage({ params }: Props) {
                 "@id": ORGANIZATION_ID,
                 name: "Nauka Motion",
                 url: absoluteUrl("/"),
+                logo: absoluteUrl("/logo-navbar-transparent.png"),
               },
               areaServed: { "@type": "Country", name: "Indonesia" },
             },

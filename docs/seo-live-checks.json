@@ -1,0 +1,276 @@
+{
+  "checkedUrls": 38,
+  "pages": [
+    {
+      "path": "/",
+      "canonical": "https://motion.nauka.id",
+      "title": "Jasa Pembuatan Website & Aplikasi Android — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/services",
+      "canonical": "https://motion.nauka.id/services",
+      "title": "Jasa Website, Aplikasi Android & Sistem Bisnis — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work",
+      "canonical": "https://motion.nauka.id/work",
+      "title": "Portofolio Website & Aplikasi — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/nacash",
+      "canonical": "https://motion.nauka.id/work/nacash",
+      "title": "NaCash — Aplikasi Kasir & Keuangan Android — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/about",
+      "canonical": "https://motion.nauka.id/about",
+      "title": "Tentang Studio & Abu Aufa — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/contact",
+      "canonical": "https://motion.nauka.id/contact",
+      "title": "Kontak — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/faq",
+      "canonical": "https://motion.nauka.id/faq",
+      "title": "Pertanyaan tentang Website & Aplikasi — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/legal/privacy",
+      "canonical": "https://motion.nauka.id/legal/privacy",
+      "title": "Kebijakan Privasi — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/legal/terms",
+      "canonical": "https://motion.nauka.id/legal/terms",
+      "title": "Syarat & Ketentuan — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/services/website",
+      "canonical": "https://motion.nauka.id/services/website",
+      "title": "Jasa Pembuatan Website — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/services/android",
+      "canonical": "https://motion.nauka.id/services/android",
+      "title": "Jasa Pembuatan Aplikasi Android — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/services/sistem-bisnis",
+      "canonical": "https://motion.nauka.id/services/sistem-bisnis",
+      "title": "Jasa Pembuatan Sistem Bisnis & Web App — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/automotive",
+      "canonical": "https://motion.nauka.id/work/automotive",
+      "title": "Portofolio Automotive — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/technology-retail",
+      "canonical": "https://motion.nauka.id/work/technology-retail",
+      "title": "Portofolio Technology & Retail — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/ngo",
+      "canonical": "https://motion.nauka.id/work/ngo",
+      "title": "Portofolio NGO — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/insurance",
+      "canonical": "https://motion.nauka.id/work/insurance",
+      "title": "Portofolio Insurance — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/inventory-systems",
+      "canonical": "https://motion.nauka.id/work/inventory-systems",
+      "title": "Portofolio Inventory & Business Systems — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/travel-tourism",
+      "canonical": "https://motion.nauka.id/work/travel-tourism",
+      "title": "Portofolio Travel & Tourism — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/pet-health",
+      "canonical": "https://motion.nauka.id/work/pet-health",
+      "title": "Portofolio Pet Health — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/personal-projects",
+      "canonical": "https://motion.nauka.id/work/personal-projects",
+      "title": "Portofolio Personal Projects — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/bakau-institute",
+      "canonical": "https://motion.nauka.id/work/bakau-institute",
+      "title": "Bakau Institute — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/berkah-komputer",
+      "canonical": "https://motion.nauka.id/work/berkah-komputer",
+      "title": "Berkah Komputer — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/jasa-proteksi",
+      "canonical": "https://motion.nauka.id/work/jasa-proteksi",
+      "title": "Jasa Proteksi — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/betawi-laptop",
+      "canonical": "https://motion.nauka.id/work/betawi-laptop",
+      "title": "Betawi Laptop Kemayoran — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/lets-go-karimun",
+      "canonical": "https://motion.nauka.id/work/lets-go-karimun",
+      "title": "Let's Go Karimun — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/nauka-motion",
+      "canonical": "https://motion.nauka.id/work/nauka-motion",
+      "title": "Nauka Motion — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/geely-bsd",
+      "canonical": "https://motion.nauka.id/work/geely-bsd",
+      "title": "Geely BSD — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/anima-companion",
+      "canonical": "https://motion.nauka.id/work/anima-companion",
+      "title": "Anima Companion — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/inventra",
+      "canonical": "https://motion.nauka.id/work/inventra",
+      "title": "Inventra — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/jakarta-laptops",
+      "canonical": "https://motion.nauka.id/work/jakarta-laptops",
+      "title": "Jakarta Laptops — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/suzuki-jakbar",
+      "canonical": "https://motion.nauka.id/work/suzuki-jakbar",
+      "title": "Suzuki Jakarta Barat — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/jejak-cahaya",
+      "canonical": "https://motion.nauka.id/work/jejak-cahaya",
+      "title": "Jejak Cahaya — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/ghazy-computer",
+      "canonical": "https://motion.nauka.id/work/ghazy-computer",
+      "title": "Ghazy Computer — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/nauka-tech",
+      "canonical": "https://motion.nauka.id/work/nauka-tech",
+      "title": "Nauka Tech — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/blessing-tech",
+      "canonical": "https://motion.nauka.id/work/blessing-tech",
+      "title": "Blessing Tech Computindo — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/jaecoo-bintaro",
+      "canonical": "https://motion.nauka.id/work/jaecoo-bintaro",
+      "title": "JAECOO Fatmawati — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/nauka-gadget",
+      "canonical": "https://motion.nauka.id/work/nauka-gadget",
+      "title": "Nauka Gadget — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    },
+    {
+      "path": "/work/padel-club",
+      "canonical": "https://motion.nauka.id/work/padel-club",
+      "title": "Padel Club — Nauka Motion",
+      "h1": 1,
+      "result": "pass"
+    }
+  ],
+  "adminNoindex": true,
+  "insightsNoindex": true,
+  "robotsConsistent": true,
+  "bakauPreserved": true,
+  "result": "PASS"
+}

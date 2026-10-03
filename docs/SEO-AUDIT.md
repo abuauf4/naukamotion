@@ -30,7 +30,9 @@ JSON-LD is rendered on the server and escapes `<` from CMS text. Meta descriptio
 - 24 browser checks across 320, 390 and 1440 px: no horizontal overflow, broken loaded images or JavaScript errors. Service-to-contact navigation and English preference persistence passed.
 - Login exposes noindex for both generic robots and Googlebot, plus X-Robots-Tag; Insights is noindex; an unknown service returns 404.
 
-The local route count reflects QA fixtures, not the number of current production CMS projects. Live deployment verification and sitemap submission are performed after publication.
+The local route count reflects QA fixtures, not the number of current production CMS projects. Hosted verification after deployment also passed for all 38 current sitemap URLs, including the admin-created Bakau Institute project. The login/Insights noindex directives and the robots group were checked on the live domain.
+
+A second crawler sampled six important live pages: all returned 200 and were indexable, with zero critical/high issues. Its recommendation to include the organization logo in nested service-provider data was addressed. Remaining sampled advisories are heuristic word-count flags for the concise FAQ/Bakau pages, absence of optional structured data on FAQ, and one 3,085 ms Bakau response immediately after deployment. That isolated timing is not a field performance assessment. Expand project stories only with documented facts; the user-managed Bakau content is preserved.
 
 ## Search Console and remaining work
 
