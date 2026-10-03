@@ -52,7 +52,7 @@ export function HomeHero({ locale }: { locale: Locale }) {
           </h1>
           <p className="nm-hero-description">
             {id
-              ? "Dari website yang memperkenalkan bisnis hingga aplikasi yang merapikan operasional. Kami bantu dari ide, desain, sampai siap digunakan."
+              ? "Jasa pembuatan website dan aplikasi Android untuk bisnis Anda. Kami bantu dari ide dan desain sampai produk siap digunakan."
               : "From a website that introduces your business to an app that simplifies daily work. We help you from idea and design through delivery."}
           </p>
           <div className="nm-hero-buttons">
@@ -228,6 +228,12 @@ export function ServiceSection({
                     ))}
                   </ul>
                 )}
+                <Link
+                  href={`/services/${service.id === "system" ? "sistem-bisnis" : service.id}`}
+                  className="nm-service-detail-link"
+                >
+                  {id ? "Tentang layanan ini" : "About this service"}
+                </Link>
                 <Link
                   href={`/contact?service=${service.id}`}
                   className="nm-service-link"
@@ -495,26 +501,27 @@ export function FaqSection({
   full?: boolean;
 }) {
   const id = locale === "id";
+  const Heading = full ? "h1" : "h2";
   return (
     <section id="faq" className="nm-section">
       <div className="nm-container nm-faq-grid">
         <div>
           <p className="nm-eyebrow">{full ? "FAQ" : "05 / FAQ"}</p>
-          <h2>
+          <Heading className="nm-faq-heading">
             {id ? (
               <>
-                Sebelum
+                {full ? "Pertanyaan tentang" : "Sebelum"}
                 <br />
-                <span>kita mulai.</span>
+                <span>{full ? "website & aplikasi." : "kita mulai."}</span>
               </>
             ) : (
               <>
-                Before
+                {full ? "Questions about" : "Before"}
                 <br />
-                <span>we begin.</span>
+                <span>{full ? "websites & apps." : "we begin."}</span>
               </>
             )}
-          </h2>
+          </Heading>
           <p className="nm-section-intro">
             {id
               ? "Beberapa hal yang mungkin ingin Anda tanyakan."

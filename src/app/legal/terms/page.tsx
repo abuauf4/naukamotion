@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { Header } from "@/components/nauka/Header";
 import { Footer } from "@/components/nauka/Footer";
 import { ScrollProgress } from "@/components/nauka/ScrollProgress";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Syarat & Ketentuan",
   description:
     "Syarat dan ketentuan penggunaan situs Nauka Motion (motion.nauka.id).",
-  alternates: { canonical: "/legal/terms" },
-};
+  path: "/legal/terms",
+});
 
 const sections = [
   {

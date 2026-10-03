@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { StudioHeader } from "@/components/studio/StudioHeader";
 import { StudioFooter } from "@/components/studio/StudioFooter";
 import { FaqSection, ProjectCTA } from "@/components/studio/MarketingSections";
 import { getLocale } from "@/lib/server-locale";
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Pertanyaan tentang Website & Aplikasi",
   description:
     "Jawaban tentang biaya, jadwal, aplikasi offline, pengelolaan konten, dan dukungan proyek Nauka Motion.",
-  alternates: { canonical: "/faq" },
-};
+  path: "/faq",
+});
 export default async function FAQPage() {
   const locale = await getLocale();
   return (

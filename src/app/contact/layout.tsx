@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Kontak",
   description:
     "Hubungi Nauka Motion untuk diskusi proyek. WhatsApp, email, atau kirim brief melalui form.",
-  alternates: { canonical: "/contact" },
-};
+  path: "/contact",
+});
 
 export default function ContactLayout({
   children,

@@ -1,0 +1,546 @@
+{
+  "seo": [
+    {
+      "path": "/",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/",
+      "title": "Jasa Pembuatan Website &amp; Aplikasi Android — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/services",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/services",
+      "title": "Jasa Website, Aplikasi Android &amp; Sistem Bisnis — Nauka Motion",
+      "schema": 0
+    },
+    {
+      "path": "/work",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work",
+      "title": "Portofolio Website &amp; Aplikasi — Nauka Motion",
+      "schema": 0
+    },
+    {
+      "path": "/work/nacash",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/nacash",
+      "title": "NaCash — Aplikasi Kasir &amp; Keuangan Android — Nauka Motion",
+      "schema": 0
+    },
+    {
+      "path": "/about",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/about",
+      "title": "Tentang Studio &amp; Abu Aufa — Nauka Motion",
+      "schema": 0
+    },
+    {
+      "path": "/contact",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/contact",
+      "title": "Kontak — Nauka Motion",
+      "schema": 0
+    },
+    {
+      "path": "/faq",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/faq",
+      "title": "Pertanyaan tentang Website &amp; Aplikasi — Nauka Motion",
+      "schema": 0
+    },
+    {
+      "path": "/legal/privacy",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/legal/privacy",
+      "title": "Kebijakan Privasi — Nauka Motion",
+      "schema": 0
+    },
+    {
+      "path": "/legal/terms",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/legal/terms",
+      "title": "Syarat &amp; Ketentuan — Nauka Motion",
+      "schema": 0
+    },
+    {
+      "path": "/services/website",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/services/website",
+      "title": "Jasa Pembuatan Website — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/services/android",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/services/android",
+      "title": "Jasa Pembuatan Aplikasi Android — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/services/sistem-bisnis",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/services/sistem-bisnis",
+      "title": "Jasa Pembuatan Sistem Bisnis &amp; Web App — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/automotive",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/automotive",
+      "title": "Portofolio Automotive — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/technology-retail",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/technology-retail",
+      "title": "Portofolio Technology &amp; Retail — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/insurance",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/insurance",
+      "title": "Portofolio Insurance — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/inventory-systems",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/inventory-systems",
+      "title": "Portofolio Inventory &amp; Business Systems — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/travel-tourism",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/travel-tourism",
+      "title": "Portofolio Travel &amp; Tourism — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/pet-health",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/pet-health",
+      "title": "Portofolio Pet Health — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/personal-projects",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/personal-projects",
+      "title": "Portofolio Personal Projects — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/geely-bsd",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/geely-bsd",
+      "title": "Geely BSD — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/berkah-komputer",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/berkah-komputer",
+      "title": "Berkah Komputer — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/jasa-proteksi",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/jasa-proteksi",
+      "title": "Jasa Proteksi — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/betawi-laptop",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/betawi-laptop",
+      "title": "Betawi Laptop Kemayoran — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/lets-go-karimun",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/lets-go-karimun",
+      "title": "Let&#x27;s Go Karimun — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/anima-companion",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/anima-companion",
+      "title": "Anima Companion — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/nauka-motion",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/nauka-motion",
+      "title": "Nauka Motion — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/suzuki-jakbar",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/suzuki-jakbar",
+      "title": "Suzuki Jakarta Barat — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/jakarta-laptops",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/jakarta-laptops",
+      "title": "Jakarta Laptops — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/inventra",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/inventra",
+      "title": "Inventra — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/jejak-cahaya",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/jejak-cahaya",
+      "title": "Jejak Cahaya — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/mitsubishi",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/mitsubishi",
+      "title": "Mitsubishi — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/ghazy-computer",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/ghazy-computer",
+      "title": "Ghazy Computer — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/nauka-tech",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/nauka-tech",
+      "title": "Nauka Tech — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/jaecoo-bintaro",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/jaecoo-bintaro",
+      "title": "JAECOO Bintaro — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/blessing-tech",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/blessing-tech",
+      "title": "Blessing Tech Computindo — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/nauka-gadget",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/nauka-gadget",
+      "title": "Nauka Gadget — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/nauka-kostay",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/nauka-kostay",
+      "title": "Nauka Kostay — Nauka Motion",
+      "schema": 1
+    },
+    {
+      "path": "/work/padel-club",
+      "status": 200,
+      "h1": 1,
+      "canonical": "https://motion.nauka.id/work/padel-club",
+      "title": "Padel Club — Nauka Motion",
+      "schema": 1
+    }
+  ],
+  "visual": [
+    {
+      "path": "/",
+      "width": 320,
+      "h1": 1,
+      "overflow": false,
+      "content": 5485,
+      "images": [],
+      "errors": []
+    },
+    {
+      "path": "/services",
+      "width": 320,
+      "h1": 1,
+      "overflow": false,
+      "content": 3796,
+      "images": [],
+      "errors": []
+    },
+    {
+      "path": "/services/website",
+      "width": 320,
+      "h1": 1,
+      "overflow": false,
+      "content": 2821,
+      "images": [],
+      "errors": []
+    },
+    {
+      "path": "/services/android",
+      "width": 320,
+      "h1": 1,
+      "overflow": false,
+      "content": 2952,
+      "images": [],
+      "errors": []
+    },
+    {
+      "path": "/services/sistem-bisnis",
+      "width": 320,
+      "h1": 1,
+      "overflow": false,
+      "content": 3036,
+      "images": [],
+      "errors": []
+    },
+    {
+      "path": "/faq",
+      "width": 320,
+      "h1": 1,
+      "overflow": false,
+      "content": 1669,
+      "images": [],
+      "errors": []
+    },
+    {
+      "path": "/work",
+      "width": 320,
+      "h1": 1,
+      "overflow": false,
+      "content": 3727,
+      "images": [],
+      "errors": []
+    },
+    {
+      "path": "/work/berkah-komputer",
+      "width": 320,
+      "h1": 1,
+      "overflow": false,
+      "content": 4115,
+      "images": [],
+      "errors": []
+    },
+    {
+      "path": "/",
+      "width": 390,
+      "h1": 1,
+      "overflow": false,
+      "content": 5485,
+      "images": [],
+      "errors": []
+    },
+    {
+      "path": "/services",
+      "width": 390,
+      "h1": 1,
+      "overflow": false,
+      "content": 3796,
+      "images": [],
+      "errors": []
+    },
+    {
+      "path": "/services/website",
+      "width": 390,
+      "h1": 1,
+      "overflow": false,
+      "content": 2821,
+      "images": [],
+      "errors": []
+    },
+    {
+      "path": "/services/android",
+      "width": 390,
+      "h1": 1,
+      "overflow": false,
+      "content": 2952,
+      "images": [],
+      "errors": []
+    },
+    {
+      "path": "/services/sistem-bisnis",
+      "width": 390,
+      "h1": 1,
+      "overflow": false,
+      "content": 3036,
+      "images": [],
+      "errors": []
+    },
+    {
+      "path": "/faq",
+      "width": 390,
+      "h1": 1,
+      "overflow": false,
+      "content": 1669,
+      "images": [],
+      "errors": []
+    },
+    {
+      "path": "/work",
+      "width": 390,
+      "h1": 1,
+      "overflow": false,
+      "content": 3727,
+      "images": [],
+      "errors": []
+    },
+    {
+      "path": "/work/berkah-komputer",
+      "width": 390,
+      "h1": 1,
+      "overflow": false,
+      "content": 4115,
+      "images": [],
+      "errors": []
+    },
+    {
+      "path": "/",
+      "width": 1440,
+      "h1": 1,
+      "overflow": false,
+      "content": 5485,
+      "images": [],
+      "errors": []
+    },
+    {
+      "path": "/services",
+      "width": 1440,
+      "h1": 1,
+      "overflow": false,
+      "content": 3796,
+      "images": [],
+      "errors": []
+    },
+    {
+      "path": "/services/website",
+      "width": 1440,
+      "h1": 1,
+      "overflow": false,
+      "content": 2821,
+      "images": [],
+      "errors": []
+    },
+    {
+      "path": "/services/android",
+      "width": 1440,
+      "h1": 1,
+      "overflow": false,
+      "content": 2952,
+      "images": [],
+      "errors": []
+    },
+    {
+      "path": "/services/sistem-bisnis",
+      "width": 1440,
+      "h1": 1,
+      "overflow": false,
+      "content": 3036,
+      "images": [],
+      "errors": []
+    },
+    {
+      "path": "/faq",
+      "width": 1440,
+      "h1": 1,
+      "overflow": false,
+      "content": 1669,
+      "images": [],
+      "errors": []
+    },
+    {
+      "path": "/work",
+      "width": 1440,
+      "h1": 1,
+      "overflow": false,
+      "content": 3727,
+      "images": [],
+      "errors": []
+    },
+    {
+      "path": "/work/berkah-komputer",
+      "width": 1440,
+      "h1": 1,
+      "overflow": false,
+      "content": 4115,
+      "images": [],
+      "errors": []
+    }
+  ],
+  "special": [
+    {
+      "page": "admin/login",
+      "noindex": true,
+      "googlebotNoindex": true,
+      "headerNoindex": true
+    },
+    {
+      "page": "insights",
+      "noindex": true
+    },
+    {
+      "page": "missing service",
+      "status": 404
+    },
+    {
+      "servicePrefillNavigation": true,
+      "englishPersists": true
+    }
+  ]
+}

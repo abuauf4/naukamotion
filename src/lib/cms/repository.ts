@@ -220,6 +220,15 @@ export async function fetchAllPublicSlugs(): Promise<string[]> {
   return projects.map((p) => p.slug);
 }
 
+/** Sitemap needs only URLs and category membership, never stories or images. */
+export async function fetchSitemapProjects() {
+  return prisma.project.findMany({
+    where: { visibility: "public", status: { not: "draft" } },
+    select: { slug: true, categorySlug: true },
+    orderBy: { sortOrder: "asc" },
+  });
+}
+
 /**
  * Lightweight category → public-project-count query for the homepage.
  *

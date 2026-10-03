@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import Image from "next/image";
 import { StudioHeader } from "@/components/studio/StudioHeader";
@@ -9,12 +9,12 @@ import { getCategories, getPublicProjects } from "@/lib/cms";
 import { getLocale } from "@/lib/server-locale";
 
 export const revalidate = 60;
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Portofolio Website & Aplikasi",
   description:
     "Jelajahi website, aplikasi, dan sistem yang dibangun Nauka Motion untuk otomotif, retail, asuransi, serta produk internal NaCash.",
-  alternates: { canonical: "/work" },
-};
+  path: "/work",
+});
 
 export default async function WorkPage() {
   const [categories, projects, locale] = await Promise.all([

@@ -1,5 +1,16 @@
 import { getAdminSession } from '@/lib/admin-auth';
 import { AdminNav } from '@/components/admin/AdminNav';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Admin',
+  alternates: { canonical: null },
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: { index: false, follow: false },
+  },
+};
 
 export default async function AdminLayout({
   children,

@@ -1,14 +1,15 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { Header } from "@/components/nauka/Header";
 import { Footer } from "@/components/nauka/Footer";
 import { ScrollProgress } from "@/components/nauka/ScrollProgress";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Insights",
   description:
     "Tulisan dan wawasan dari Nauka Motion tentang desain, teknologi, dan produk digital.",
-  alternates: { canonical: "/insights" },
-};
+  path: "/insights",
+  index: false,
+});
 
 export default function InsightsPage() {
   return (

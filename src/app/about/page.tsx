@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { StudioHeader } from "@/components/studio/StudioHeader";
 import { StudioFooter } from "@/components/studio/StudioFooter";
@@ -9,12 +9,12 @@ import {
 } from "@/components/studio/MarketingSections";
 import { getLocale } from "@/lib/server-locale";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Tentang Studio & Abu Aufa",
   description:
     "Nauka Motion, studio digital independen yang dipimpin Abu Aufa di Jakarta. Mengembangkan website, aplikasi Android, dan sistem bisnis, termasuk ekosistem NaCash.",
-  alternates: { canonical: "/about" },
-};
+  path: "/about",
+});
 export default async function AboutPage() {
   const locale = await getLocale();
   const id = locale === "id";

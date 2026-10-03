@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { StudioHeader } from "@/components/studio/StudioHeader";
 import { StudioFooter } from "@/components/studio/StudioFooter";
 import {
@@ -15,12 +15,12 @@ import {
   Handshake,
 } from "lucide-react";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Jasa Website, Aplikasi Android & Sistem Bisnis",
   description:
     "Layanan pembuatan website, aplikasi Android, dan sistem bisnis custom. Bahas kebutuhan, lingkup, pengujian, serta serah terima bersama Nauka Motion.",
-  alternates: { canonical: "/services" },
-};
+  path: "/services",
+});
 
 export default async function ServicesPage() {
   const locale = await getLocale();
@@ -80,7 +80,7 @@ export default async function ServicesPage() {
           </h1>
           <p>
             {id
-              ? "Pilih sesuai kebutuhan. Website untuk memperkenalkan bisnis, aplikasi untuk pengguna, atau sistem untuk merapikan pekerjaan."
+              ? "Jasa pembuatan website, aplikasi Android, dan sistem bisnis custom. Pilih sesuai kebutuhan, lalu pelajari lingkup dan contoh tiap layanan."
               : "Choose what fits your needs. A website to introduce your business, an app for your users, or a system to simplify daily work."}
           </p>
         </div>

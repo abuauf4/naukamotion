@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { Header } from "@/components/nauka/Header";
 import { Footer } from "@/components/nauka/Footer";
 import { ScrollProgress } from "@/components/nauka/ScrollProgress";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Kebijakan Privasi",
   description:
     "Kebijakan privasi Nauka Motion terkait pengumpulan, penggunaan, dan perlindungan data pribadi.",
-  alternates: { canonical: "/legal/privacy" },
-};
+  path: "/legal/privacy",
+});
 
 const sections = [
   {

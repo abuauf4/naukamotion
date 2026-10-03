@@ -4,6 +4,7 @@ import "./globals.css";
 import "./studio.css";
 import { getLocale } from "@/lib/server-locale";
 import { LocaleProvider } from "@/lib/locale-context";
+import { pageMetadata, SITE_URL } from "@/lib/seo";
 
 // Bundled Latin fonts keep builds independent of Google Fonts availability.
 const instrumentSans = localFont({
@@ -39,30 +40,17 @@ const fraunces = localFont({
   ],
 });
 
-const SITE_URL = "https://motion.nauka.id";
-
 export const metadata: Metadata = {
+  ...pageMetadata({
+    title: "Jasa Pembuatan Website & Aplikasi Android",
+    description: "Jasa pembuatan website, aplikasi Android, dan sistem bisnis oleh Nauka Motion. Desain sesuai brand, lingkup jelas, dan progres yang bisa Anda tinjau.",
+    path: "/",
+  }),
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Nauka Motion — Jasa Website & Aplikasi Android",
+    default: "Jasa Pembuatan Website & Aplikasi Android — Nauka Motion",
     template: "%s — Nauka Motion",
   },
-  description:
-    "Jasa pembuatan website, aplikasi Android, dan sistem bisnis oleh Nauka Motion. Desain sesuai brand, lingkup jelas, dan progres yang bisa Anda tinjau.",
-  keywords: [
-    "Nauka Motion",
-    "jasa pembuatan website",
-    "jasa pembuatan aplikasi Android",
-    "developer website Jakarta",
-    "sistem bisnis custom",
-    "website development",
-    "web application",
-    "business system",
-    "e-commerce",
-    "UI/UX design",
-    "digital product studio Indonesia",
-    "Jakarta",
-  ],
   authors: [{ name: "Nauka Motion", url: SITE_URL }],
   creator: "Nauka Motion",
   publisher: "Nauka Motion",
@@ -71,44 +59,6 @@ export const metadata: Metadata = {
     icon: "/logo-favicon.webp",
     shortcut: "/logo-favicon.webp",
     apple: "/logo-favicon.webp",
-  },
-  openGraph: {
-    title: "Nauka Motion — Jasa Website & Aplikasi Android",
-    description:
-      "Website, aplikasi Android, dan sistem bisnis yang dibangun sesuai kebutuhan Anda. Jelajahi karya dan diskusikan ide Anda bersama Nauka Motion.",
-    url: SITE_URL,
-    siteName: "Nauka Motion",
-    type: "website",
-    locale: "id_ID",
-    alternateLocale: ["en_US"],
-    images: [
-      {
-        url: "/ogimage.webp",
-        width: 1200,
-        height: 630,
-        alt: "Nauka Motion — Jasa Website & Aplikasi Android",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Nauka Motion — Jasa Website & Aplikasi Android",
-    description:
-      "Kami mengubah kebutuhan bisnis menjadi produk digital yang bekerja.",
-    images: ["/ogimage.webp"],
-  },
-  alternates: {
-    canonical: SITE_URL,
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
   },
 };
 

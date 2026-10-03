@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -12,12 +12,12 @@ import { StudioHeader } from "@/components/studio/StudioHeader";
 import { StudioFooter } from "@/components/studio/StudioFooter";
 import { ProjectCTA } from "@/components/studio/MarketingSections";
 import { getLocale } from "@/lib/server-locale";
-export const metadata: Metadata = {
-  title: "NaCash — Produk Android Nauka",
+export const metadata = pageMetadata({
+  title: "NaCash — Aplikasi Kasir & Keuangan Android",
   description:
     "NaCash, ekosistem aplikasi kasir dan pencatatan keuangan buatan Nauka. Contoh pengembangan produk Android dengan alur transaksi, stok, serta laporan.",
-  alternates: { canonical: "/work/nacash" },
-};
+  path: "/work/nacash",
+});
 export default async function NaCashPage() {
   const locale = await getLocale();
   const id = locale === "id";

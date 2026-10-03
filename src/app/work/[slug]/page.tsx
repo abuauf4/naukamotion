@@ -14,6 +14,8 @@ import {
   getAllProjectSlugs,
 } from "@/lib/cms";
 import { getLocale } from "@/lib/server-locale";
+import { pageMetadata, breadcrumbSchema } from "@/lib/seo";
+import { StructuredData } from "@/components/studio/StructuredData";
 
 export const revalidate = 60;
 type Props = { params: Promise<{ slug: string }> };
@@ -30,24 +32,27 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const category = await getCategoryBySlug(slug);
-  if (category)
-    return {
-      title: `${category.title} — Portofolio`,
-      description: category.description.id,
-      alternates: { canonical: `/work/${slug}` },
-    };
+  if (category) {
+    const projects = await getProjectsByCategory(category.slug);
+    return pageMetadata({
+      title: `Portofolio ${category.title}`,
+      description: `Karya Nauka Motion untuk bidang ${category.title}. ${category.description.id}`,
+      path: `/work/${slug}`,
+      index: projects.length > 0,
+    });
+  }
   const project = await getProjectBySlug(slug);
-  if (!project) return { title: "Proyek tidak ditemukan" };
-  return {
+  if (!project)
+    return { title: "Proyek tidak ditemukan", robots: { index: false } };
+  return pageMetadata({
     title: project.name,
-    description: project.summary.id,
-    alternates: { canonical: `/work/${slug}` },
-    openGraph: {
-      title: `${project.name} — Nauka Motion`,
-      description: project.summary.id,
-      images: [{ url: project.cover, alt: `Preview ${project.name}` }],
-    },
-  };
+    description:
+      project.summary.id ||
+      project.tagline.id ||
+      `Proyek ${project.name} oleh Nauka Motion.`,
+    path: `/work/${slug}`,
+    image: project.cover || "/ogimage.webp",
+  });
 }
 export default async function WorkDetailPage({ params }: Props) {
   const { slug } = await params;
@@ -65,6 +70,13 @@ export default async function WorkDetailPage({ params }: Props) {
       <div className="nm-page">
         <StudioHeader />
         <main id="main-content" className="nm-subpage">
+          <StructuredData
+            data={breadcrumbSchema([
+              { name: "Beranda", path: "/" },
+              { name: "Portofolio", path: "/work" },
+              { name: category.title, path: `/work/${slug}` },
+            ])}
+          />
           <div className="nm-container">
             <div className="nm-page-intro">
               <div className="nm-breadcrumb">
@@ -131,6 +143,21 @@ export default async function WorkDetailPage({ params }: Props) {
     <div className="nm-page">
       <StudioHeader />
       <main id="main-content" className="nm-subpage">
+        <StructuredData
+          data={breadcrumbSchema([
+            { name: "Beranda", path: "/" },
+            { name: "Portofolio", path: "/work" },
+            ...(projectCategory
+              ? [
+                  {
+                    name: projectCategory.title,
+                    path: `/work/${project.categorySlug}`,
+                  },
+                ]
+              : []),
+            { name: project.name, path: `/work/${slug}` },
+          ])}
+        />
         <div className="nm-container">
           <div className="nm-page-intro">
             <div className="nm-breadcrumb">

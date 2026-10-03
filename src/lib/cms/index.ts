@@ -60,6 +60,7 @@ import {
   fetchPublicProjectBySlug,
   fetchPublicProjectsByCategory,
   fetchAllPublicSlugs,
+  fetchSitemapProjects,
   fetchPublicProjectCountsByCategory,
 } from "./repository";
 import {
@@ -223,6 +224,12 @@ export const getCategories = cache(getCategoriesUncached);
 export const getCategoryBySlug = cache(getCategoryBySlugUncached);
 export const getProjectBySlug = cache(getProjectBySlugUncached);
 export const getAllProjectSlugs = cache(getAllProjectSlugsUncached);
+export const getSitemapProjects = cache(async () => {
+  if (DATA_SOURCE === "static") {
+    return staticGetPublicProjects().map(({ slug, categorySlug }) => ({ slug, categorySlug }));
+  }
+  return fetchSitemapProjects();
+});
 export const getProjectsByCategory = cache(getProjectsByCategoryUncached);
 export const getPublicProjects = cache(getPublicProjectsUncached);
 export const getFeaturedProjects = cache(getFeaturedProjectsUncached);
