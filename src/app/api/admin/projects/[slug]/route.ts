@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
+import { invalidatePublicPortfolio } from '@/lib/cms/invalidate';
 import { prisma } from '@/lib/cms/db';
 import { requireAdmin } from '@/lib/admin-auth';
 
@@ -68,6 +69,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
     });
 
     // Revalidate affected paths
+    invalidatePublicPortfolio();
     revalidatePath('/', 'layout');
     revalidatePath('/work', 'page');
     revalidatePath(`/work/${slug}`, 'page');
@@ -94,6 +96,7 @@ export async function DELETE(request: NextRequest, { params }: Params) {
 
     await prisma.project.delete({ where: { slug } });
 
+    invalidatePublicPortfolio();
     revalidatePath('/', 'layout');
     revalidatePath('/work', 'page');
     revalidatePath(`/work/${existing.categorySlug}`, 'page');

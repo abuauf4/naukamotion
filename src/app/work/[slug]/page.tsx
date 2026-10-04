@@ -32,7 +32,10 @@ export async function generateStaticParams() {
 }
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const category = await getCategoryBySlug(slug);
+  const [category, project] = await Promise.all([
+    getCategoryBySlug(slug),
+    getProjectBySlug(slug),
+  ]);
   if (category) {
     const projects = await getProjectsByCategory(category.slug);
     return pageMetadata({
@@ -42,7 +45,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       index: projects.length > 0,
     });
   }
-  const project = await getProjectBySlug(slug);
   if (!project)
     return { title: "Proyek tidak ditemukan", robots: { index: false } };
   return pageMetadata({
@@ -57,8 +59,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 export default async function WorkDetailPage({ params }: Props) {
   const { slug } = await params;
-  const [category, locale] = await Promise.all([
+  const [category, project, locale] = await Promise.all([
     getCategoryBySlug(slug),
+    getProjectBySlug(slug),
     getLocale(),
   ]);
   const id = locale === "id";
@@ -125,7 +128,6 @@ export default async function WorkDetailPage({ params }: Props) {
       </div>
     );
   }
-  const project = await getProjectBySlug(slug);
   if (!project) notFound();
   const projectCategory = await getCategoryBySlug(project.categorySlug);
   const status =

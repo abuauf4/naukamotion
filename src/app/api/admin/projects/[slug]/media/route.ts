@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
+import { invalidatePublicPortfolio } from '@/lib/cms/invalidate';
 import { prisma } from '@/lib/cms/db';
 import { requireAdmin } from '@/lib/admin-auth';
 
@@ -273,6 +274,7 @@ export async function POST(request: NextRequest, { params }: Params) {
     });
 
     // Revalidate — only after DB write succeeded (so cache reflects truth)
+    invalidatePublicPortfolio();
     revalidatePath(`/work/${slug}`, 'page');
     if (type === 'cover' || type === 'og') {
       revalidatePath('/', 'page');

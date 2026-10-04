@@ -170,6 +170,23 @@ export default async function InsightPage({ params }: Props) {
                 </ul>
               </section>
               <section>
+                <h2>{id ? "Panduan terkait" : "Related guides"}</h2>
+                <ul>
+                  {insights
+                    .filter((item) => item.slug !== slug)
+                    .map((item) => (
+                      <li key={item.slug}>
+                        <Link
+                          href={`/insights/${item.slug}`}
+                          className="nm-text-link"
+                        >
+                          {item.title[locale]}
+                        </Link>
+                      </li>
+                    ))}
+                </ul>
+              </section>
+              <section>
                 <h2>
                   {id ? "Referensi bagian SEO" : "SEO section references"}
                 </h2>

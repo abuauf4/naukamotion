@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { unstable_cache } from "next/cache";
+import { PUBLIC_PORTFOLIO_TAG } from "./cache-policy";
 /**
  * CMS Source Selector
  *
@@ -43,7 +44,6 @@ const DATA_SOURCE = process.env.CMS_DATA_SOURCE ?? "database";
 import {
   studioCategories,
   studioProjects,
-  getCategoryBySlug as staticGetCategoryBySlug,
   getProjectBySlug as staticGetProjectBySlug,
   getAllProjectSlugs as staticGetAllProjectSlugs,
   getProjectsByCategory as staticGetProjectsByCategory,
@@ -53,7 +53,6 @@ import {
 // ─── Database imports ───
 import {
   fetchAllCategories,
-  fetchCategoryBySlug,
   fetchPublicProjects,
   fetchFeaturedProjects,
   fetchPublicPreviewProjects,
@@ -63,12 +62,7 @@ import {
   fetchSitemapProjects,
   fetchPublicProjectCountsByCategory,
 } from "./repository";
-import {
-  adaptCategory,
-  adaptCategories,
-  adaptProjects,
-  adaptProject,
-} from "./adapter";
+import { adaptCategories, adaptProjects, adaptProject } from "./adapter";
 import type {
   StudioCategory,
   StudioProject,
@@ -88,17 +82,18 @@ export type FeaturedProject = {
   isPreview?: boolean;
 };
 
-// Only public showcase data is shared across requests. Locale and admin data
-// remain request-specific. Existing admin revalidatePath calls invalidate it.
+// Only public, locale-independent CMS data is shared across requests.
+// Admin mutations immediately expire this tag; TTL also bounds external edits.
+const publicCacheOptions = { revalidate: 60, tags: [PUBLIC_PORTFOLIO_TAG] };
 const cachedFeaturedProjects = unstable_cache(
   fetchFeaturedProjects,
-  ["studio-featured-v2"],
-  { revalidate: 60 },
+  ["studio-featured-v3"],
+  publicCacheOptions,
 );
 const cachedPreviewProjects = unstable_cache(
   fetchPublicPreviewProjects,
-  ["studio-preview-v2"],
-  { revalidate: 60 },
+  ["studio-preview-v3"],
+  publicCacheOptions,
 );
 
 // ─── Public API ───
@@ -114,12 +109,7 @@ async function getCategoriesUncached(): Promise<StudioCategory[]> {
 async function getCategoryBySlugUncached(
   slug: string,
 ): Promise<StudioCategory | undefined> {
-  if (DATA_SOURCE === "static") {
-    return staticGetCategoryBySlug(slug);
-  }
-  const dbCategory = await fetchCategoryBySlug(slug);
-  if (!dbCategory) return undefined;
-  return adaptCategory(dbCategory);
+  return (await getCategories()).find((category) => category.slug === slug);
 }
 
 async function getProjectBySlugUncached(
@@ -220,19 +210,63 @@ async function getPublicProjectCountsByCategoryUncached(): Promise<
 }
 
 // Deduplicate CMS reads shared by metadata and page rendering within a request.
-export const getCategories = cache(getCategoriesUncached);
+export const getCategories = cache(
+  unstable_cache(
+    getCategoriesUncached,
+    ["studio-categories-v3", DATA_SOURCE],
+    publicCacheOptions,
+  ),
+);
 export const getCategoryBySlug = cache(getCategoryBySlugUncached);
-export const getProjectBySlug = cache(getProjectBySlugUncached);
-export const getAllProjectSlugs = cache(getAllProjectSlugsUncached);
-export const getSitemapProjects = cache(async () => {
-  if (DATA_SOURCE === "static") {
-    return staticGetPublicProjects().map(({ slug, categorySlug }) => ({ slug, categorySlug }));
-  }
-  return fetchSitemapProjects();
-});
-export const getProjectsByCategory = cache(getProjectsByCategoryUncached);
-export const getPublicProjects = cache(getPublicProjectsUncached);
+const cachedProject = unstable_cache(
+  async (slug: string) => (await getProjectBySlugUncached(slug)) ?? null,
+  ["studio-project-v3", DATA_SOURCE],
+  publicCacheOptions,
+);
+export const getProjectBySlug = cache(
+  async (slug: string) => (await cachedProject(slug)) ?? undefined,
+);
+export const getAllProjectSlugs = cache(
+  unstable_cache(
+    getAllProjectSlugsUncached,
+    ["studio-getAllProjectSlugs-v3", DATA_SOURCE],
+    publicCacheOptions,
+  ),
+);
+export const getSitemapProjects = cache(
+  unstable_cache(
+    async () => {
+      if (DATA_SOURCE === "static") {
+        return staticGetPublicProjects().map(({ slug, categorySlug }) => ({
+          slug,
+          categorySlug,
+        }));
+      }
+      return fetchSitemapProjects();
+    },
+    ["studio-sitemap-v3", DATA_SOURCE],
+    publicCacheOptions,
+  ),
+);
+export const getProjectsByCategory = cache(
+  unstable_cache(
+    getProjectsByCategoryUncached,
+    ["studio-getProjectsByCategory-v3", DATA_SOURCE],
+    publicCacheOptions,
+  ),
+);
+export const getPublicProjects = cache(
+  unstable_cache(
+    getPublicProjectsUncached,
+    ["studio-getPublicProjects-v3", DATA_SOURCE],
+    publicCacheOptions,
+  ),
+);
 export const getFeaturedProjects = cache(getFeaturedProjectsUncached);
 export const getPublicProjectCountsByCategory = cache(
-  getPublicProjectCountsByCategoryUncached,
+  unstable_cache(
+    getPublicProjectCountsByCategoryUncached,
+    ["studio-getPublicProjectCountsByCategory-v3", DATA_SOURCE],
+    publicCacheOptions,
+  ),
 );

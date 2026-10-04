@@ -69,9 +69,7 @@ export default async function InsightsPage() {
                     href={`/insights/${article.slug}`}
                     className="nm-text-link"
                   >
-                    {id
-                      ? "Baca panduan biaya website"
-                      : "Read the website cost guide"}
+                    {id ? "Baca panduan" : "Read the guide"}
                   </Link>
                 </section>
               ))}

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
+import { invalidatePublicPortfolio } from '@/lib/cms/invalidate';
 import { prisma } from '@/lib/cms/db';
 import { requireAdmin } from '@/lib/admin-auth';
 
@@ -25,6 +26,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
       data: updateData,
     });
 
+    invalidatePublicPortfolio();
     revalidatePath(`/work/${existing.projectSlug}`, 'page');
 
     return NextResponse.json(updated);
@@ -43,6 +45,7 @@ export async function DELETE(request: NextRequest, { params }: Params) {
 
     await prisma.projectTechnology.delete({ where: { id } });
 
+    invalidatePublicPortfolio();
     revalidatePath(`/work/${existing.projectSlug}`, 'page');
 
     return NextResponse.json({ success: true });

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
+import { invalidatePublicPortfolio } from '@/lib/cms/invalidate';
 import { prisma } from '@/lib/cms/db';
 import { requireAdmin } from '@/lib/admin-auth';
 
@@ -37,6 +38,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
       data: updateData,
     });
 
+    invalidatePublicPortfolio();
     revalidatePath(`/work/${existing.projectSlug}`, 'page');
 
     return NextResponse.json(updated);
@@ -64,6 +66,7 @@ export async function DELETE(request: NextRequest, { params }: Params) {
         console.error('Cloudinary delete error:', cloudinaryError);
         // If Cloudinary delete fails, still delete DB record but report error
         await prisma.projectMedia.delete({ where: { id } });
+        invalidatePublicPortfolio();
         revalidatePath(`/work/${existing.projectSlug}`, 'page');
         if (existing.type === 'cover' || existing.type === 'og') {
           const project = await prisma.project.findUnique({
@@ -86,6 +89,7 @@ export async function DELETE(request: NextRequest, { params }: Params) {
     // Delete from DB
     await prisma.projectMedia.delete({ where: { id } });
 
+    invalidatePublicPortfolio();
     // Revalidate. Cover/OG removal affects cards + metadata site-wide;
     // other media types only affect the project's own page.
     revalidatePath(`/work/${existing.projectSlug}`, 'page');

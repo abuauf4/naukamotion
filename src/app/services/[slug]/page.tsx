@@ -159,6 +159,16 @@ export default async function ServicePage({ params }: Props) {
                       ? "Baca panduan biaya pembuatan website"
                       : "Read the website cost guide"}
                   </Link>
+                  <p>
+                    <Link
+                      href="/insights/landing-page-vs-company-profile"
+                      className="nm-text-link"
+                    >
+                      {id
+                        ? "Landing page atau company profile?"
+                        : "Landing page or company website?"}
+                    </Link>
+                  </p>
                 </section>
               )}
             </div>

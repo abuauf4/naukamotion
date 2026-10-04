@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
+import { invalidatePublicPortfolio } from '@/lib/cms/invalidate';
 import { prisma } from '@/lib/cms/db';
 import { requireAdmin } from '@/lib/admin-auth';
 
@@ -95,6 +96,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    invalidatePublicPortfolio();
     revalidatePath('/', 'layout');
     revalidatePath('/work', 'page');
     revalidatePath('/sitemap.xml');
