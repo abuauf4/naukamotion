@@ -5,6 +5,7 @@ export function buildSitemap(
   categories: { slug: string }[],
   projects: { slug: string; categorySlug: string }[],
   serviceSlugs: string[],
+  insightSlugs: string[] = [],
 ): MetadataRoute.Sitemap {
   const populatedCategories = new Set(
     projects.map((project) => project.categorySlug),
@@ -20,6 +21,9 @@ export function buildSitemap(
     "/legal/privacy",
     "/legal/terms",
     ...serviceSlugs.map((slug) => `/services/${slug}`),
+    ...(insightSlugs.length
+      ? ["/insights", ...insightSlugs.map((slug) => `/insights/${slug}`)]
+      : []),
     ...categories
       .filter((category) => populatedCategories.has(category.slug))
       .map((category) => `/work/${category.slug}`),

@@ -75,4 +75,16 @@ describe("public SEO", () => {
     expect(urls.filter((url) => url.endsWith("/work/nacash"))).toHaveLength(1);
     expect(entries.every((entry) => !entry.lastModified)).toBe(true);
   });
+
+  it("includes the insights hub only when there are published article routes", () => {
+    const emptyUrls = buildSitemap([], [], []).map((entry) => entry.url);
+    expect(emptyUrls).not.toContain("https://motion.nauka.id/insights");
+    const urls = buildSitemap([], [], [], ["biaya-pembuatan-website"]).map(
+      (entry) => entry.url,
+    );
+    expect(urls).toContain("https://motion.nauka.id/insights");
+    expect(urls).toContain(
+      "https://motion.nauka.id/insights/biaya-pembuatan-website",
+    );
+  });
 });

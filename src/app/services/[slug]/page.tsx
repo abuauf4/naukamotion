@@ -139,6 +139,28 @@ export default async function ServicePage({ params }: Props) {
                   ))}
                 </div>
               </section>
+              {slug === "website" && (
+                <section>
+                  <h2>
+                    {id
+                      ? "Siapkan brief dan anggaran"
+                      : "Prepare your brief and budget"}
+                  </h2>
+                  <p>
+                    {id
+                      ? "Pahami faktor biaya, pengeluaran berulang, dan hal yang perlu dibandingkan dalam penawaran sebelum memulai proyek."
+                      : "Understand cost factors, recurring expenses, and what to compare in proposals before starting your project."}
+                  </p>
+                  <Link
+                    href="/insights/biaya-pembuatan-website"
+                    className="nm-text-link"
+                  >
+                    {id
+                      ? "Baca panduan biaya pembuatan website"
+                      : "Read the website cost guide"}
+                  </Link>
+                </section>
+              )}
             </div>
           </div>
         </div>

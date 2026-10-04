@@ -37,6 +37,9 @@ export function StudioFooter({ locale = "id" }: { locale?: Locale }) {
               {id ? "Tentang studio" : "About the studio"}
             </Link>
             <Link href="/faq">FAQ</Link>
+            <Link href="/insights">
+              {id ? "Panduan & artikel" : "Guides & insights"}
+            </Link>
           </div>
           <div className="nm-footer-column">
             <span>{id ? "Mulai percakapan" : "Start a conversation"}</span>

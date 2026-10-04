@@ -1,4 +1,11 @@
-import { pageMetadata } from "@/lib/seo";
+import {
+  absoluteUrl,
+  breadcrumbSchema,
+  ORGANIZATION_ID,
+  pageMetadata,
+} from "@/lib/seo";
+import { StructuredData } from "@/components/studio/StructuredData";
+import { NaCashEditorial } from "@/components/studio/ProjectEditorial";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -55,6 +62,35 @@ export default async function NaCashPage() {
     <div className="nm-page">
       <StudioHeader />
       <main id="main-content" className="nm-subpage">
+        <StructuredData
+          data={[
+            breadcrumbSchema([
+              { name: id ? "Beranda" : "Home", path: "/" },
+              { name: id ? "Portofolio" : "Portfolio", path: "/work" },
+              { name: "NaCash", path: "/work/nacash" },
+            ]),
+            {
+              "@context": "https://schema.org",
+              "@type": "CreativeWork",
+              "@id": absoluteUrl("/work/nacash#case-study"),
+              url: absoluteUrl("/work/nacash"),
+              name: id
+                ? "NaCash — studi kasus pengembangan aplikasi Android"
+                : "NaCash — Android application development case study",
+              description: id
+                ? "Produk internal Nauka untuk kasir dan pencatatan keuangan: perbedaan kebutuhan pengguna, alur data, dan penggunaan offline."
+                : "Nauka's in-house point-of-sale and finance products: different user needs, data flows, and offline use.",
+              creator: {
+                "@type": "Organization",
+                "@id": ORGANIZATION_ID,
+                name: "Nauka Motion",
+                url: absoluteUrl("/"),
+              },
+              image: absoluteUrl("/showcase/nacash-dashboard.webp"),
+              inLanguage: id ? "id-ID" : "en",
+            },
+          ]}
+        />
         <div className="nm-container">
           <div className="nm-breadcrumb">
             <Link href="/work">{id ? "Portofolio" : "Portfolio"}</Link>
@@ -147,6 +183,7 @@ export default async function NaCashPage() {
             </div>
           </div>
         </section>
+        <NaCashEditorial locale={locale} />
         <section className="nm-section">
           <div className="nm-container nm-delivery-grid">
             <div>

@@ -1,117 +1,86 @@
-import { pageMetadata } from "@/lib/seo";
-import { Header } from "@/components/nauka/Header";
-import { Footer } from "@/components/nauka/Footer";
-import { ScrollProgress } from "@/components/nauka/ScrollProgress";
+import Link from "next/link";
+import { pageMetadata, breadcrumbSchema } from "@/lib/seo";
+import { StudioHeader } from "@/components/studio/StudioHeader";
+import { StudioFooter } from "@/components/studio/StudioFooter";
+import { StructuredData } from "@/components/studio/StructuredData";
+import { ProjectCTA } from "@/components/studio/MarketingSections";
+import { getLocale } from "@/lib/server-locale";
+import { insights } from "@/lib/insights";
 
 export const metadata = pageMetadata({
-  title: "Insights",
+  title: "Panduan Website & Aplikasi untuk Bisnis",
   description:
-    "Tulisan dan wawasan dari Nauka Motion tentang desain, teknologi, dan produk digital.",
+    "Panduan dari Nauka Motion untuk merencanakan website dan aplikasi: kebutuhan, biaya, fitur, serta persiapan proyek sebelum memilih jasa pengembangan.",
   path: "/insights",
-  index: false,
+  index: insights.length > 0,
 });
-
-export default function InsightsPage() {
+export default async function InsightsPage() {
+  const locale = await getLocale();
+  const id = locale === "id";
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        background: "var(--bg)",
-      }}
-    >
-      <ScrollProgress />
-      <Header />
-
-      <main id="main-content" style={{ flex: 1, paddingTop: "120px" }}>
-        {/* Hero */}
-        <section style={{ paddingBottom: "60px" }}>
-          <div className="container-wide">
-            <p className="eyebrow eyebrow-burnt" style={{ marginBottom: "24px" }}>
-              <span style={{ opacity: 0.5 }}>///</span>
-              Insights
-            </p>
-            <h1
-              style={{
-                fontFamily: "var(--font-body), sans-serif",
-                fontWeight: 500,
-                fontSize: "clamp(2.5rem, 7vw, 5rem)",
-                lineHeight: 1.02,
-                letterSpacing: "-0.03em",
-                color: "var(--ink)",
-                margin: 0,
-                marginBottom: "32px",
-                maxWidth: "16ch",
-              }}
-            >
-              Wawasan dari{" "}
-              <span
-                style={{
-                  fontFamily: "var(--font-fraunces), serif",
-                  fontStyle: "italic",
-                  fontWeight: 400,
-                  color: "var(--burnt)",
-                }}
-              >
-                Nauka Motion
-              </span>
+    <div className="nm-page">
+      <StudioHeader />
+      <main id="main-content" className="nm-subpage">
+        <StructuredData
+          data={breadcrumbSchema([
+            { name: id ? "Beranda" : "Home", path: "/" },
+            { name: "Insights", path: "/insights" },
+          ])}
+        />
+        <div className="nm-container">
+          <div className="nm-page-intro">
+            <p className="nm-eyebrow">NAUKA MOTION / INSIGHTS</p>
+            <h1>
+              {id
+                ? "Sebelum mulai, pahami kebutuhannya."
+                : "Understand your needs before you build."}
             </h1>
-            <p
-              style={{
-                fontFamily: "var(--font-fraunces), serif",
-                fontStyle: "italic",
-                fontWeight: 400,
-                fontSize: "clamp(1.1rem, 1.6vw, 1.4rem)",
-                color: "var(--ink-soft)",
-                lineHeight: 1.4,
-                margin: 0,
-                maxWidth: "44ch",
-              }}
-            >
-              Tulisan tentang desain, teknologi, dan pemecahan masalah digital.
-              Belum ada artikel yang dipublikasikan — akan datang segera.
+            <p>
+              {id
+                ? "Panduan untuk menyiapkan brief, memahami pilihan fitur, dan membahas biaya pengembangan website atau aplikasi dengan lebih jelas."
+                : "Guides to preparing a brief, understanding feature choices, and discussing website or application development costs clearly."}
             </p>
           </div>
-        </section>
-
-        {/* Empty state */}
-        <section style={{ paddingBottom: "120px" }}>
-          <div
-            style={{
-              maxWidth: "860px",
-              margin: "0 auto",
-              paddingLeft: "clamp(20px, 5vw, 80px)",
-              paddingRight: "clamp(20px, 5vw, 80px)",
-              borderTop: "1px solid var(--line)",
-              paddingTop: "80px",
-              textAlign: "center",
-            }}
-          >
-            <p
-              className="studio-meta"
-              style={{ color: "var(--ink-faint)", marginBottom: "16px" }}
-            >
-              Belum ada artikel
-            </p>
-            <p
-              style={{
-                fontFamily: "var(--font-body), sans-serif",
-                fontSize: "1.05rem",
-                color: "var(--ink-soft)",
-                maxWidth: "44ch",
-                margin: "0 auto",
-                lineHeight: 1.55,
-              }}
-            >
-              Insights akan diisi seiring perjalanan Nauka Motion. Sementara
-              itu, lihat project kami di halaman Work.
-            </p>
+          <div className="nm-case-layout">
+            <aside className="nm-case-aside">
+              <p>{id ? "DARI TIM NAUKA MOTION" : "FROM NAUKA MOTION"}</p>
+              <p>
+                {id
+                  ? "Mulai dari pertanyaan yang muncul saat merencanakan proyek digital."
+                  : "Start with questions that arise when planning a digital project."}
+              </p>
+              <Link href="/services" className="nm-text-link">
+                {id ? "Jelajahi layanan" : "Explore services"}
+              </Link>
+            </aside>
+            <div className="nm-case-content">
+              {insights.map((article) => (
+                <section key={article.slug}>
+                  <p className="nm-eyebrow">
+                    {id ? "PERENCANAAN WEBSITE" : "WEBSITE PLANNING"}
+                  </p>
+                  <h2>
+                    <Link href={`/insights/${article.slug}`}>
+                      {article.title[locale]}
+                    </Link>
+                  </h2>
+                  <p>{article.description[locale]}</p>
+                  <Link
+                    href={`/insights/${article.slug}`}
+                    className="nm-text-link"
+                  >
+                    {id
+                      ? "Baca panduan biaya website"
+                      : "Read the website cost guide"}
+                  </Link>
+                </section>
+              ))}
+            </div>
           </div>
-        </section>
+        </div>
+        <ProjectCTA locale={locale} />
       </main>
-
-      <Footer />
+      <StudioFooter locale={locale} />
     </div>
   );
 }

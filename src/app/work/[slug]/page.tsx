@@ -16,6 +16,7 @@ import {
 import { getLocale } from "@/lib/server-locale";
 import { pageMetadata, breadcrumbSchema } from "@/lib/seo";
 import { StructuredData } from "@/components/studio/StructuredData";
+import { BakauEditorial } from "@/components/studio/ProjectEditorial";
 
 export const revalidate = 60;
 type Props = { params: Promise<{ slug: string }> };
@@ -239,6 +240,7 @@ export default async function WorkDetailPage({ params }: Props) {
                   )}
                 </section>
               ))}
+              {slug === "bakau-institute" && <BakauEditorial locale={locale} />}
               {project.caseStudy.techStory && (
                 <section>
                   <h2>{id ? "Pilihan teknologi" : "Technology choices"}</h2>
