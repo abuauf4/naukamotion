@@ -1202,7 +1202,8 @@ select {
   color: #d5e1cd;
   text-underline-offset: 3px;
 }
-.nm-form-footer > a {
+.nm-form-footer > a,
+.nm-form-whatsapp {
   text-align: center;
   color: #d5e1cd;
   font-size: 0.875rem;
@@ -2193,4 +2194,13 @@ select {
   font-size: 0.875rem;
   color: inherit;
   text-underline-offset: 5px;
+}
+
+.nm-form-whatsapp {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  text-decoration: underline;
+  cursor: pointer;
 }

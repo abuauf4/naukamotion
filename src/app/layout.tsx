@@ -4,6 +4,7 @@ import "./globals.css";
 import "./studio.css";
 import { getLocale } from "@/lib/server-locale";
 import { LocaleProvider } from "@/lib/locale-context";
+import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import { pageMetadata, SITE_URL } from "@/lib/seo";
 
 // Bundled Latin fonts keep builds independent of Google Fonts availability.
@@ -43,7 +44,8 @@ const fraunces = localFont({
 export const metadata: Metadata = {
   ...pageMetadata({
     title: "Jasa Pembuatan Website & Aplikasi Android",
-    description: "Jasa pembuatan website, aplikasi Android, dan sistem bisnis oleh Nauka Motion. Desain sesuai brand, lingkup jelas, dan progres yang bisa Anda tinjau.",
+    description:
+      "Jasa pembuatan website, aplikasi Android, dan sistem bisnis oleh Nauka Motion. Desain sesuai brand, lingkup jelas, dan progres yang bisa Anda tinjau.",
     path: "/",
   }),
   metadataBase: new URL(SITE_URL),
@@ -96,6 +98,7 @@ export default async function RootLayout({
         className={`${instrumentSans.variable} ${fraunces.variable} antialiased bg-background text-foreground`}
       >
         <LocaleProvider initialLocale={locale}>{children}</LocaleProvider>
+        <GoogleAnalytics />
       </body>
     </html>
   );

@@ -33,6 +33,14 @@ const sections = [
     ],
   },
   {
+    heading: "Pengukuran Kunjungan",
+    body: [
+      "Kami menggunakan Google Analytics 4 untuk memahami kunjungan halaman, interaksi dengan konten, klik WhatsApp, dan keberhasilan pengiriman brief. Google Analytics dapat memproses informasi perangkat, browser, sumber kunjungan, dan cookie pengukuran.",
+      "Event khusus klik WhatsApp dan brief tersimpan hanya memuat jalur halaman serta kategori interaksi atau layanan. Kami tidak menyertakan nama, email, nomor telepon, anggaran, atau isi brief dalam event tersebut. Isi brief diteruskan ke WhatsApp hanya ketika Anda memilih tombol untuk melanjutkan percakapan.",
+      "Google Signals dan personalisasi iklan tidak diaktifkan melalui konfigurasi Analytics situs ini. Anda dapat membatasi cookie melalui pengaturan browser atau menggunakan pemblokir Analytics. Kebijakan Google terkait data layanan tersedia di https://policies.google.com/privacy.",
+    ],
+  },
+  {
     heading: "Penyimpanan dan Keamanan",
     body: [
       "Data brief proyek disimpan dalam sistem internal kami dan hanya dapat diakses oleh anggota tim Nauka Motion yang memerlukan akses untuk menindaklanjuti permintaan Anda.",
@@ -49,7 +57,7 @@ const sections = [
   {
     heading: "Cookie",
     body: [
-      "Situs menggunakan cookie untuk pilihan bahasa dan sesi login admin. Preferensi tampilan dapat tersimpan di penyimpanan lokal browser. Anda dapat mengatur browser untuk menolak atau menghapus penyimpanan tersebut.",
+      "Situs menggunakan cookie untuk pilihan bahasa, sesi login admin, dan pengukuran kunjungan Google Analytics. Preferensi tampilan dapat tersimpan di penyimpanan lokal browser. Anda dapat mengatur browser untuk menolak atau menghapus penyimpanan tersebut.",
     ],
   },
   {
@@ -82,7 +90,10 @@ export default function PrivacyPolicyPage() {
       <main id="main-content" style={{ flex: 1, paddingTop: "120px" }}>
         <section style={{ paddingBottom: "60px" }}>
           <div className="container-wide">
-            <p className="eyebrow eyebrow-burnt" style={{ marginBottom: "24px" }}>
+            <p
+              className="eyebrow eyebrow-burnt"
+              style={{ marginBottom: "24px" }}
+            >
               <span style={{ opacity: 0.5 }}>///</span>
               Legal
             </p>
@@ -110,11 +121,8 @@ export default function PrivacyPolicyPage() {
                 Privasi
               </span>
             </h1>
-            <p
-              className="studio-meta"
-              style={{ color: "var(--ink-faint)" }}
-            >
-              Terakhir diperbarui: 2026
+            <p className="studio-meta" style={{ color: "var(--ink-faint)" }}>
+              Terakhir diperbarui: 4 Oktober 2026
             </p>
           </div>
         </section>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 import { whatsappUrl } from "@/lib/studio-offering";
 import type { Locale } from "@/lib/server-locale";
+import { trackSavedBrief, trackWhatsappClick } from "@/lib/analytics";
 
 const services = [
   {
@@ -69,6 +70,13 @@ export function ProjectIntake({
     .filter(Boolean)
     .join("\n");
 
+  function continueOnWhatsapp() {
+    trackWhatsappClick(submitted ? "saved_brief" : "project_brief");
+    // Keep personal details out of anchor hrefs collected by Enhanced Measurement.
+    // The completed brief goes to WhatsApp only after the visitor presses this button.
+    window.open(whatsappUrl(brief), "_blank", "noopener,noreferrer");
+  }
+
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (submitting) return;
@@ -95,6 +103,7 @@ export function ProjectIntake({
               : "Your brief has not been saved. Try again or continue it on WhatsApp below.",
         );
       setSubmitted(true);
+      trackSavedBrief(form.projectType);
     } catch (err) {
       setError(
         err instanceof Error && err.name !== "AbortError"
@@ -119,14 +128,13 @@ export function ProjectIntake({
             ? "Terima kasih sudah menceritakan kebutuhan Anda. Anda juga bisa melanjutkan percakapan melalui WhatsApp dengan brief yang sama."
             : "Thank you for sharing your project needs. You can also continue the conversation on WhatsApp with the same brief."}
         </p>
-        <a
+        <button
+          type="button"
           className="nm-button"
-          href={whatsappUrl(brief)}
-          target="_blank"
-          rel="noopener noreferrer"
+          onClick={continueOnWhatsapp}
         >
           {id ? "Lanjutkan di WhatsApp" : "Continue on WhatsApp"}
-        </a>
+        </button>
         <button
           type="button"
           className="nm-form-reset"
@@ -305,11 +313,15 @@ export function ProjectIntake({
             {id ? "Kebijakan privasi" : "Privacy policy"}
           </Link>
         </p>
-        <a href={whatsappUrl(brief)} target="_blank" rel="noopener noreferrer">
+        <button
+          type="button"
+          className="nm-form-whatsapp"
+          onClick={continueOnWhatsapp}
+        >
           {id
             ? "Atau lanjutkan brief ini ke WhatsApp"
             : "Or continue this brief on WhatsApp"}
-        </a>
+        </button>
       </div>
       <noscript>
         <p className="nm-no-js-note">
