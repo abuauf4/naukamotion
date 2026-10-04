@@ -1,4 +1,12 @@
-import { pageMetadata } from "@/lib/seo";
+import {
+  absoluteUrl,
+  breadcrumbSchema,
+  ORGANIZATION_ID,
+  pageMetadata,
+} from "@/lib/seo";
+import { studioOrganization } from "@/lib/studio-schema";
+import { StructuredData } from "@/components/studio/StructuredData";
+import { servicePages } from "@/lib/service-pages";
 import Link from "next/link";
 import { StudioHeader } from "@/components/studio/StudioHeader";
 import { StudioFooter } from "@/components/studio/StudioFooter";
@@ -22,6 +30,42 @@ export default async function AboutPage() {
     <div className="nm-page">
       <StudioHeader />
       <main id="main-content" className="nm-subpage">
+        <StructuredData
+          data={[
+            {
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  ...studioOrganization(),
+                  founder: { "@id": absoluteUrl("/about#abu-aufa") },
+                },
+                {
+                  "@type": "Person",
+                  "@id": absoluteUrl("/about#abu-aufa"),
+                  name: "Abu Aufa",
+                  worksFor: { "@id": ORGANIZATION_ID },
+                },
+                {
+                  "@type": "AboutPage",
+                  "@id": absoluteUrl("/about#webpage"),
+                  url: absoluteUrl("/about"),
+                  name: id
+                    ? "Tentang Nauka Motion & Abu Aufa"
+                    : "About Nauka Motion & Abu Aufa",
+                  mainEntity: { "@id": ORGANIZATION_ID },
+                  inLanguage: id ? "id-ID" : "en",
+                },
+              ],
+            },
+            breadcrumbSchema([
+              { name: id ? "Beranda" : "Home", path: "/" },
+              {
+                name: id ? "Tentang studio" : "About the studio",
+                path: "/about",
+              },
+            ]),
+          ]}
+        />
         <div className="nm-container">
           <div className="nm-page-intro">
             <p className="nm-eyebrow">
@@ -53,7 +97,7 @@ export default async function AboutPage() {
               <p className="nm-eyebrow">
                 {id ? "DI BALIK NAUKA MOTION" : "BEHIND NAUKA MOTION"}
               </p>
-              <h2>Abu Aufa</h2>
+              <h2 id="abu-aufa">Abu Aufa</h2>
               <Link href="/contact" className="nm-text-link">
                 {id ? "Mulai percakapan" : "Start a conversation"}
               </Link>
@@ -72,6 +116,16 @@ export default async function AboutPage() {
               <Link href="/work/nacash" className="nm-text-link">
                 {id ? "Kenali produk NaCash" : "Explore NaCash"}
               </Link>
+              <nav
+                className="nm-service-nav"
+                aria-label={id ? "Layanan studio" : "Studio services"}
+              >
+                {servicePages.map((service) => (
+                  <Link key={service.slug} href={`/services/${service.slug}`}>
+                    {service.title[locale]}
+                  </Link>
+                ))}
+              </nav>
             </div>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Plus } from "lucide-react";
 import { notFound } from "next/navigation";
 import { StudioHeader } from "@/components/studio/StudioHeader";
 import { StudioFooter } from "@/components/studio/StudioFooter";
@@ -6,12 +7,8 @@ import { ProjectCTA } from "@/components/studio/MarketingSections";
 import { StructuredData } from "@/components/studio/StructuredData";
 import { getLocale } from "@/lib/server-locale";
 import { servicePages } from "@/lib/service-pages";
-import {
-  absoluteUrl,
-  breadcrumbSchema,
-  ORGANIZATION_ID,
-  pageMetadata,
-} from "@/lib/seo";
+import { studioOrganization } from "@/lib/studio-schema";
+import { absoluteUrl, breadcrumbSchema, pageMetadata } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -53,13 +50,7 @@ export default async function ServicePage({ params }: Props) {
               name: service.title[locale],
               description: service.intro[locale],
               url: absoluteUrl(`/services/${slug}`),
-              provider: {
-                "@type": "Organization",
-                "@id": ORGANIZATION_ID,
-                name: "Nauka Motion",
-                url: absoluteUrl("/"),
-                logo: absoluteUrl("/logo-navbar-transparent.png"),
-              },
+              provider: studioOrganization(),
               areaServed: { "@type": "Country", name: "Indonesia" },
             },
           ]}
@@ -117,6 +108,37 @@ export default async function ServicePage({ params }: Props) {
                   <p>{section.body[locale]}</p>
                 </section>
               ))}
+              <section>
+                <h2>
+                  {id
+                    ? "Contoh karya yang bisa ditinjau"
+                    : "Work you can explore"}
+                </h2>
+                <p>{service.portfolioIntro[locale]}</p>
+                <ul>
+                  {service.relatedProjects.map((project) => (
+                    <li key={project.path}>
+                      <Link href={project.path} className="nm-text-link">
+                        {project.label[locale]}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+              <section>
+                <h2>{id ? "Pertanyaan sebelum mulai" : "Before we start"}</h2>
+                <div className="nm-faq-list">
+                  {service.faqs.map((faq) => (
+                    <details key={faq.question.id}>
+                      <summary>
+                        {faq.question[locale]}
+                        <Plus size={20} aria-hidden="true" />
+                      </summary>
+                      <p>{faq.answer[locale]}</p>
+                    </details>
+                  ))}
+                </div>
+              </section>
             </div>
           </div>
         </div>

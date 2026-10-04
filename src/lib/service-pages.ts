@@ -46,6 +46,58 @@ export const servicePages = [
       },
     ],
     examplePath: "/work",
+    portfolioIntro: text(
+      "Tinjau contoh website di portofolio untuk membandingkan kebutuhan Anda. Website organisasi seperti Bakau Institute dan katalog bisnis seperti Berkah Komputer memiliki susunan informasi berbeda; referensi ini membantu percakapan tentang halaman, konten, dan alur kontak yang diperlukan.",
+      "Explore portfolio websites to compare your needs. An organization website such as Bakau Institute and a business catalog such as Berkah Komputer organize information differently. These references help us discuss the pages, content, and contact flow your project needs.",
+    ),
+    relatedProjects: [
+      {
+        path: "/work/bakau-institute",
+        label: text(
+          "Bakau Institute — website organisasi NGO",
+          "Bakau Institute — NGO website",
+        ),
+      },
+      {
+        path: "/work/berkah-komputer",
+        label: text(
+          "Berkah Komputer — website bisnis komputer",
+          "Berkah Komputer — computer business website",
+        ),
+      },
+    ],
+    faqs: [
+      {
+        question: text(
+          "Apa yang perlu disiapkan sebelum membuat website?",
+          "What should I prepare before building a website?",
+        ),
+        answer: text(
+          "Mulai dari tujuan website, daftar layanan atau produk, logo, foto yang boleh digunakan, dan kontak bisnis. Jika tulisan belum siap, bawa poin-poin utama serta contoh website yang Anda sukai. Kebutuhan penulisan, pengolahan foto, dan jumlah halaman dibahas dalam lingkup proyek sebelum jadwal ditentukan.",
+          "Start with your website's purpose, services or products, logo, photos you can use, and business contact details. If the copy is not ready, bring key points and examples you like. Copywriting, photo preparation, and page count are scoped before scheduling the work.",
+        ),
+      },
+      {
+        question: text(
+          "Apakah domain dan hosting lama bisa digunakan?",
+          "Can I use my existing domain and hosting?",
+        ),
+        answer: text(
+          "Bisa dibahas setelah jenis hosting, akses pengelolaan, dan kebutuhan website diperiksa. Untuk penggantian website lama, daftar URL penting, formulir, serta pengaturan email perlu dicatat agar perpindahannya terencana. Biaya perpanjangan domain, hosting, dan bantuan migrasi dijelaskan dalam penawaran.",
+          "We can assess this after checking the hosting type, management access, and website requirements. When replacing a website, important URLs, forms, and email settings should be recorded to plan the move. Domain renewals, hosting fees, and migration support are specified in the proposal.",
+        ),
+      },
+      {
+        question: text(
+          "Apakah website langsung muncul di halaman pertama Google?",
+          "Will the website immediately rank on Google's first page?",
+        ),
+        answer: text(
+          "Tidak ada jaminan posisi pertama atau tanggal pasti masuk indeks. SEO dasar menyiapkan halaman agar dapat dirayapi dan dipahami mesin pencari. Setelah website terbit, pemantauan Search Console, perbaikan konten, serta pengembangan halaman yang relevan dapat direncanakan sebagai pekerjaan lanjutan dengan lingkup tersendiri.",
+          "There is no guaranteed first-page position or indexing date. Foundational SEO prepares pages for search engines to crawl and understand. After launch, Search Console monitoring, content improvements, and relevant new pages can be planned as a separately scoped engagement.",
+        ),
+      },
+    ],
     exampleLabel: text(
       "Lihat portofolio website",
       "Explore our website portfolio",
@@ -91,6 +143,51 @@ export const servicePages = [
       },
     ],
     examplePath: "/work/nacash",
+    portfolioIntro: text(
+      "NaCash merupakan produk internal Nauka untuk kasir dan pencatatan keuangan di Android. Gunakan halaman produknya sebagai bahan diskusi tentang alur transaksi, input data, dan laporan. Aplikasi custom tetap memerlukan pemetaan tersendiri karena aturan usaha, perangkat, dan pengguna Anda dapat berbeda.",
+      "NaCash is Nauka's in-house Android product for point-of-sale and finance tracking. Use its product page to discuss transaction flows, data entry, and reports. Custom applications still need their own requirements because your business rules, devices, and users may differ.",
+    ),
+    relatedProjects: [
+      {
+        path: "/work/nacash",
+        label: text(
+          "NaCash — aplikasi kasir dan keuangan Android",
+          "NaCash — Android point-of-sale and finance apps",
+        ),
+      },
+    ],
+    faqs: [
+      {
+        question: text(
+          "Lebih cocok aplikasi Android atau web app?",
+          "Should I choose an Android app or a web app?",
+        ),
+        answer: text(
+          "Android layak dipertimbangkan ketika pekerjaan berpusat pada HP atau tablet, membutuhkan penggunaan offline, atau memakai fitur perangkat tertentu. Web app lebih sesuai untuk akses melalui browser di beragam perangkat. Kita bandingkan kebutuhan pengguna, koneksi internet, dan cara distribusinya sebelum memilih bentuk aplikasi.",
+          "Consider Android when work centers on phones or tablets, requires offline use, or needs specific device features. A web app suits browser access across different devices. We compare users, connectivity, and distribution needs before choosing the application format.",
+        ),
+      },
+      {
+        question: text(
+          "Bisakah aplikasi terhubung ke printer atau perangkat toko?",
+          "Can the app connect to printers or shop devices?",
+        ),
+        answer: text(
+          "Integrasi dinilai berdasarkan model perangkat, cara koneksi, serta dukungan teknis yang tersedia. Sampaikan merek dan tipe printer atau pemindai sejak awal. Kecocokan harus diuji pada perangkat sasaran; dukungan untuk satu model tidak otomatis berarti semua perangkat sejenis didukung.",
+          "Integration depends on the device model, connection method, and available technical support. Share printer or scanner brands and models early. Compatibility must be tested on target hardware; support for one model does not automatically cover all similar devices.",
+        ),
+      },
+      {
+        question: text(
+          "Bagaimana mencoba aplikasi sebelum serah terima?",
+          "How can I try the app before handover?",
+        ),
+        answer: text(
+          "Skenario uji disepakati dari pekerjaan utama pengguna, lalu diperiksa pada versi yang bisa dipasang di perangkat sasaran. Contohnya input, edit, hapus, cetak, ekspor, dan pemulihan data jika masuk lingkup. Temuan dicatat untuk diperbaiki sebelum versi akhir; penambahan fitur baru dibahas terpisah dari perbaikan kesalahan.",
+          "Test scenarios are agreed from users' core tasks and checked in an installable version on target devices. Examples include entry, editing, deletion, printing, export, and recovery where in scope. Findings are addressed before handover; new features are scoped separately from bug fixes.",
+        ),
+      },
+    ],
     exampleLabel: text(
       "Kenali produk Android NaCash",
       "Explore the NaCash Android products",
@@ -142,6 +239,51 @@ export const servicePages = [
       },
     ],
     examplePath: "/work/inventory-systems",
+    portfolioIntro: text(
+      "Portofolio Inventra dapat menjadi awal pembahasan sistem inventory. Saat meninjau referensi, catat alur yang mirip dengan pekerjaan tim dan bagian yang perlu berbeda. Nama modul saja belum cukup: aturan perubahan stok, pengguna yang boleh mengubah data, dan laporan yang dibutuhkan harus diperjelas.",
+      "The Inventra portfolio can start a conversation about inventory systems. When reviewing a reference, note workflows that resemble your team's work and those that need to differ. Module names alone are not enough: stock-change rules, editing permissions, and reporting needs must be clarified.",
+    ),
+    relatedProjects: [
+      {
+        path: "/work/inventra",
+        label: text(
+          "Inventra — referensi sistem inventory",
+          "Inventra — inventory system reference",
+        ),
+      },
+    ],
+    faqs: [
+      {
+        question: text(
+          "Apakah data dari Excel bisa dipindahkan?",
+          "Can existing Excel data be migrated?",
+        ),
+        answer: text(
+          "Bisa dinilai dari contoh berkas, struktur kolom, jumlah data, dan kualitas isinya. Data duplikat, format tanggal, kode barang, serta hubungan antartabel perlu diperiksa sebelum impor. Untuk pembahasan awal, gunakan contoh tanpa data pribadi. Pemetaan kolom dan pengecekan hasil migrasi dimasukkan ke lingkup jika diperlukan.",
+          "We assess sample files, columns, record counts, and data quality. Duplicates, date formats, item codes, and relationships need checking before import. Use samples without personal data for the initial discussion. Column mapping and migration checks are included in the scope when required.",
+        ),
+      },
+      {
+        question: text(
+          "Bisakah akses pemilik dan staf dibedakan?",
+          "Can owners and staff have different access?",
+        ),
+        answer: text(
+          "Hak akses dapat dirancang berdasarkan pekerjaan, misalnya siapa yang boleh melihat laporan, mengubah stok, atau menyetujui transaksi. Daftar peran dan tindakan yang diizinkan perlu disepakati sebelum pembangunan. Kebutuhan seperti riwayat perubahan dan pembatasan per cabang dibahas terpisah agar aturan akses dapat diuji dengan jelas.",
+          "Permissions can be designed around tasks such as viewing reports, changing stock, or approving transactions. Roles and allowed actions are agreed before development. Change history and branch-level restrictions are scoped explicitly so access rules can be tested clearly.",
+        ),
+      },
+      {
+        question: text(
+          "Apakah semua modul harus dibuat sekaligus?",
+          "Do all modules need to be built at once?",
+        ),
+        answer: text(
+          "Tidak harus. Mulai dari satu alur yang paling penting, tentukan data masuk dan hasil yang diharapkan, lalu uji dengan skenario kerja nyata. Tahap berikutnya diprioritaskan setelah evaluasi versi awal. Hubungan data antarmodul tetap dipikirkan sejak awal supaya penambahan fitur tidak mengacaukan catatan yang sudah berjalan.",
+          "No. Start with the most important workflow, define its inputs and expected outputs, then test representative work scenarios. Prioritize later stages after reviewing the first version. Data relationships are considered from the start so new features do not disrupt existing records.",
+        ),
+      },
+    ],
     exampleLabel: text(
       "Lihat karya sistem inventory",
       "Explore inventory system projects",

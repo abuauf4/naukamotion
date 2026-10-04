@@ -13,8 +13,8 @@ import {
 import { getFeaturedProjects } from "@/lib/cms";
 import { getLocale } from "@/lib/server-locale";
 import { StructuredData } from "@/components/studio/StructuredData";
-import { SITE_URL, ORGANIZATION_ID, absoluteUrl } from "@/lib/seo";
-import { studioContact } from "@/lib/studio-offering";
+import { SITE_URL, ORGANIZATION_ID } from "@/lib/seo";
+import { studioOrganization } from "@/lib/studio-schema";
 
 export const revalidate = 60;
 
@@ -25,33 +25,6 @@ async function FeaturedWork({ locale }: { locale: "id" | "en" }) {
 
 export default async function HomePage() {
   const locale = await getLocale();
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "@id": ORGANIZATION_ID,
-    logo: absoluteUrl("/logo-navbar-transparent.png"),
-    name: "Nauka Motion",
-    url: SITE_URL,
-    description:
-      "Jasa pembuatan website, aplikasi Android, dan sistem bisnis oleh Nauka Motion.",
-    email: studioContact.email,
-    telephone: `+${studioContact.phone}`,
-    areaServed: { "@type": "Country", name: "Indonesia" },
-    contactPoint: {
-      "@type": "ContactPoint",
-      contactType: "sales",
-      telephone: `+${studioContact.phone}`,
-      email: studioContact.email,
-      availableLanguage: ["Indonesian", "English"],
-    },
-    knowsAbout: [
-      "Website development",
-      "Android applications",
-      "Business systems",
-      "UI/UX design",
-    ],
-    sameAs: [studioContact.instagram],
-  };
 
   return (
     <div className="nm-page">
@@ -61,14 +34,14 @@ export default async function HomePage() {
           data={{
             "@context": "https://schema.org",
             "@graph": [
-              schema,
+              studioOrganization(),
               {
                 "@type": "WebSite",
                 "@id": `${SITE_URL}/#website`,
                 name: "Nauka Motion",
                 url: `${SITE_URL}/`,
                 publisher: { "@id": ORGANIZATION_ID },
-                inLanguage: "id-ID",
+                inLanguage: locale === "id" ? "id-ID" : "en",
               },
             ],
           }}
