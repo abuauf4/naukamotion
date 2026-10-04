@@ -74,12 +74,7 @@ export default async function InsightPage({ params }: Props) {
                   description: article.description[locale],
                   datePublished: article.publishedAt,
                   inLanguage: id ? "id-ID" : "en",
-                  author: {
-                    "@type": "Organization",
-                    "@id": ORGANIZATION_ID,
-                    name: "Nauka Motion",
-                    url: absoluteUrl("/about"),
-                  },
+                  author: { "@id": ORGANIZATION_ID },
                   publisher: { "@id": ORGANIZATION_ID },
                   image: absoluteUrl("/ogimage.webp"),
                 },

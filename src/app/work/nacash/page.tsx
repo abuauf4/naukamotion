@@ -1,9 +1,9 @@
 import {
   absoluteUrl,
   breadcrumbSchema,
-  ORGANIZATION_ID,
   pageMetadata,
 } from "@/lib/seo";
+import { studioOrganization } from "@/lib/studio-schema";
 import { StructuredData } from "@/components/studio/StructuredData";
 import { NaCashEditorial } from "@/components/studio/ProjectEditorial";
 import Image from "next/image";
@@ -80,12 +80,7 @@ export default async function NaCashPage() {
               description: id
                 ? "Produk internal Nauka untuk kasir dan pencatatan keuangan: perbedaan kebutuhan pengguna, alur data, dan penggunaan offline."
                 : "Nauka's in-house point-of-sale and finance products: different user needs, data flows, and offline use.",
-              creator: {
-                "@type": "Organization",
-                "@id": ORGANIZATION_ID,
-                name: "Nauka Motion",
-                url: absoluteUrl("/"),
-              },
+              creator: studioOrganization(),
               image: absoluteUrl("/showcase/nacash-dashboard.webp"),
               inLanguage: id ? "id-ID" : "en",
             },
