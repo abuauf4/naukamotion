@@ -2,231 +2,198 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Check, Layers3 } from "lucide-react";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
 import {
   motion,
-  useMotionValue,
   useReducedMotion,
   useScroll,
-  useSpring,
   useTransform,
-  type MotionValue,
 } from "framer-motion";
-import { useRef, type PointerEvent } from "react";
+import { useRef } from "react";
 import type { Locale } from "@/lib/server-locale";
 import styles from "./MotionHomeHero.module.css";
 
-function KineticLetter({
-  children,
-  x,
-  y,
-  depth,
-  disabled,
-}: {
-  children: string;
-  x: MotionValue<number>;
-  y: MotionValue<number>;
-  depth: number;
-  disabled: boolean;
-}) {
-  const tx = useTransform(x, [-1, 1], [-depth, depth]);
-  const ty = useTransform(y, [-1, 1], [-depth * 0.45, depth * 0.45]);
-
-  return (
-    <motion.span
-      aria-hidden="true"
-      className={styles.letter}
-      style={disabled ? undefined : { x: tx, y: ty }}
-    >
-      {children}
-    </motion.span>
-  );
-}
+const letters = Array.from("MOTION");
 
 export function MotionHomeHero({ locale }: { locale: Locale }) {
   const id = locale === "id";
-  const sectionRef = useRef<HTMLElement>(null);
+  const heroRef = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion() ?? false;
 
-  const pointerX = useMotionValue(0);
-  const pointerY = useMotionValue(0);
-  const smoothX = useSpring(pointerX, { stiffness: 120, damping: 22, mass: 0.45 });
-  const smoothY = useSpring(pointerY, { stiffness: 120, damping: 22, mass: 0.45 });
-
   const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end start"],
+    target: heroRef,
+    offset: ["start start", "end end"],
   });
 
-  const copyY = useTransform(scrollYProgress, [0, 1], [0, -34]);
-  const showcaseY = useTransform(scrollYProgress, [0, 1], [0, -62]);
-  const showcaseScale = useTransform(scrollYProgress, [0, 0.85], [1, 1.025]);
-  const wordSpacing = useTransform(scrollYProgress, [0, 0.8], ["0em", "0.075em"]);
+  const titleY = useTransform(scrollYProgress, [0, 0.58], [0, -88]);
+  const titleScale = useTransform(scrollYProgress, [0, 0.58], [1, 1.12]);
+  const titleOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.36, 0.68],
+    [1, 1, 0.11],
+  );
 
-  const browserX = useTransform(smoothX, [-1, 1], [-9, 9]);
-  const browserY = useTransform(smoothY, [-1, 1], [-5, 5]);
-  const phoneX = useTransform(smoothX, [-1, 1], [12, -12]);
-  const phoneY = useTransform(smoothY, [-1, 1], [7, -7]);
+  const projectY = useTransform(scrollYProgress, [0, 0.16, 0.72], [150, 120, -12]);
+  const projectScale = useTransform(scrollYProgress, [0, 0.12, 0.72], [0.66, 0.72, 1.08]);
+  const projectRotate = useTransform(scrollYProgress, [0, 0.68], [-5, 0]);
+  const projectOpacity = useTransform(scrollYProgress, [0, 0.12, 0.3], [0, 0.75, 1]);
+  const projectRadius = useTransform(scrollYProgress, [0.12, 0.72], [34, 10]);
 
-  function handlePointerMove(event: PointerEvent<HTMLElement>) {
-    if (reduceMotion || event.pointerType !== "mouse") return;
-    const rect = event.currentTarget.getBoundingClientRect();
-    pointerX.set(((event.clientX - rect.left) / rect.width) * 2 - 1);
-    pointerY.set(((event.clientY - rect.top) / rect.height) * 2 - 1);
-  }
-
-  function resetPointer() {
-    pointerX.set(0);
-    pointerY.set(0);
-  }
+  const railScale = useTransform(scrollYProgress, [0, 0.72], [0.12, 1]);
+  const indexX = useTransform(scrollYProgress, [0, 0.72], [-24, 0]);
+  const detailOpacity = useTransform(scrollYProgress, [0.5, 0.75], [0, 1]);
+  const detailY = useTransform(scrollYProgress, [0.5, 0.78], [44, 0]);
+  const scrollHintOpacity = useTransform(scrollYProgress, [0, 0.18], [1, 0]);
 
   return (
-    <section
-      ref={sectionRef}
-      className={styles.hero}
-      onPointerMove={handlePointerMove}
-      onPointerLeave={resetPointer}
-    >
-      <div className={styles.ambient} aria-hidden="true" />
-      <div className={`nm-container ${styles.grid}`}>
-        <motion.div
-          className={styles.copy}
-          style={reduceMotion ? undefined : { y: copyY }}
-        >
-          <p className="nm-eyebrow">
-            <span className="nm-tiny-mark" />
-            INDEPENDENT DIGITAL STUDIO
-          </p>
+    <section ref={heroRef} className={styles.hero}>
+      <div className={styles.stickyStage}>
+        <div className={styles.grid} aria-hidden="true" />
+        <div className={styles.glow} aria-hidden="true" />
 
-          <h1 className={styles.wordmark} aria-label="Nauka Motion">
-            <span className={styles.nauka}>NAUKA</span>
-            <motion.span
-              className={styles.motionWord}
-              style={reduceMotion ? undefined : { letterSpacing: wordSpacing }}
-              aria-hidden="true"
-            >
-              {Array.from("MOTION").map((letter, index) => (
-                <KineticLetter
-                  key={`${letter}-${index}`}
-                  x={smoothX}
-                  y={smoothY}
-                  depth={2.5 + index * 1.25}
-                  disabled={reduceMotion}
-                >
-                  {letter}
-                </KineticLetter>
-              ))}
-            </motion.span>
-          </h1>
-
-          <p className={styles.kicker}>SMALL MOVEMENT. REAL IMPACT.</p>
-          <p className={styles.description}>
-            {id
-              ? "Website dan aplikasi yang dirancang dengan detail, dibangun untuk bisnis nyata, dan dibuat terasa hidup tanpa mengorbankan kecepatan."
-              : "Websites and apps designed with care, built for real businesses, and made to feel alive without sacrificing speed."}
-          </p>
-
-          <div className={styles.actions}>
-            <Link className="nm-button" href="/contact">
-              {id ? "Diskusikan ide Anda" : "Let's discuss your idea"}
-            </Link>
-            <Link className="nm-button nm-button-ghost" href="#karya">
-              {id ? "Lihat karya" : "Explore the work"}
-            </Link>
-          </div>
-
-          <div className={styles.reassurance}>
-            <span>
-              <Check size={15} />
-              {id ? "Motion ringan" : "Lightweight motion"}
-            </span>
-            <span>
-              <Check size={15} />
-              {id ? "Mobile tetap cepat" : "Fast on mobile"}
-            </span>
-          </div>
-        </motion.div>
-
-        <motion.div
-          className={styles.showcase}
-          style={
-            reduceMotion
-              ? undefined
-              : { y: showcaseY, scale: showcaseScale }
-          }
-          aria-label={id ? "Preview karya Nauka Motion" : "Nauka Motion project previews"}
-        >
-          <div className={styles.gridLines} aria-hidden="true" />
-          <div className={styles.showcaseMeta}>
-            <span>DESIGN / BUILD / MOTION</span>
-            <span>NAUKA / 2026</span>
+        <div className={`nm-container ${styles.stageInner}`}>
+          <div className={styles.topline}>
+            <span>NAUKA MOTION / DIGITAL STUDIO</span>
+            <span>JAKARTA · ID / 2026</span>
           </div>
 
           <motion.div
-            className={styles.browser}
+            className={styles.titleBlock}
             style={
               reduceMotion
                 ? undefined
-                : { x: browserX, y: browserY, rotate: -4.2 }
+                : { y: titleY, scale: titleScale, opacity: titleOpacity }
             }
           >
-            <div className={styles.browserBar}>
-              <span className={styles.dots} aria-hidden="true">
-                <i />
-                <i />
-                <i />
-              </span>
-              <span>JAECOO MAM Fatmawati</span>
-              <Layers3 size={13} />
+            <motion.span
+              className={styles.nauka}
+              initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            >
+              NAUKA
+            </motion.span>
+
+            <h1 className={styles.motionWord} aria-label="Nauka Motion">
+              {letters.map((letter, index) => (
+                <motion.span
+                  key={`${letter}-${index}`}
+                  initial={reduceMotion ? false : { y: "105%", opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{
+                    duration: 0.72,
+                    delay: reduceMotion ? 0 : 0.05 + index * 0.055,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                >
+                  {letter}
+                </motion.span>
+              ))}
+            </h1>
+
+            <motion.div
+              className={styles.motionRail}
+              style={reduceMotion ? undefined : { scaleX: railScale }}
+            >
+              <span />
+            </motion.div>
+
+            <div className={styles.statementRow}>
+              <p>SMALL MOVEMENT.</p>
+              <p>REAL IMPACT.</p>
             </div>
-            <div className={styles.browserImage}>
+          </motion.div>
+
+          <motion.div
+            className={styles.projectShell}
+            style={
+              reduceMotion
+                ? undefined
+                : {
+                    y: projectY,
+                    scale: projectScale,
+                    rotate: projectRotate,
+                    opacity: projectOpacity,
+                    borderRadius: projectRadius,
+                  }
+            }
+          >
+            <div className={styles.projectChrome}>
+              <span>SELECTED WORK / 01</span>
+              <span>JAECOO MAM FATMAWATI</span>
+              <span>WEB EXPERIENCE</span>
+            </div>
+            <div className={styles.projectImage}>
               <Image
                 src="/showcase/jaecoo-fatmawati.webp"
                 alt={
                   id
-                    ? "Tampilan website JAECOO MAM Fatmawati"
+                    ? "Preview website JAECOO MAM Fatmawati"
                     : "JAECOO MAM Fatmawati website preview"
                 }
                 fill
-                sizes="(max-width: 767px) 90vw, 43vw"
+                sizes="(max-width: 767px) 94vw, 72vw"
                 priority
               />
-            </div>
-            <div className={styles.browserCaption}>
-              <span>WEB EXPERIENCE</span>
-              <span>{id ? "DESAIN + PENGEMBANGAN" : "DESIGN + DEVELOPMENT"}</span>
+              <div className={styles.imageShade} />
+              <motion.div
+                className={styles.projectIndex}
+                style={reduceMotion ? undefined : { x: indexX }}
+              >
+                <span>01</span>
+                <small>DESIGN / BUILD / MOTION</small>
+              </motion.div>
             </div>
           </motion.div>
 
           <motion.div
-            className={styles.phone}
+            className={styles.detailPanel}
             style={
               reduceMotion
                 ? undefined
-                : { x: phoneX, y: phoneY, rotate: 6 }
+                : { opacity: detailOpacity, y: detailY }
             }
           >
-            <Image
-              src="/showcase/nacash-household.webp"
-              alt={id ? "Tampilan NaCash Household" : "NaCash Household preview"}
-              width={739}
-              height={1536}
-              sizes="(max-width: 767px) 27vw, 14vw"
-              priority
-            />
-            <span>NaCash Household</span>
+            <div>
+              <p className={styles.eyebrow}>INDEPENDENT DIGITAL STUDIO</p>
+              <h2>
+                {id ? (
+                  <>
+                    Website yang tidak cuma <em>dilihat.</em>
+                  </>
+                ) : (
+                  <>
+                    Websites that are not only <em>seen.</em>
+                  </>
+                )}
+              </h2>
+            </div>
+            <div className={styles.detailCopy}>
+              <p>
+                {id
+                  ? "Kami merancang website dan aplikasi dengan identitas visual yang kuat, interaksi yang terasa hidup, dan performa yang tetap dijaga."
+                  : "We design websites and apps with a distinct visual identity, purposeful interaction, and performance kept in check."}
+              </p>
+              <div className={styles.actions}>
+                <Link className="nm-button" href="/contact">
+                  {id ? "Mulai proyek" : "Start a project"}
+                  <ArrowUpRight size={17} />
+                </Link>
+                <Link className="nm-button nm-button-ghost" href="#karya">
+                  {id ? "Lihat karya" : "Explore work"}
+                </Link>
+              </div>
+            </div>
           </motion.div>
 
-          <div className={styles.orbitNote}>
-            <span className={styles.orbitDot} aria-hidden="true" />
-            <span>{id ? "GERAK KECIL / FOKUS BESAR" : "SMALL MOTION / CLEAR FOCUS"}</span>
-          </div>
-        </motion.div>
-      </div>
-
-      <div className={`nm-container ${styles.baseline}`}>
-        <span>{id ? "Motion yang punya tujuan." : "Motion with a purpose."}</span>
-        <span>{id ? "RINGAN / RESPONSIF / TERARAH" : "LIGHT / RESPONSIVE / INTENTIONAL"}</span>
+          <motion.div
+            className={styles.scrollHint}
+            style={reduceMotion ? undefined : { opacity: scrollHintOpacity }}
+          >
+            <ArrowDown size={15} />
+            <span>{id ? "SCROLL UNTUK MELIHAT" : "SCROLL TO REVEAL"}</span>
+          </motion.div>
+        </div>
       </div>
     </section>
   );
