@@ -12,7 +12,7 @@ import {
   useTransform,
   type MotionValue,
 } from "framer-motion";
-import { useRef } from "react";
+import { useRef, type PointerEvent } from "react";
 import type { Locale } from "@/lib/server-locale";
 import styles from "./MotionHomeHero.module.css";
 
@@ -68,7 +68,7 @@ export function MotionHomeHero({ locale }: { locale: Locale }) {
   const phoneX = useTransform(smoothX, [-1, 1], [12, -12]);
   const phoneY = useTransform(smoothY, [-1, 1], [7, -7]);
 
-  function handlePointerMove(event: React.PointerEvent<HTMLElement>) {
+  function handlePointerMove(event: PointerEvent<HTMLElement>) {
     if (reduceMotion || event.pointerType !== "mouse") return;
     const rect = event.currentTarget.getBoundingClientRect();
     pointerX.set(((event.clientX - rect.left) / rect.width) * 2 - 1);
@@ -164,7 +164,11 @@ export function MotionHomeHero({ locale }: { locale: Locale }) {
 
           <motion.div
             className={styles.browser}
-            style={reduceMotion ? undefined : { x: browserX, y: browserY }}
+            style={
+              reduceMotion
+                ? undefined
+                : { x: browserX, y: browserY, rotate: -4.2 }
+            }
           >
             <div className={styles.browserBar}>
               <span className={styles.dots} aria-hidden="true">
@@ -196,7 +200,11 @@ export function MotionHomeHero({ locale }: { locale: Locale }) {
 
           <motion.div
             className={styles.phone}
-            style={reduceMotion ? undefined : { x: phoneX, y: phoneY }}
+            style={
+              reduceMotion
+                ? undefined
+                : { x: phoneX, y: phoneY, rotate: 6 }
+            }
           >
             <Image
               src="/showcase/nacash-household.webp"
