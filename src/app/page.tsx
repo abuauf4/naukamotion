@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 import { StudioHeader } from "@/components/studio/StudioHeader";
 import { StudioFooter } from "@/components/studio/StudioFooter";
+import { MotionHomeHero } from "@/components/studio/MotionHomeHero";
 import {
-  HomeHero,
   ServiceSection,
   WorkSection,
   TrustSection,
@@ -46,7 +46,7 @@ export default async function HomePage() {
             ],
           }}
         />
-        <HomeHero locale={locale} />
+        <MotionHomeHero locale={locale} />
         <ServiceSection locale={locale} />
         <Suspense
           fallback={
