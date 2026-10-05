@@ -1,7 +1,7 @@
 .hero {
   position: relative;
-  height: 190svh;
-  min-height: 1120px;
+  height: 210svh;
+  min-height: 1320px;
   background: var(--bg);
 }
 
@@ -9,7 +9,7 @@
   position: sticky;
   top: 86px;
   height: calc(100svh - 86px);
-  min-height: 650px;
+  min-height: 660px;
   overflow: clip;
   isolation: isolate;
   background: #101716;
@@ -24,41 +24,41 @@
   position: absolute;
   inset: 0;
   z-index: -3;
-  opacity: 0.6;
+  opacity: 0.55;
   background-image:
-    linear-gradient(rgba(224, 238, 226, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(224, 238, 226, 0.035) 1px, transparent 1px);
+    linear-gradient(rgba(224, 238, 226, 0.033) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(224, 238, 226, 0.033) 1px, transparent 1px);
   background-size: 46px 46px;
-  mask-image: linear-gradient(to bottom, #000 0%, #000 76%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 78%, transparent 100%);
 }
 
 .glow {
   position: absolute;
-  inset: -15% -5% 0;
+  inset: -12% -8% 0;
   z-index: -2;
   pointer-events: none;
   background:
-    radial-gradient(circle at 50% 49%, rgba(255, 128, 80, 0.11), transparent 27%),
-    radial-gradient(circle at 72% 19%, rgba(219, 231, 184, 0.05), transparent 24%);
+    radial-gradient(circle at 50% 50%, rgba(255, 128, 80, 0.1), transparent 28%),
+    radial-gradient(circle at 72% 20%, rgba(219, 231, 184, 0.045), transparent 24%);
 }
 
 .topline {
   position: absolute;
-  top: 30px;
+  top: 28px;
   left: clamp(22px, 5vw, 76px);
   right: clamp(22px, 5vw, 76px);
+  z-index: 10;
   display: flex;
   justify-content: space-between;
   gap: 24px;
   color: #91a198;
   font-size: 0.62rem;
   letter-spacing: 0.16em;
-  z-index: 8;
 }
 
 .titleBlock {
   position: absolute;
-  top: clamp(80px, 12vh, 128px);
+  top: clamp(84px, 11vh, 126px);
   left: clamp(22px, 5vw, 76px);
   right: clamp(22px, 5vw, 76px);
   z-index: 2;
@@ -68,12 +68,12 @@
 
 .nauka {
   display: block;
-  margin-bottom: 2px;
-  color: #a9b6ae;
-  font-size: clamp(1.1rem, 1.8vw, 1.7rem);
-  font-weight: 500;
-  letter-spacing: 0.5em;
+  margin-bottom: 4px;
   padding-left: 0.08em;
+  color: #a9b6ae;
+  font-size: clamp(1.05rem, 1.8vw, 1.65rem);
+  font-weight: 500;
+  letter-spacing: 0.48em;
 }
 
 .motionWord {
@@ -86,7 +86,7 @@
   color: var(--ink);
   font-size: clamp(7rem, 15.8vw, 14.5rem);
   font-weight: 520;
-  line-height: 0.78;
+  line-height: 0.8;
   letter-spacing: -0.085em;
   white-space: nowrap;
 }
@@ -96,27 +96,14 @@
   min-width: 0;
 }
 
-.motionRail {
-  width: 100%;
-  height: 2px;
-  margin-top: 24px;
-  transform-origin: left center;
-  background: rgba(255, 128, 80, 0.18);
-}
-
-.motionRail span {
-  display: block;
-  width: 34%;
-  height: 100%;
-  background: var(--nm-orange);
-}
-
 .statementRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  margin-top: 14px;
+  margin-top: 19px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 128, 80, 0.2);
   color: var(--nm-orange);
   font-size: clamp(0.62rem, 0.78vw, 0.78rem);
   font-weight: 600;
@@ -127,47 +114,40 @@
   margin: 0;
 }
 
+.signalLine {
+  position: absolute;
+  z-index: 8;
+  top: 50%;
+  left: 7%;
+  right: 7%;
+  height: 2px;
+  transform-origin: left center;
+  background: linear-gradient(90deg, transparent, var(--nm-orange) 9%, var(--nm-orange) 91%, transparent);
+  box-shadow: 0 0 26px rgba(255, 128, 80, 0.42);
+  will-change: transform, opacity;
+}
+
 .projectShell {
   position: absolute;
-  z-index: 4;
-  left: 14%;
-  right: 14%;
-  top: 37%;
+  z-index: 5;
+  left: 7%;
+  right: 7%;
+  top: 24%;
+  height: 68%;
+  min-height: 430px;
+  max-height: 650px;
   overflow: hidden;
-  border: 1px solid rgba(218, 232, 221, 0.22);
-  background: #1d2722;
-  box-shadow: 0 42px 110px rgba(0, 0, 0, 0.48);
+  border: 1px solid rgba(218, 232, 221, 0.24);
+  background: #111815;
+  box-shadow: 0 44px 120px rgba(0, 0, 0, 0.5);
   transform-origin: center center;
-  will-change: transform, opacity, border-radius;
-}
-
-.projectChrome {
-  height: 38px;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  align-items: center;
-  gap: 12px;
-  padding-inline: 15px;
-  color: #c6d0c7;
-  background: #1c2821;
-  border-bottom: 1px solid rgba(225, 236, 226, 0.12);
-  font-size: 0.58rem;
-  letter-spacing: 0.1em;
-}
-
-.projectChrome span:nth-child(2) {
-  text-align: center;
-}
-
-.projectChrome span:last-child {
-  text-align: right;
+  will-change: transform, opacity, clip-path;
 }
 
 .projectImage {
-  position: relative;
-  aspect-ratio: 16 / 8.8;
-  overflow: hidden;
-  background: #121816;
+  position: absolute;
+  inset: 0;
+  will-change: transform;
 }
 
 .projectImage img {
@@ -180,90 +160,106 @@
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(to top, rgba(9, 14, 12, 0.72), transparent 34%),
-    linear-gradient(90deg, rgba(9, 14, 12, 0.18), transparent 40%);
+    linear-gradient(to top, rgba(8, 13, 11, 0.93) 0%, rgba(8, 13, 11, 0.58) 25%, transparent 54%),
+    linear-gradient(90deg, rgba(7, 12, 10, 0.28), transparent 40%);
 }
 
-.projectIndex {
+.projectChrome {
   position: absolute;
-  left: 20px;
-  bottom: 16px;
-  display: flex;
-  align-items: flex-end;
-  gap: 13px;
-  color: #f4f6f2;
-}
-
-.projectIndex > span {
-  font-size: clamp(2rem, 4vw, 4rem);
-  font-weight: 500;
-  line-height: 0.84;
-}
-
-.projectIndex small {
-  margin-bottom: 2px;
-  color: #d1dad2;
-  font-size: 0.56rem;
-  letter-spacing: 0.15em;
-}
-
-.detailPanel {
-  position: absolute;
-  left: clamp(22px, 5vw, 76px);
-  right: clamp(22px, 5vw, 76px);
-  bottom: clamp(28px, 4.5vh, 46px);
-  z-index: 7;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  height: 39px;
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: clamp(32px, 7vw, 110px);
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  gap: 12px;
+  padding-inline: 16px;
+  border-bottom: 1px solid rgba(225, 236, 226, 0.13);
+  background: rgba(16, 24, 20, 0.78);
+  color: #d0d8d1;
+  font-size: 0.57rem;
+  letter-spacing: 0.1em;
+  backdrop-filter: blur(6px);
+}
+
+.projectChrome span:nth-child(2) {
+  text-align: center;
+}
+
+.projectChrome span:last-child {
+  text-align: right;
+}
+
+.projectDetail {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 20px;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: auto 1.1fr 0.9fr;
   align-items: end;
-  padding-top: 20px;
-  border-top: 1px solid rgba(226, 237, 227, 0.2);
+  gap: clamp(20px, 3vw, 46px);
+  color: var(--ink);
   will-change: transform, opacity;
 }
 
-.eyebrow {
-  margin: 0 0 10px;
-  color: #9aa9a0;
-  font-size: 0.61rem;
-  letter-spacing: 0.16em;
+.projectNumber {
+  align-self: end;
+  font-size: clamp(3rem, 7vw, 7rem);
+  font-weight: 500;
+  line-height: 0.78;
+  letter-spacing: -0.07em;
 }
 
-.detailPanel h2 {
-  max-width: 13ch;
+.detailText > p,
+.detailActions > p {
   margin: 0;
-  color: var(--ink);
+}
+
+.detailText > p {
+  margin-bottom: 8px;
+  color: #a9b7ae;
+  font-size: 0.57rem;
+  letter-spacing: 0.15em;
+}
+
+.detailText h2 {
+  max-width: 12ch;
+  margin: 0;
+  color: #f4f6f2;
   font-size: clamp(2rem, 4vw, 4.2rem);
   font-weight: 500;
-  line-height: 0.95;
+  line-height: 0.94;
   letter-spacing: -0.055em;
 }
 
-.detailPanel h2 em {
+.detailText h2 em {
   font-family: var(--nm-serif);
   font-weight: 400;
 }
 
-.detailCopy > p {
-  max-width: 42ch;
-  margin: 0;
-  color: var(--ink-soft);
-  font-size: 0.94rem;
-  line-height: 1.65;
+.detailActions > p {
+  max-width: 36ch;
+  color: #d1d8d2;
+  font-size: 0.88rem;
+  line-height: 1.55;
 }
 
 .actions {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  margin-top: 19px;
+  margin-top: 16px;
 }
 
 .scrollHint {
   position: absolute;
   left: 50%;
-  bottom: 24px;
-  z-index: 9;
+  bottom: 22px;
+  z-index: 10;
   display: inline-flex;
   align-items: center;
   gap: 9px;
@@ -281,25 +277,22 @@
 @media (max-width: 900px) {
   .hero {
     height: 205svh;
-    min-height: 1200px;
+    min-height: 1240px;
   }
 
   .projectShell {
-    left: 8%;
-    right: 8%;
-    top: 39%;
+    left: 5%;
+    right: 5%;
+    top: 25%;
+    height: 66%;
   }
 
-  .detailPanel {
-    grid-template-columns: 1fr;
-    gap: 14px;
+  .projectDetail {
+    grid-template-columns: auto 1fr;
   }
 
-  .detailPanel h2 {
-    max-width: 16ch;
-  }
-
-  .detailCopy {
+  .detailActions {
+    grid-column: 1 / -1;
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: end;
@@ -313,8 +306,8 @@
 
 @media (max-width: 600px) {
   .hero {
-    height: 220svh;
-    min-height: 1380px;
+    height: 200svh;
+    min-height: 1220px;
   }
 
   .stickyStage {
@@ -328,9 +321,9 @@
   }
 
   .topline {
-    top: 18px;
-    left: 18px;
-    right: 18px;
+    top: 17px;
+    left: 16px;
+    right: 16px;
     font-size: 0.49rem;
     letter-spacing: 0.11em;
   }
@@ -340,46 +333,62 @@
   }
 
   .titleBlock {
-    top: 76px;
+    top: 70px;
     left: 12px;
     right: 12px;
   }
 
   .nauka {
     margin-left: 5px;
-    margin-bottom: 7px;
-    font-size: 0.78rem;
+    margin-bottom: 6px;
+    font-size: 0.76rem;
     letter-spacing: 0.42em;
   }
 
   .motionWord {
-    font-size: clamp(4.75rem, 22.6vw, 7rem);
+    font-size: clamp(4.75rem, 22.5vw, 7rem);
     letter-spacing: -0.105em;
   }
 
-  .motionRail {
-    margin-top: 17px;
-  }
-
   .statementRow {
-    margin-top: 10px;
-    font-size: 0.52rem;
+    margin-top: 14px;
+    padding-top: 10px;
+    font-size: 0.5rem;
     letter-spacing: 0.1em;
   }
 
+  .signalLine {
+    left: 4%;
+    right: 4%;
+  }
+
   .projectShell {
-    left: 4.5%;
-    right: 4.5%;
-    top: 35.5%;
-    box-shadow: 0 28px 78px rgba(0, 0, 0, 0.5);
+    left: 4%;
+    right: 4%;
+    top: 19%;
+    height: 73%;
+    min-height: 0;
+    max-height: none;
+    box-shadow: 0 30px 84px rgba(0, 0, 0, 0.52);
+  }
+
+  .projectImage img {
+    object-position: center top;
+  }
+
+  .imageShade {
+    background:
+      linear-gradient(to top, rgba(8, 13, 11, 0.97) 0%, rgba(8, 13, 11, 0.78) 29%, transparent 62%),
+      linear-gradient(90deg, rgba(7, 12, 10, 0.18), transparent 50%);
   }
 
   .projectChrome {
     height: 32px;
     grid-template-columns: 1fr auto;
     padding-inline: 10px;
-    font-size: 0.47rem;
+    font-size: 0.46rem;
     letter-spacing: 0.07em;
+    backdrop-filter: none;
   }
 
   .projectChrome span:nth-child(2) {
@@ -390,86 +399,66 @@
     display: none;
   }
 
-  .projectImage {
-    aspect-ratio: 1.38;
+  .projectDetail {
+    left: 13px;
+    right: 13px;
+    bottom: 13px;
+    grid-template-columns: auto 1fr;
+    gap: 10px 12px;
   }
 
-  .projectIndex {
-    left: 12px;
-    bottom: 12px;
-    gap: 9px;
+  .projectNumber {
+    font-size: 2.55rem;
   }
 
-  .projectIndex > span {
-    font-size: 2.2rem;
-  }
-
-  .projectIndex small {
-    max-width: 120px;
+  .detailText > p {
+    margin-bottom: 5px;
     font-size: 0.44rem;
-    line-height: 1.4;
   }
 
-  .detailPanel {
-    left: 18px;
-    right: 18px;
-    bottom: 22px;
-    gap: 10px;
-    padding-top: 13px;
-  }
-
-  .eyebrow {
-    margin-bottom: 7px;
-    font-size: 0.49rem;
-  }
-
-  .detailPanel h2 {
+  .detailText h2 {
     max-width: 12ch;
-    font-size: clamp(1.85rem, 8.9vw, 2.75rem);
-    line-height: 0.98;
+    font-size: clamp(1.7rem, 7.9vw, 2.35rem);
+    line-height: 0.97;
   }
 
-  .detailCopy {
+  .detailActions {
+    grid-column: 1 / -1;
     display: block;
   }
 
-  .detailCopy > p {
-    max-width: 34ch;
-    font-size: 0.78rem;
-    line-height: 1.52;
+  .detailActions > p {
+    display: none;
   }
 
   .actions {
-    margin-top: 12px;
+    margin-top: 5px;
   }
 
   .actions :global(.nm-button) {
-    min-height: 44px;
-    padding: 11px 14px;
-    font-size: 0.78rem;
+    min-height: 42px;
+    padding: 10px 13px;
+    font-size: 0.74rem;
   }
 
   .scrollHint {
-    bottom: 18px;
-    font-size: 0.48rem;
+    bottom: 16px;
+    font-size: 0.47rem;
   }
 }
 
-@media (max-height: 720px) and (max-width: 600px) {
+@media (max-height: 700px) and (max-width: 600px) {
   .titleBlock {
-    top: 58px;
+    top: 54px;
   }
 
   .projectShell {
-    top: 33%;
+    top: 17%;
+    height: 76%;
   }
 
-  .detailPanel {
-    bottom: 12px;
-  }
-
-  .detailCopy > p {
-    display: none;
+  .detailText h2 {
+    font-size: 1.55rem;
   }
 }
 
@@ -486,19 +475,23 @@
     min-height: 900px;
   }
 
-  .titleBlock,
+  .titleBlock {
+    opacity: 0.12 !important;
+  }
+
+  .signalLine {
+    display: none;
+  }
+
   .projectShell,
-  .detailPanel {
+  .projectImage,
+  .projectDetail {
     transform: none !important;
     opacity: 1 !important;
   }
 
   .projectShell {
-    top: 38%;
-  }
-
-  .detailPanel {
-    bottom: 34px;
+    clip-path: none !important;
   }
 
   .scrollHint {
