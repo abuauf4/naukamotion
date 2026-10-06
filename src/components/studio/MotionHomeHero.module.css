@@ -1,7 +1,7 @@
 .hero {
   position: relative;
-  height: 210svh;
-  min-height: 1320px;
+  height: 205svh;
+  min-height: 1280px;
   background: var(--bg);
 }
 
@@ -9,7 +9,7 @@
   position: sticky;
   top: 86px;
   height: calc(100svh - 86px);
-  min-height: 660px;
+  min-height: 650px;
   overflow: clip;
   isolation: isolate;
   background: #101716;
@@ -24,76 +24,78 @@
   position: absolute;
   inset: 0;
   z-index: -3;
-  opacity: 0.55;
+  opacity: 0.48;
   background-image:
-    linear-gradient(rgba(224, 238, 226, 0.033) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(224, 238, 226, 0.033) 1px, transparent 1px);
+    linear-gradient(rgba(224, 238, 226, 0.032) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(224, 238, 226, 0.032) 1px, transparent 1px);
   background-size: 46px 46px;
-  mask-image: linear-gradient(to bottom, #000 0%, #000 78%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 84%, transparent 100%);
 }
 
 .glow {
   position: absolute;
-  inset: -12% -8% 0;
+  inset: -8% -8% -12%;
   z-index: -2;
   pointer-events: none;
   background:
-    radial-gradient(circle at 50% 50%, rgba(255, 128, 80, 0.1), transparent 28%),
-    radial-gradient(circle at 72% 20%, rgba(219, 231, 184, 0.045), transparent 24%);
+    radial-gradient(circle at 50% 44%, rgba(255, 128, 80, 0.11), transparent 24%),
+    radial-gradient(circle at 17% 63%, rgba(219, 231, 184, 0.035), transparent 24%);
 }
 
 .topline {
   position: absolute;
-  top: 28px;
+  top: 26px;
   left: clamp(22px, 5vw, 76px);
   right: clamp(22px, 5vw, 76px);
-  z-index: 10;
+  z-index: 12;
   display: flex;
   justify-content: space-between;
   gap: 24px;
   color: #91a198;
-  font-size: 0.62rem;
+  font-size: 0.59rem;
   letter-spacing: 0.16em;
 }
 
-.titleBlock {
+.brandStage {
   position: absolute;
-  top: clamp(84px, 11vh, 126px);
-  left: clamp(22px, 5vw, 76px);
-  right: clamp(22px, 5vw, 76px);
-  z-index: 2;
-  transform-origin: center top;
+  top: 50%;
+  left: clamp(22px, 4vw, 62px);
+  right: clamp(22px, 4vw, 62px);
+  z-index: 3;
+  transform: translateY(-55%);
+  transform-origin: center center;
   will-change: transform, opacity;
 }
 
 .nauka {
   display: block;
-  margin-bottom: 4px;
-  padding-left: 0.08em;
+  margin: 0 0 9px 0.12em;
   color: #a9b6ae;
-  font-size: clamp(1.05rem, 1.8vw, 1.65rem);
+  font-size: clamp(1rem, 1.55vw, 1.45rem);
   font-weight: 500;
-  letter-spacing: 0.48em;
+  letter-spacing: 0.55em;
 }
 
 .motionWord {
   display: flex;
   width: 100%;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   margin: 0;
   overflow: hidden;
   color: var(--ink);
-  font-size: clamp(7rem, 15.8vw, 14.5rem);
-  font-weight: 520;
-  line-height: 0.8;
-  letter-spacing: -0.085em;
+  font-size: clamp(7.2rem, 16.4vw, 15.5rem);
+  font-weight: 540;
+  line-height: 0.78;
+  letter-spacing: -0.095em;
   white-space: nowrap;
 }
 
-.motionWord > span {
+.glyph {
   display: block;
   min-width: 0;
+  transform-origin: center center;
+  will-change: transform, opacity;
 }
 
 .statementRow {
@@ -101,171 +103,181 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  margin-top: 19px;
+  margin-top: 22px;
   padding-top: 14px;
-  border-top: 1px solid rgba(255, 128, 80, 0.2);
+  border-top: 1px solid rgba(255, 128, 80, 0.23);
   color: var(--nm-orange);
   font-size: clamp(0.62rem, 0.78vw, 0.78rem);
   font-weight: 600;
   letter-spacing: 0.16em;
 }
 
-.statementRow p {
-  margin: 0;
-}
-
-.signalLine {
+.sweep {
   position: absolute;
-  z-index: 8;
+  left: -6%;
+  right: -6%;
   top: 50%;
-  left: 7%;
-  right: 7%;
+  z-index: 9;
   height: 2px;
-  transform-origin: left center;
-  background: linear-gradient(90deg, transparent, var(--nm-orange) 9%, var(--nm-orange) 91%, transparent);
-  box-shadow: 0 0 26px rgba(255, 128, 80, 0.42);
+  transform-origin: center center;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 128, 80, 0.15) 5%,
+    var(--nm-orange) 26%,
+    #ffc0a8 50%,
+    var(--nm-orange) 74%,
+    rgba(255, 128, 80, 0.15) 95%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 24px rgba(255, 128, 80, 0.45),
+    0 0 72px rgba(255, 128, 80, 0.12);
   will-change: transform, opacity;
 }
 
-.projectShell {
+.track {
   position: absolute;
-  z-index: 5;
-  left: 7%;
-  right: 7%;
-  top: 24%;
-  height: 68%;
-  min-height: 430px;
-  max-height: 650px;
+  left: -18%;
+  right: -18%;
+  z-index: 1;
   overflow: hidden;
-  border: 1px solid rgba(218, 232, 221, 0.24);
-  background: #111815;
-  box-shadow: 0 44px 120px rgba(0, 0, 0, 0.5);
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(219, 231, 184, 0.62);
+  font-size: clamp(4.2rem, 10vw, 9rem);
+  font-weight: 520;
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  white-space: nowrap;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.trackA {
+  top: 24%;
+}
+
+.trackB {
+  bottom: 18%;
+}
+
+.manifesto {
+  position: absolute;
+  left: 50%;
+  top: 49%;
+  z-index: 7;
+  width: min(900px, calc(100% - 44px));
+  transform: translate(-50%, -50%);
+  text-align: center;
   transform-origin: center center;
   will-change: transform, opacity, clip-path;
 }
 
-.projectImage {
-  position: absolute;
-  inset: 0;
-  will-change: transform;
+.manifesto > p {
+  margin: 0 0 15px;
+  color: #9ea9a1;
+  font-size: 0.64rem;
+  letter-spacing: 0.2em;
 }
 
-.projectImage img {
-  object-fit: cover;
-  object-position: center;
+.manifesto h2 {
+  margin: 0;
+  color: #f4f6f2;
+  font-size: clamp(3.4rem, 9.8vw, 9rem);
+  font-weight: 520;
+  line-height: 0.86;
+  letter-spacing: -0.065em;
 }
 
-.imageShade {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(to top, rgba(8, 13, 11, 0.93) 0%, rgba(8, 13, 11, 0.58) 25%, transparent 54%),
-    linear-gradient(90deg, rgba(7, 12, 10, 0.28), transparent 40%);
+.manifesto h2 em {
+  font-family: var(--nm-serif);
+  font-weight: 400;
 }
 
-.projectChrome {
+.manifestoNote {
+  display: inline-block;
+  max-width: 42ch;
+  margin-top: 20px;
+  color: #aebbb1;
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+.slash {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 3;
-  height: 39px;
+  left: 50%;
+  top: -42%;
+  width: 3px;
+  height: 185%;
+  z-index: -1;
+  background: linear-gradient(to bottom, transparent, var(--nm-orange) 18%, var(--nm-orange) 82%, transparent);
+  box-shadow: 0 0 36px rgba(255, 128, 80, 0.32);
+  transform-origin: center center;
+}
+
+.finalPanel {
+  position: absolute;
+  left: clamp(22px, 5vw, 76px);
+  right: clamp(22px, 5vw, 76px);
+  bottom: clamp(28px, 4vh, 44px);
+  z-index: 10;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  align-items: center;
-  gap: 12px;
-  padding-inline: 16px;
-  border-bottom: 1px solid rgba(225, 236, 226, 0.13);
-  background: rgba(16, 24, 20, 0.78);
-  color: #d0d8d1;
-  font-size: 0.57rem;
-  letter-spacing: 0.1em;
-  backdrop-filter: blur(6px);
-}
-
-.projectChrome span:nth-child(2) {
-  text-align: center;
-}
-
-.projectChrome span:last-child {
-  text-align: right;
-}
-
-.projectDetail {
-  position: absolute;
-  left: 22px;
-  right: 22px;
-  bottom: 20px;
-  z-index: 4;
-  display: grid;
-  grid-template-columns: auto 1.1fr 0.9fr;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: clamp(28px, 7vw, 110px);
   align-items: end;
-  gap: clamp(20px, 3vw, 46px);
-  color: var(--ink);
+  padding-top: 19px;
+  border-top: 1px solid rgba(226, 237, 227, 0.2);
   will-change: transform, opacity;
 }
 
-.projectNumber {
-  align-self: end;
-  font-size: clamp(3rem, 7vw, 7rem);
-  font-weight: 500;
-  line-height: 0.78;
-  letter-spacing: -0.07em;
+.finalEyebrow {
+  margin: 0 0 9px;
+  color: #97a69d;
+  font-size: 0.58rem;
+  letter-spacing: 0.17em;
 }
 
-.detailText > p,
-.detailActions > p {
+.finalPanel h2 {
+  max-width: 11ch;
   margin: 0;
-}
-
-.detailText > p {
-  margin-bottom: 8px;
-  color: #a9b7ae;
-  font-size: 0.57rem;
-  letter-spacing: 0.15em;
-}
-
-.detailText h2 {
-  max-width: 12ch;
-  margin: 0;
-  color: #f4f6f2;
-  font-size: clamp(2rem, 4vw, 4.2rem);
+  color: var(--ink);
+  font-size: clamp(2.25rem, 4.8vw, 4.9rem);
   font-weight: 500;
   line-height: 0.94;
   letter-spacing: -0.055em;
 }
 
-.detailText h2 em {
+.finalPanel h2 em {
   font-family: var(--nm-serif);
   font-weight: 400;
 }
 
-.detailActions > p {
-  max-width: 36ch;
-  color: #d1d8d2;
-  font-size: 0.88rem;
-  line-height: 1.55;
+.finalCopy > p {
+  max-width: 42ch;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  line-height: 1.62;
 }
 
 .actions {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  margin-top: 16px;
+  margin-top: 17px;
 }
 
 .scrollHint {
   position: absolute;
   left: 50%;
-  bottom: 22px;
-  z-index: 10;
+  bottom: 19px;
+  z-index: 14;
   display: inline-flex;
   align-items: center;
   gap: 9px;
   transform: translateX(-50%);
   color: #8fa098;
-  font-size: 0.56rem;
+  font-size: 0.54rem;
   letter-spacing: 0.16em;
   white-space: nowrap;
 }
@@ -276,27 +288,25 @@
 
 @media (max-width: 900px) {
   .hero {
-    height: 205svh;
-    min-height: 1240px;
+    height: 198svh;
+    min-height: 1220px;
   }
 
-  .projectShell {
-    left: 5%;
-    right: 5%;
-    top: 25%;
-    height: 66%;
+  .track {
+    left: -38%;
+    right: -38%;
   }
 
-  .projectDetail {
-    grid-template-columns: auto 1fr;
+  .finalPanel {
+    grid-template-columns: 1fr;
+    gap: 14px;
   }
 
-  .detailActions {
-    grid-column: 1 / -1;
+  .finalCopy {
     display: grid;
     grid-template-columns: 1fr auto;
-    align-items: end;
     gap: 20px;
+    align-items: end;
   }
 
   .actions {
@@ -306,8 +316,8 @@
 
 @media (max-width: 600px) {
   .hero {
-    height: 200svh;
-    min-height: 1220px;
+    height: 190svh;
+    min-height: 1120px;
   }
 
   .stickyStage {
@@ -324,115 +334,114 @@
     top: 17px;
     left: 16px;
     right: 16px;
-    font-size: 0.49rem;
-    letter-spacing: 0.11em;
+    font-size: 0.47rem;
+    letter-spacing: 0.1em;
   }
 
   .topline span:last-child {
     display: none;
   }
 
-  .titleBlock {
-    top: 70px;
-    left: 12px;
-    right: 12px;
+  .brandStage {
+    top: 45%;
+    left: 10px;
+    right: 10px;
+    transform: translateY(-50%);
   }
 
   .nauka {
-    margin-left: 5px;
-    margin-bottom: 6px;
-    font-size: 0.76rem;
-    letter-spacing: 0.42em;
+    margin-left: 4px;
+    margin-bottom: 8px;
+    font-size: 0.72rem;
+    letter-spacing: 0.44em;
   }
 
   .motionWord {
-    font-size: clamp(4.75rem, 22.5vw, 7rem);
-    letter-spacing: -0.105em;
+    font-size: clamp(4.85rem, 23vw, 7.1rem);
+    letter-spacing: -0.11em;
   }
 
   .statementRow {
     margin-top: 14px;
     padding-top: 10px;
-    font-size: 0.5rem;
+    font-size: 0.49rem;
     letter-spacing: 0.1em;
   }
 
-  .signalLine {
-    left: 4%;
-    right: 4%;
+  .track {
+    left: -82%;
+    right: -82%;
+    font-size: 4.5rem;
+    -webkit-text-stroke-width: 0.7px;
   }
 
-  .projectShell {
-    left: 4%;
-    right: 4%;
-    top: 19%;
-    height: 73%;
-    min-height: 0;
-    max-height: none;
-    box-shadow: 0 30px 84px rgba(0, 0, 0, 0.52);
+  .trackA {
+    top: 20%;
   }
 
-  .projectImage img {
-    object-position: center top;
+  .trackB {
+    bottom: 19%;
   }
 
-  .imageShade {
-    background:
-      linear-gradient(to top, rgba(8, 13, 11, 0.97) 0%, rgba(8, 13, 11, 0.78) 29%, transparent 62%),
-      linear-gradient(90deg, rgba(7, 12, 10, 0.18), transparent 50%);
+  .manifesto {
+    top: 46%;
+    width: calc(100% - 30px);
   }
 
-  .projectChrome {
-    height: 32px;
-    grid-template-columns: 1fr auto;
-    padding-inline: 10px;
+  .manifesto > p {
+    margin-bottom: 10px;
+    font-size: 0.49rem;
+    letter-spacing: 0.14em;
+  }
+
+  .manifesto h2 {
+    font-size: clamp(3.25rem, 15.5vw, 5.4rem);
+    line-height: 0.88;
+  }
+
+  .manifestoNote {
+    max-width: 31ch;
+    margin-top: 14px;
+    font-size: 0.72rem;
+  }
+
+  .slash {
+    top: -28%;
+    height: 155%;
+    width: 2px;
+  }
+
+  .finalPanel {
+    left: 17px;
+    right: 17px;
+    bottom: 18px;
+    gap: 9px;
+    padding-top: 12px;
+  }
+
+  .finalEyebrow {
+    margin-bottom: 6px;
     font-size: 0.46rem;
-    letter-spacing: 0.07em;
-    backdrop-filter: none;
   }
 
-  .projectChrome span:nth-child(2) {
-    text-align: right;
+  .finalPanel h2 {
+    max-width: 10ch;
+    font-size: clamp(1.9rem, 9.2vw, 2.8rem);
+    line-height: 0.96;
   }
 
-  .projectChrome span:last-child {
-    display: none;
-  }
-
-  .projectDetail {
-    left: 13px;
-    right: 13px;
-    bottom: 13px;
-    grid-template-columns: auto 1fr;
-    gap: 10px 12px;
-  }
-
-  .projectNumber {
-    font-size: 2.55rem;
-  }
-
-  .detailText > p {
-    margin-bottom: 5px;
-    font-size: 0.44rem;
-  }
-
-  .detailText h2 {
-    max-width: 12ch;
-    font-size: clamp(1.7rem, 7.9vw, 2.35rem);
-    line-height: 0.97;
-  }
-
-  .detailActions {
-    grid-column: 1 / -1;
+  .finalCopy {
     display: block;
   }
 
-  .detailActions > p {
-    display: none;
+  .finalCopy > p {
+    max-width: 34ch;
+    font-size: 0.76rem;
+    line-height: 1.5;
   }
 
   .actions {
-    margin-top: 5px;
+    margin-top: 11px;
   }
 
   .actions :global(.nm-button) {
@@ -442,23 +451,26 @@
   }
 
   .scrollHint {
-    bottom: 16px;
-    font-size: 0.47rem;
+    bottom: 14px;
+    font-size: 0.46rem;
   }
 }
 
 @media (max-height: 700px) and (max-width: 600px) {
-  .titleBlock {
-    top: 54px;
+  .brandStage {
+    top: 42%;
   }
 
-  .projectShell {
-    top: 17%;
-    height: 76%;
+  .manifesto {
+    top: 43%;
   }
 
-  .detailText h2 {
-    font-size: 1.55rem;
+  .manifesto h2 {
+    font-size: 2.85rem;
+  }
+
+  .finalCopy > p {
+    display: none;
   }
 }
 
@@ -472,29 +484,34 @@
     position: relative;
     top: 0;
     height: auto;
-    min-height: 900px;
+    min-height: 920px;
   }
 
-  .titleBlock {
-    opacity: 0.12 !important;
+  .brandStage {
+    top: 34%;
   }
 
-  .signalLine {
-    display: none;
-  }
-
-  .projectShell,
-  .projectImage,
-  .projectDetail {
+  .glyph,
+  .brandStage,
+  .manifesto,
+  .finalPanel {
     transform: none !important;
     opacity: 1 !important;
   }
 
-  .projectShell {
+  .track,
+  .sweep,
+  .slash,
+  .scrollHint {
+    display: none;
+  }
+
+  .manifesto {
+    top: 55%;
     clip-path: none !important;
   }
 
-  .scrollHint {
-    display: none;
+  .finalPanel {
+    bottom: 36px;
   }
 }
