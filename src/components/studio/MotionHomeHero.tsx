@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import {
@@ -8,12 +7,68 @@ import {
   useReducedMotion,
   useScroll,
   useTransform,
+  type MotionValue,
 } from "framer-motion";
 import { useRef } from "react";
 import type { Locale } from "@/lib/server-locale";
 import styles from "./MotionHomeHero.module.css";
 
-const letters = Array.from("MOTION");
+const LETTERS = Array.from("MOTION");
+const OFFSETS = [
+  { x: -92, y: -42, r: -8 },
+  { x: -54, y: 34, r: 5 },
+  { x: -18, y: -26, r: -3 },
+  { x: 18, y: 30, r: 3 },
+  { x: 54, y: -36, r: -5 },
+  { x: 92, y: 40, r: 8 },
+];
+
+function KineticGlyph({
+  letter,
+  index,
+  progress,
+  reduceMotion,
+}: {
+  letter: string;
+  index: number;
+  progress: MotionValue<number>;
+  reduceMotion: boolean;
+}) {
+  const target = OFFSETS[index];
+  const x = useTransform(progress, [0.16, 0.54, 0.82], [0, target.x, target.x * 1.18]);
+  const y = useTransform(progress, [0.16, 0.54, 0.82], [0, target.y, target.y * 1.28]);
+  const rotate = useTransform(progress, [0.16, 0.54, 0.82], [0, target.r, target.r * 1.25]);
+  const scale = useTransform(progress, [0.16, 0.54, 0.82], [1, 1.08, 1.13]);
+  const opacity = useTransform(progress, [0.18, 0.56, 0.82], [1, 0.62, 0.08]);
+
+  return (
+    <motion.span
+      className={styles.glyph}
+      style={
+        reduceMotion
+          ? undefined
+          : { x, y, rotate, scale, opacity }
+      }
+      initial={
+        reduceMotion
+          ? false
+          : {
+              y: index % 2 === 0 ? "112%" : "-112%",
+              rotate: index % 2 === 0 ? -7 : 7,
+              opacity: 0,
+            }
+      }
+      animate={{ y: 0, rotate: 0, opacity: 1 }}
+      transition={{
+        duration: 0.85,
+        delay: 0.06 + index * 0.065,
+        ease: [0.16, 1, 0.3, 1],
+      }}
+    >
+      {letter}
+    </motion.span>
+  );
+}
 
 export function MotionHomeHero({ locale }: { locale: Locale }) {
   const id = locale === "id";
@@ -25,35 +80,32 @@ export function MotionHomeHero({ locale }: { locale: Locale }) {
     offset: ["start start", "end end"],
   });
 
-  // Phase 1 — keep the wordmark dominant, then let it recede.
-  const titleY = useTransform(scrollYProgress, [0, 0.28, 0.62], [0, -10, -86]);
-  const titleScale = useTransform(scrollYProgress, [0, 0.34, 0.62], [1, 1.025, 1.08]);
-  const titleOpacity = useTransform(scrollYProgress, [0, 0.32, 0.62], [1, 1, 0.12]);
+  const brandOpacity = useTransform(scrollYProgress, [0, 0.48, 0.76], [1, 0.72, 0.08]);
+  const brandY = useTransform(scrollYProgress, [0, 0.72], [0, -34]);
 
-  // Phase 2 — a thin orange signal sweeps across before any project appears.
-  const signalScaleX = useTransform(scrollYProgress, [0.08, 0.28], [0, 1]);
-  const signalOpacity = useTransform(scrollYProgress, [0.06, 0.2, 0.38], [0, 1, 0]);
+  const sweepY = useTransform(scrollYProgress, [0.1, 0.5], ["-34vh", "36vh"]);
+  const sweepOpacity = useTransform(scrollYProgress, [0.08, 0.18, 0.42, 0.54], [0, 1, 1, 0]);
+  const sweepScaleX = useTransform(scrollYProgress, [0.08, 0.28], [0.18, 1]);
 
-  // Phase 3 — reveal the work from a horizontal slit instead of throwing a card on top.
-  const projectOpacity = useTransform(scrollYProgress, [0.18, 0.24], [0, 1]);
-  const projectClip = useTransform(
+  const trackAX = useTransform(scrollYProgress, [0.16, 0.78], ["-10%", "12%"]);
+  const trackBX = useTransform(scrollYProgress, [0.16, 0.78], ["11%", "-13%"]);
+  const trackOpacity = useTransform(scrollYProgress, [0.12, 0.3, 0.72, 0.9], [0, 0.15, 0.11, 0]);
+
+  const manifestoOpacity = useTransform(scrollYProgress, [0.22, 0.36, 0.65, 0.76], [0, 1, 1, 0]);
+  const manifestoY = useTransform(scrollYProgress, [0.22, 0.4, 0.7], [58, 0, -34]);
+  const manifestoScale = useTransform(scrollYProgress, [0.22, 0.46, 0.72], [0.92, 1, 1.04]);
+  const manifestoClip = useTransform(
     scrollYProgress,
-    [0.18, 0.34, 0.62],
-    [
-      "inset(49% 10% 49% 10% round 28px)",
-      "inset(28% 6% 28% 6% round 24px)",
-      "inset(0% 0% 0% 0% round 14px)",
-    ],
+    [0.22, 0.42],
+    ["inset(48% 0 48% 0)", "inset(0% 0 0% 0)"],
   );
-  const projectScale = useTransform(scrollYProgress, [0.18, 0.62], [1.08, 1]);
-  const projectY = useTransform(scrollYProgress, [0.18, 0.62], [18, 0]);
-  const imageScale = useTransform(scrollYProgress, [0.18, 0.64], [1.12, 1]);
 
-  // Phase 4 — details only arrive after the visual has settled.
-  const chromeOpacity = useTransform(scrollYProgress, [0.48, 0.64], [0, 1]);
-  const detailOpacity = useTransform(scrollYProgress, [0.64, 0.82], [0, 1]);
-  const detailY = useTransform(scrollYProgress, [0.64, 0.84], [28, 0]);
-  const scrollHintOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
+  const slashRotate = useTransform(scrollYProgress, [0.26, 0.58], [-18, 18]);
+  const slashScale = useTransform(scrollYProgress, [0.26, 0.58], [0.65, 1.15]);
+
+  const finalOpacity = useTransform(scrollYProgress, [0.68, 0.82], [0, 1]);
+  const finalY = useTransform(scrollYProgress, [0.68, 0.86], [46, 0]);
+  const scrollHintOpacity = useTransform(scrollYProgress, [0, 0.13], [1, 0]);
 
   return (
     <section ref={heroRef} className={styles.hero}>
@@ -63,150 +115,138 @@ export function MotionHomeHero({ locale }: { locale: Locale }) {
 
         <div className={`nm-container ${styles.stageInner}`}>
           <div className={styles.topline}>
-            <span>NAUKA MOTION / DIGITAL STUDIO</span>
-            <span>JAKARTA · ID / 2026</span>
+            <span>NAUKA MOTION / INDEPENDENT DIGITAL STUDIO</span>
+            <span>DESIGN · BUILD · MOTION / 2026</span>
           </div>
 
           <motion.div
-            className={styles.titleBlock}
-            style={
-              reduceMotion
-                ? undefined
-                : { y: titleY, scale: titleScale, opacity: titleOpacity }
-            }
+            className={styles.brandStage}
+            style={reduceMotion ? undefined : { opacity: brandOpacity, y: brandY }}
           >
             <motion.span
               className={styles.nauka}
-              initial={reduceMotion ? false : { opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+              initial={reduceMotion ? false : { opacity: 0, x: -22 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             >
               NAUKA
             </motion.span>
 
             <h1 className={styles.motionWord} aria-label="Nauka Motion">
-              {letters.map((letter, index) => (
-                <motion.span
+              {LETTERS.map((letter, index) => (
+                <KineticGlyph
                   key={`${letter}-${index}`}
-                  initial={reduceMotion ? false : { y: "110%", opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{
-                    duration: 0.72,
-                    delay: reduceMotion ? 0 : 0.04 + index * 0.055,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                >
-                  {letter}
-                </motion.span>
+                  letter={letter}
+                  index={index}
+                  progress={scrollYProgress}
+                  reduceMotion={reduceMotion}
+                />
               ))}
             </h1>
 
             <div className={styles.statementRow}>
-              <p>SMALL MOVEMENT.</p>
-              <p>REAL IMPACT.</p>
+              <span>SMALL MOVEMENT.</span>
+              <span>REAL IMPACT.</span>
             </div>
           </motion.div>
 
           <motion.div
-            className={styles.signalLine}
+            className={styles.sweep}
             style={
               reduceMotion
                 ? undefined
-                : { scaleX: signalScaleX, opacity: signalOpacity }
+                : { y: sweepY, opacity: sweepOpacity, scaleX: sweepScaleX }
             }
             aria-hidden="true"
           />
 
-          <motion.article
-            className={styles.projectShell}
+          <motion.div
+            className={`${styles.track} ${styles.trackA}`}
+            style={reduceMotion ? undefined : { x: trackAX, opacity: trackOpacity }}
+            aria-hidden="true"
+          >
+            WEB / APP / SYSTEM / BRAND / MOTION / EXPERIENCE / WEB / APP / SYSTEM
+          </motion.div>
+          <motion.div
+            className={`${styles.track} ${styles.trackB}`}
+            style={reduceMotion ? undefined : { x: trackBX, opacity: trackOpacity }}
+            aria-hidden="true"
+          >
+            DESIGN / INTERACTION / PERFORMANCE / PRODUCT / DIGITAL / DESIGN / INTERACTION
+          </motion.div>
+
+          <motion.div
+            className={styles.manifesto}
             style={
               reduceMotion
                 ? undefined
                 : {
-                    opacity: projectOpacity,
-                    clipPath: projectClip,
-                    scale: projectScale,
-                    y: projectY,
+                    opacity: manifestoOpacity,
+                    y: manifestoY,
+                    scale: manifestoScale,
+                    clipPath: manifestoClip,
                   }
             }
-            aria-label={id ? "Karya pilihan JAECOO MAM Fatmawati" : "Selected work JAECOO MAM Fatmawati"}
           >
-            <motion.div
-              className={styles.projectImage}
-              style={reduceMotion ? undefined : { scale: imageScale }}
-            >
-              <Image
-                src="/showcase/jaecoo-fatmawati.webp"
-                alt={
-                  id
-                    ? "Preview website JAECOO MAM Fatmawati"
-                    : "JAECOO MAM Fatmawati website preview"
-                }
-                fill
-                sizes="(max-width: 767px) 94vw, 86vw"
-                priority
-              />
-            </motion.div>
+            <motion.span
+              className={styles.slash}
+              style={reduceMotion ? undefined : { rotate: slashRotate, scaleY: slashScale }}
+              aria-hidden="true"
+            />
+            <p>DESIGN / BUILD / MOTION</p>
+            <h2>
+              BUILT TO BE <em>FELT.</em>
+            </h2>
+            <span className={styles.manifestoNote}>
+              {id
+                ? "Gerak bukan dekorasi. Gerak mengarahkan perhatian."
+                : "Motion is not decoration. Motion directs attention."}
+            </span>
+          </motion.div>
 
-            <div className={styles.imageShade} />
+          <motion.div
+            className={styles.finalPanel}
+            style={reduceMotion ? undefined : { opacity: finalOpacity, y: finalY }}
+          >
+            <div>
+              <p className={styles.finalEyebrow}>NAUKA MOTION / DIGITAL EXPERIENCE</p>
+              <h2>
+                {id ? (
+                  <>
+                    Website yang punya <em>presence.</em>
+                  </>
+                ) : (
+                  <>
+                    Websites with <em>presence.</em>
+                  </>
+                )}
+              </h2>
+            </div>
 
-            <motion.div
-              className={styles.projectChrome}
-              style={reduceMotion ? undefined : { opacity: chromeOpacity }}
-            >
-              <span>SELECTED WORK / 01</span>
-              <span>JAECOO MAM FATMAWATI</span>
-              <span>WEB EXPERIENCE</span>
-            </motion.div>
-
-            <motion.div
-              className={styles.projectDetail}
-              style={
-                reduceMotion
-                  ? undefined
-                  : { opacity: detailOpacity, y: detailY }
-              }
-            >
-              <div className={styles.projectNumber}>01</div>
-              <div className={styles.detailText}>
-                <p>INDEPENDENT DIGITAL STUDIO</p>
-                <h2>
-                  {id ? (
-                    <>
-                      Website yang tidak cuma <em>dilihat.</em>
-                    </>
-                  ) : (
-                    <>
-                      Websites that are not only <em>seen.</em>
-                    </>
-                  )}
-                </h2>
+            <div className={styles.finalCopy}>
+              <p>
+                {id
+                  ? "Kami merancang website dan aplikasi dengan identitas yang kuat, interaksi yang terasa hidup, dan performa yang tetap dijaga."
+                  : "We design websites and apps with a distinct identity, purposeful interaction, and performance kept in check."}
+              </p>
+              <div className={styles.actions}>
+                <Link className="nm-button" href="/contact">
+                  {id ? "Mulai proyek" : "Start a project"}
+                  <ArrowUpRight size={17} />
+                </Link>
+                <Link className="nm-button nm-button-ghost" href="#karya">
+                  {id ? "Lihat karya" : "Explore work"}
+                </Link>
               </div>
-              <div className={styles.detailActions}>
-                <p>
-                  {id
-                    ? "Identitas yang kuat. Interaksi yang hidup. Performa tetap dijaga."
-                    : "Distinct identity. Purposeful interaction. Performance kept in check."}
-                </p>
-                <div className={styles.actions}>
-                  <Link className="nm-button" href="/contact">
-                    {id ? "Mulai proyek" : "Start a project"}
-                    <ArrowUpRight size={17} />
-                  </Link>
-                  <Link className="nm-button nm-button-ghost" href="#karya">
-                    {id ? "Lihat karya" : "Explore work"}
-                  </Link>
-                </div>
-              </div>
-            </motion.div>
-          </motion.article>
+            </div>
+          </motion.div>
 
           <motion.div
             className={styles.scrollHint}
             style={reduceMotion ? undefined : { opacity: scrollHintOpacity }}
           >
             <ArrowDown size={15} />
-            <span>{id ? "SCROLL UNTUK MEMBUKA" : "SCROLL TO REVEAL"}</span>
+            <span>{id ? "SCROLL / GERAKKAN" : "SCROLL / MOVE"}</span>
           </motion.div>
         </div>
       </div>
