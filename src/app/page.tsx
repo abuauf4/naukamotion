@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import { StudioHeader } from "@/components/studio/StudioHeader";
 import { StudioFooter } from "@/components/studio/StudioFooter";
 import {
-  HomeHero,
   ServiceSection,
   WorkSection,
   TrustSection,
@@ -15,6 +14,7 @@ import { getLocale } from "@/lib/server-locale";
 import { StructuredData } from "@/components/studio/StructuredData";
 import { SITE_URL, ORGANIZATION_ID } from "@/lib/seo";
 import { studioOrganization } from "@/lib/studio-schema";
+import { MotionHomeHero } from "@/components/studio/MotionHomeHero";
 
 export const revalidate = 60;
 
@@ -27,7 +27,7 @@ export default async function HomePage() {
   const locale = await getLocale();
 
   return (
-    <div className="nm-page">
+    <div className="nm-page nm-motion-home">
       <StudioHeader />
       <main id="main-content">
         <StructuredData
@@ -46,8 +46,7 @@ export default async function HomePage() {
             ],
           }}
         />
-        <HomeHero locale={locale} />
-        <ServiceSection locale={locale} />
+        <MotionHomeHero locale={locale} />
         <Suspense
           fallback={
             <section
@@ -61,6 +60,7 @@ export default async function HomePage() {
         >
           <FeaturedWork locale={locale} />
         </Suspense>
+        <ServiceSection locale={locale} />
         <TrustSection locale={locale} />
         <ProcessSection locale={locale} />
         <FaqSection locale={locale} />

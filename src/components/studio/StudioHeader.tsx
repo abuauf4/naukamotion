@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useLocale } from "@/lib/locale-context";
+import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 
 export function StudioHeader() {
   const { locale, setLocale } = useLocale();
@@ -13,6 +14,7 @@ export function StudioHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const menuButton = useRef<HTMLButtonElement>(null);
+  const reduce = useReducedMotion();
   const nav =
     locale === "id"
       ? [
@@ -105,37 +107,58 @@ export function StudioHeader() {
             type="button"
             aria-expanded={open}
             aria-controls="nm-mobile-nav"
-            aria-label={open ? "Tutup menu" : "Buka menu"}
+            aria-label={
+              locale === "id"
+                ? open
+                  ? "Tutup menu"
+                  : "Buka menu"
+                : open
+                  ? "Close menu"
+                  : "Open menu"
+            }
             onClick={() => setOpen((v) => !v)}
           >
             {open ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </div>
-      {open && (
-        <nav
-          id="nm-mobile-nav"
-          className="nm-mobile-nav nm-container"
-          aria-label="Mobile navigation"
-        >
-          {nav.map((item) => (
+      <AnimatePresence initial={false}>
+        {open && (
+          <m.nav
+            key="mobile-navigation"
+            id="nm-mobile-nav"
+            className="nm-mobile-nav nm-container"
+            aria-label={
+              locale === "id" ? "Navigasi mobile" : "Mobile navigation"
+            }
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{
+              height: 0,
+              opacity: 0,
+              transition: { duration: reduce ? 0 : 0.2 },
+            }}
+            transition={{ duration: reduce ? 0 : 0.3 }}
+          >
+            {nav.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
             <Link
-              key={item.href}
-              href={item.href}
+              className="nm-button"
+              href="/contact"
               onClick={() => setOpen(false)}
             >
-              {item.label}
+              {locale === "id" ? "Diskusi proyek" : "Let's talk"}
             </Link>
-          ))}
-          <Link
-            className="nm-button"
-            href="/contact"
-            onClick={() => setOpen(false)}
-          >
-            {locale === "id" ? "Diskusi proyek" : "Let's talk"}
-          </Link>
-        </nav>
-      )}
+          </m.nav>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

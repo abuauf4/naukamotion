@@ -5,6 +5,7 @@ import "./studio.css";
 import { getLocale } from "@/lib/server-locale";
 import { LocaleProvider } from "@/lib/locale-context";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
+import { StudioMotion } from "@/components/studio/StudioMotion";
 import { pageMetadata, SITE_URL } from "@/lib/seo";
 
 // Bundled Latin fonts keep builds independent of Google Fonts availability.
@@ -97,7 +98,9 @@ export default async function RootLayout({
       <body
         className={`${instrumentSans.variable} ${fraunces.variable} antialiased bg-background text-foreground`}
       >
-        <LocaleProvider initialLocale={locale}>{children}</LocaleProvider>
+        <LocaleProvider initialLocale={locale}>
+          <StudioMotion>{children}</StudioMotion>
+        </LocaleProvider>
         <GoogleAnalytics />
       </body>
     </html>

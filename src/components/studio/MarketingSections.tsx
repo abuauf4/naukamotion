@@ -20,6 +20,7 @@ import {
 } from "@/lib/studio-offering";
 import type { Locale } from "@/lib/server-locale";
 import type { FeaturedProject } from "@/lib/cms";
+import { MotionPicture, MotionReveal } from "./StudioMotion";
 
 export function HomeHero({ locale }: { locale: Locale }) {
   const id = locale === "id";
@@ -176,10 +177,10 @@ export function ServiceSection({
   return (
     <section id="layanan" className="nm-section nm-light">
       <div className="nm-container">
-        <div className="nm-section-heading">
+        <MotionReveal className="nm-section-heading">
           <div>
             <p className="nm-eyebrow">
-              01 / {id ? "YANG KAMI BANGUN" : "WHAT WE BUILD"}
+              02 / {id ? "YANG KAMI BANGUN" : "WHAT WE BUILD"}
             </p>
             <h2>
               {id ? (
@@ -202,12 +203,17 @@ export function ServiceSection({
               ? "Mulai dari kebutuhan Anda. Kita pilih bentuk produk dan fitur yang benar-benar membantu bisnis."
               : "Start with your needs. Together, we choose the product and features that will help your business."}
           </p>
-        </div>
+        </MotionReveal>
         <div className="nm-service-grid">
           {offerings.map((service, i) => {
             const Icon = icons[i];
             return (
-              <article key={service.id} className="nm-service-card">
+              <MotionReveal
+                as="article"
+                key={service.id}
+                className="nm-service-card"
+                delay={i * 0.07}
+              >
                 <div className="nm-service-top">
                   <span>{service.number}</span>
                   <Icon size={27} strokeWidth={1.5} />
@@ -241,7 +247,7 @@ export function ServiceSection({
                   {id ? "Bahas kebutuhan ini" : "Discuss this service"}
                   <Plus size={17} />
                 </Link>
-              </article>
+              </MotionReveal>
             );
           })}
         </div>
@@ -271,10 +277,10 @@ export function WorkSection({
   return (
     <section id="karya" className="nm-section">
       <div className="nm-container">
-        <div className="nm-section-heading">
+        <MotionReveal className="nm-section-heading">
           <div>
             <p className="nm-eyebrow">
-              02 / {id ? "KARYA PILIHAN" : "SELECTED WORK"}
+              01 / {id ? "KARYA PILIHAN" : "SELECTED WORK"}
             </p>
             <h2>
               {id ? (
@@ -302,71 +308,73 @@ export function WorkSection({
               {id ? "Lihat semua portofolio" : "View the full portfolio"}
             </Link>
           </div>
-        </div>
+        </MotionReveal>
         <div className="nm-work-grid">
-          <Link className="nm-work-card nm-work-product" href="/work/nacash">
-            <div className="nm-work-visual nm-app-visual">
-              <div className="nm-app-wordmark">
-                <span>PRODUK NAUKA</span>
-                <strong>
-                  NaCash<span>by Nauka</span>
-                </strong>
-                <p>
-                  {id
-                    ? "Dibuat untuk aktivitas sehari-hari."
-                    : "Built for everyday work."}
-                </p>
-              </div>
-              <Image
-                src="/showcase/nacash-dashboard.webp"
-                alt="Antarmuka aplikasi NaCash Fashion"
-                width={390}
-                height={844}
-                sizes="200px"
-              />
-            </div>
-            <div className="nm-work-caption">
-              <div>
-                <span>
-                  {id
-                    ? "Produk internal · Android"
-                    : "In-house product · Android"}
-                </span>
-                <h3>NaCash</h3>
-                <p>
-                  {id
-                    ? "Kasir, stok, dan pencatatan keuangan."
-                    : "Point of sale, inventory, and finance tracking."}
-                </p>
-              </div>
-              <span className="nm-project-number">01</span>
-            </div>
-          </Link>
-          {projects.slice(0, 3).map((project, i) => (
-            <Link
-              href={`/work/${project.slug}`}
-              className="nm-work-card"
-              key={project.slug}
-            >
-              <div className="nm-work-visual">
+          <MotionReveal>
+            <Link className="nm-work-card nm-work-product" href="/work/nacash">
+              <div className="nm-work-visual nm-app-visual">
+                <div className="nm-app-wordmark">
+                  <span>PRODUK NAUKA</span>
+                  <strong>
+                    NaCash<span>by Nauka</span>
+                  </strong>
+                  <p>
+                    {id
+                      ? "Dibuat untuk aktivitas sehari-hari."
+                      : "Built for everyday work."}
+                  </p>
+                </div>
                 <Image
-                  src={project.cover}
-                  alt={`Preview proyek ${project.name}`}
-                  fill
-                  sizes="(max-width: 767px) 92vw, 44vw"
+                  src="/showcase/nacash-dashboard.webp"
+                  alt="Antarmuka aplikasi NaCash Fashion"
+                  width={390}
+                  height={844}
+                  sizes="200px"
                 />
               </div>
               <div className="nm-work-caption">
                 <div>
-                  <span>{project.categoryTitle}</span>
-                  <h3>{project.name}</h3>
-                  <p>{project.tagline[locale]}</p>
+                  <span>
+                    {id
+                      ? "Produk internal · Android"
+                      : "In-house product · Android"}
+                  </span>
+                  <h3>NaCash</h3>
+                  <p>
+                    {id
+                      ? "Kasir, stok, dan pencatatan keuangan."
+                      : "Point of sale, inventory, and finance tracking."}
+                  </p>
                 </div>
-                <span className="nm-project-number">
-                  {String(i + 2).padStart(2, "0")}
-                </span>
+                <span className="nm-project-number">01</span>
               </div>
             </Link>
+          </MotionReveal>
+          {projects.slice(0, 3).map((project, i) => (
+            <MotionReveal key={project.slug} delay={i % 2 === 0 ? 0.08 : 0}>
+              <Link href={`/work/${project.slug}`} className="nm-work-card">
+                <div className="nm-work-visual">
+                  <MotionPicture>
+                    <Image
+                      src={project.cover}
+                      alt={`Preview proyek ${project.name}`}
+                      fill
+                      sizes="(max-width: 767px) 92vw, 44vw"
+                    />
+                  </MotionPicture>
+                </div>
+                <div className="nm-work-caption">
+                  <div>
+                    <span>{project.categoryTitle}</span>
+                    <h3>{project.name}</h3>
+                    <p>{project.tagline[locale]}</p>
+                  </div>
+                  <span className="nm-project-number">
+                    {String(i + 2).padStart(2, "0")}
+                  </span>
+                </div>
+              </Link>
+            </MotionReveal>
           ))}
         </div>
       </div>
@@ -401,7 +409,7 @@ export function TrustSection({ locale }: { locale: Locale }) {
   ];
   return (
     <section id="studio" className="nm-section nm-trust-section">
-      <div className="nm-container nm-trust-grid">
+      <MotionReveal className="nm-container nm-trust-grid">
         <div>
           <p className="nm-eyebrow">
             03 / {id ? "CARA KAMI BERPIKIR" : "HOW WE THINK"}
@@ -441,7 +449,7 @@ export function TrustSection({ locale }: { locale: Locale }) {
             </div>
           ))}
         </div>
-      </div>
+      </MotionReveal>
     </section>
   );
 }
@@ -451,7 +459,7 @@ export function ProcessSection({ locale }: { locale: Locale }) {
   return (
     <section id="proses" className="nm-section nm-process-section">
       <div className="nm-container">
-        <div className="nm-section-heading">
+        <MotionReveal className="nm-section-heading">
           <div>
             <p className="nm-eyebrow">
               04 / {id ? "PROSES KERJA" : "THE PROCESS"}
@@ -477,15 +485,15 @@ export function ProcessSection({ locale }: { locale: Locale }) {
               ? "Dari percakapan pertama sampai produk digunakan, setiap tahap punya hasil yang bisa Anda tinjau."
               : "From the first conversation to delivery, every stage has an outcome you can review."}
           </p>
-        </div>
+        </MotionReveal>
         <ol className="nm-process-grid">
-          {deliverySteps.map((step) => (
-            <li key={step.number}>
+          {deliverySteps.map((step, i) => (
+            <MotionReveal as="li" key={step.number} delay={i * 0.08}>
               <span className="nm-step-number">{step.number}</span>
               <h3>{step.title[locale]}</h3>
               <p>{step.description[locale]}</p>
               <span className="nm-step-result">{step.result[locale]}</span>
-            </li>
+            </MotionReveal>
           ))}
         </ol>
       </div>
@@ -504,7 +512,7 @@ export function FaqSection({
   const Heading = full ? "h1" : "h2";
   return (
     <section id="faq" className="nm-section">
-      <div className="nm-container nm-faq-grid">
+      <MotionReveal className="nm-container nm-faq-grid">
         <div>
           <p className="nm-eyebrow">{full ? "FAQ" : "05 / FAQ"}</p>
           <Heading className="nm-faq-heading">
@@ -547,7 +555,7 @@ export function FaqSection({
             </details>
           ))}
         </div>
-      </div>
+      </MotionReveal>
     </section>
   );
 }
@@ -556,7 +564,7 @@ export function ProjectCTA({ locale }: { locale: Locale }) {
   const id = locale === "id";
   return (
     <section id="kontak" className="nm-cta-section">
-      <div className="nm-container nm-cta-inner">
+      <MotionReveal className="nm-container nm-cta-inner">
         <div>
           <p className="nm-eyebrow">
             {id ? "MULAI DARI SATU PERCAKAPAN" : "START WITH A CONVERSATION"}
@@ -597,7 +605,7 @@ export function ProjectCTA({ locale }: { locale: Locale }) {
             {id ? "Atau ngobrol via WhatsApp" : "Or chat on WhatsApp"}
           </a>
         </div>
-      </div>
+      </MotionReveal>
     </section>
   );
 }

@@ -1,0 +1,400 @@
+.hero {
+  position: relative;
+  height: 170svh;
+  background: #101716;
+}
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: clip;
+  isolation: isolate;
+  background: #101716;
+}
+.inner {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  padding-top: 116px;
+  padding-bottom: 35px;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 28px;
+}
+.topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  color: #a8b3ad;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+}
+.canvas {
+  position: relative;
+  min-height: 0;
+  display: grid;
+  align-items: center;
+}
+.brand {
+  position: relative;
+  z-index: 2;
+}
+.brand h1 {
+  margin: 0;
+  font-weight: 500;
+  font-size: clamp(5rem, 16.1vw, 15rem);
+  letter-spacing: -0.08em;
+  line-height: 0.84;
+}
+.nauka {
+  display: block;
+  overflow: clip;
+  width: max-content;
+  padding: 0.03em 0.04em 0.1em 0;
+  margin-bottom: -0.02em;
+}
+.nauka > span {
+  display: block;
+}
+.motion {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.025em 0.025em 0 0;
+  letter-spacing: -0.075em;
+}
+.glyph {
+  display: block;
+  min-width: 0;
+}
+.glyphMask {
+  display: block;
+  overflow: clip;
+  padding-block: 0.025em 0.1em;
+}
+.glyphMask > span {
+  display: block;
+}
+.motto {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  color: var(--nm-orange);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  margin-top: 15px;
+  padding-top: 18px;
+  border-top: 1px solid #ffffff26;
+}
+.accent {
+  position: absolute;
+  width: clamp(80px, 14vw, 185px);
+  aspect-ratio: 1;
+  right: 10%;
+  top: 10%;
+  z-index: 1;
+  color: #ff8050;
+  transform-origin: center;
+}
+.accent > span {
+  position: absolute;
+  width: 100%;
+  height: 21%;
+  top: 39.5%;
+  left: 0;
+  background: currentColor;
+}
+.accent > span:nth-child(2) {
+  transform: rotate(45deg);
+}
+.accent > span:nth-child(3) {
+  transform: rotate(90deg);
+}
+.accent > span:nth-child(4) {
+  transform: rotate(135deg);
+}
+.statement {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 3;
+  pointer-events: none;
+}
+.statement > p {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  margin: 0 0 26px;
+  color: #a8b3ad;
+}
+.statement > span {
+  display: block;
+  font-size: clamp(4rem, 11vw, 10.6rem);
+  font-weight: 500;
+  letter-spacing: -0.07em;
+  line-height: 0.92;
+}
+.statement em {
+  font-family: var(--nm-serif);
+  font-weight: 400;
+  color: var(--nm-orange);
+}
+.bottom {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+  gap: 30px;
+}
+.bottom > p {
+  color: #b9c4be;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  margin: 0;
+}
+.bottom strong {
+  font-weight: 500;
+  color: #f5f6f2;
+}
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+.actions :global(.nm-button) {
+  border-radius: 100px;
+  padding-inline: 30px;
+}
+.workLink {
+  color: var(--ink);
+  position: relative;
+  text-decoration: none;
+  font-size: 0.9375rem;
+  padding-block: 16px;
+}
+.linkLine {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: currentColor;
+  transform-origin: left;
+  transition: transform 0.3s;
+}
+.workLink:hover .linkLine {
+  transform: scaleX(0.45);
+}
+.scrollNote {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  font-size: 0.75rem;
+  color: #a8b3ad;
+  letter-spacing: 0.07em;
+}
+.scrollNote > span {
+  display: block;
+  width: 1px;
+  height: 35px;
+  overflow: hidden;
+  background: #ffffff26;
+}
+.scrollNote > span::after {
+  content: "";
+  display: block;
+  height: 14px;
+  width: 1px;
+  background: #ff8050;
+  animation: travel 2s ease-in-out 3;
+}
+.backgroundType {
+  position: absolute;
+  left: -2%;
+  bottom: 8%;
+  color: transparent;
+  -webkit-text-stroke: 1px #b5c5ba13;
+  font-size: 13vw;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.065em;
+  white-space: nowrap;
+  z-index: 0;
+  pointer-events: none;
+}
+.progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: #ff8050;
+  transform-origin: left;
+}
+@keyframes travel {
+  0% {
+    transform: translateY(-15px);
+  }
+  100% {
+    transform: translateY(40px);
+  }
+}
+@media (min-width: 1500px) {
+  .brand h1 {
+    font-size: 15rem;
+  }
+}
+@media (max-width: 1100px) {
+  .bottom {
+    grid-template-columns: 1fr auto;
+  }
+  .scrollNote {
+    display: none;
+  }
+  .brand h1 {
+    font-size: 16vw;
+  }
+}
+@media (max-width: 900px) {
+  .inner {
+    padding-top: 105px;
+  }
+  .topline {
+    font-size: 0.75rem;
+  }
+  .topline > span:last-child {
+    display: none;
+  }
+  .actions {
+    gap: 22px;
+  }
+  .bottom > p {
+    font-size: 1rem;
+  }
+}
+@media (max-width: 640px) {
+  .hero {
+    height: 150svh;
+  }
+  .inner {
+    padding-top: 97px;
+    padding-bottom: 30px;
+    gap: 20px;
+  }
+  .canvas {
+    align-items: center;
+  }
+  .brand h1 {
+    font-size: clamp(4rem, 25.5vw, 9rem);
+    line-height: 0.9;
+  }
+  .nauka {
+    padding-bottom: 0.08em;
+  }
+  .motto {
+    font-size: 0.75rem;
+    margin-top: 19px;
+    padding-top: 16px;
+    gap: 10px;
+    letter-spacing: 0.045em;
+  }
+  .accent {
+    right: 3%;
+    top: 10%;
+    width: 75px;
+  }
+  .statement > span {
+    font-size: clamp(3.6rem, 16vw, 6rem);
+  }
+  .statement > p {
+    font-size: 0.75rem;
+    margin-bottom: 24px;
+  }
+  .bottom {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+  .bottom > p {
+    font-size: 1.125rem;
+  }
+  .actions {
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .actions :global(.nm-button) {
+    min-height: 50px;
+    padding: 15px 25px;
+    font-size: 0.9375rem;
+  }
+  .workLink {
+    font-size: 0.9375rem;
+  }
+  .backgroundType {
+    font-size: 30vw;
+    bottom: 19%;
+  }
+}
+/* A short landscape viewport gets a natural, non-pinned composition. */
+@media (max-height: 580px) {
+  .hero {
+    height: auto;
+  }
+  .stage {
+    position: relative;
+    height: auto;
+  }
+  .inner {
+    grid-template-rows: auto auto auto;
+    min-height: 540px;
+  }
+  .canvas {
+    padding-block: 25px;
+  }
+  .brand h1 {
+    font-size: clamp(4rem, 12vw, 8.5rem);
+  }
+  .motion {
+    width: min(100%, 800px);
+  }
+  .statement {
+    display: none;
+  }
+  .brand,
+  .nauka,
+  .glyph {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero {
+    height: auto;
+  }
+  .stage {
+    position: relative;
+    height: auto;
+    min-height: 100svh;
+  }
+  .inner {
+    min-height: 100svh;
+    grid-template-rows: auto auto auto;
+  }
+  .canvas {
+    padding-block: 50px;
+  }
+  .statement,
+  .backgroundType {
+    display: none;
+  }
+  .brand,
+  .nauka,
+  .glyph {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  .scrollNote > span::after {
+    animation: none;
+  }
+}
