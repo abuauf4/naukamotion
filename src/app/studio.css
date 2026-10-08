@@ -203,7 +203,7 @@ select {
   inset-inline: 0;
   z-index: 80;
   color: var(--ink);
-  background: rgba(16, 23, 22, 0.94);
+  background: #101716;
   border-bottom: 1px solid var(--line);
   /* Opaque enough for readability without a scroll-time GPU blur. */
   backdrop-filter: none;
@@ -2294,6 +2294,20 @@ select {
 .nm-motion-home .nm-work-grid > div:nth-child(even) {
   margin-top: 88px;
 }
+.nm-motion-home .nm-work-grid > div:last-child:nth-child(odd):not(:first-child) {
+  grid-column: 1 / -1;
+}
+.nm-motion-home .nm-work-grid > div:last-child:nth-child(odd):not(:first-child) .nm-work-card {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  align-items: center;
+  gap: 50px;
+}
+.nm-motion-home .nm-work-grid > div:last-child:nth-child(odd):not(:first-child) .nm-work-caption {
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
 .nm-motion-home .nm-work-visual {
   border-radius: 2px;
   border: 0;
@@ -2540,6 +2554,14 @@ select {
   }
   .nm-motion-home .nm-work-grid > div:nth-child(even) {
     margin-top: 0;
+  }
+  .nm-motion-home .nm-work-grid > div:last-child:nth-child(odd):not(:first-child) .nm-work-card {
+    display: block;
+  }
+  .nm-motion-home .nm-work-grid > div:last-child:nth-child(odd):not(:first-child) .nm-work-caption {
+    margin-top: 16px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
   }
   .nm-motion-home .nm-work-visual {
     aspect-ratio: 1.2;
