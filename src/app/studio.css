@@ -2220,6 +2220,10 @@ select {
 .nm-mobile-nav {
   overflow: hidden;
 }
+/* Framer controls the transform; CSS hover transitions must not trail it. */
+.nm-service-card.nm-motion-reveal {
+  transition: border-color 0.2s;
+}
 .nm-desktop-nav a {
   position: relative;
 }

@@ -55,6 +55,7 @@
 }
 .nauka > span {
   display: block;
+  animation: settle 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .motion {
   display: flex;
@@ -74,6 +75,22 @@
 }
 .glyphMask > span {
   display: block;
+  animation: settle 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.glyph:nth-child(2) .glyphMask > span {
+  animation-delay: 0.055s;
+}
+.glyph:nth-child(3) .glyphMask > span {
+  animation-delay: 0.11s;
+}
+.glyph:nth-child(4) .glyphMask > span {
+  animation-delay: 0.165s;
+}
+.glyph:nth-child(5) .glyphMask > span {
+  animation-delay: 0.22s;
+}
+.glyph:nth-child(6) .glyphMask > span {
+  animation-delay: 0.275s;
 }
 .motto {
   display: flex;
@@ -93,25 +110,24 @@
   right: 10%;
   top: 10%;
   z-index: 1;
-  color: #ff8050;
   transform-origin: center;
+  pointer-events: none;
 }
-.accent > span {
+.gearRotor,
+.gearHub {
   position: absolute;
+  inset: 0;
+}
+.gearRotor {
+  will-change: transform;
+}
+.accent svg {
+  display: block;
   width: 100%;
-  height: 21%;
-  top: 39.5%;
-  left: 0;
-  background: currentColor;
+  height: 100%;
 }
-.accent > span:nth-child(2) {
-  transform: rotate(45deg);
-}
-.accent > span:nth-child(3) {
-  transform: rotate(90deg);
-}
-.accent > span:nth-child(4) {
-  transform: rotate(135deg);
+.gearHub {
+  z-index: 1;
 }
 .statement {
   position: absolute;
@@ -241,6 +257,14 @@
     transform: translateY(40px);
   }
 }
+@keyframes settle {
+  from {
+    transform: translateY(8%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
 @media (min-width: 1500px) {
   .brand h1 {
     font-size: 15rem;
@@ -303,7 +327,7 @@
   .accent {
     right: 3%;
     top: 10%;
-    width: 75px;
+    width: 82px;
   }
   .statement > span {
     font-size: clamp(3.6rem, 16vw, 6rem);
@@ -396,5 +420,13 @@
   }
   .scrollNote > span::after {
     animation: none;
+  }
+  .nauka > span,
+  .glyphMask > span {
+    animation: none;
+    transform: none;
+  }
+  .gearRotor {
+    will-change: auto;
   }
 }

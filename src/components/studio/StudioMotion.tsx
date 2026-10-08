@@ -39,8 +39,8 @@ export function StudioMotion({ children }: { children: ReactNode }) {
   );
 }
 
-/** Server content stays visible without JavaScript. Only offscreen elements
- * are prepared for an entrance after hydration; keyboard focus reveals them. */
+/** Keep content opaque during fast scrolling. Offscreen elements move into
+ * place once, with a head start before they enter the viewport. */
 export function MotionReveal({
   children,
   className,
@@ -53,6 +53,7 @@ export function MotionReveal({
   delay?: number;
 }) {
   const ref = useRef<HTMLElement>(null);
+  const hasEntered = useRef(false);
   const setRef = useCallback((element: HTMLElement | null) => {
     ref.current = element;
   }, []);
@@ -62,26 +63,28 @@ export function MotionReveal({
 
   useEffect(() => {
     const element = ref.current;
+    if (!element) return;
     if (
-      !element ||
       reduce ||
-      element.getBoundingClientRect().top < window.innerHeight
+      hasEntered.current ||
+      element.getBoundingClientRect().top < window.innerHeight + 80
     ) {
-      controls.set({ opacity: 1, y: 0 });
+      hasEntered.current = true;
+      controls.set({ y: 0 });
       return;
     }
-    controls.set({ opacity: 0, y: 36 });
+    controls.set({ y: 24 });
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
+        hasEntered.current = true;
         void controls.start({
-          opacity: 1,
           y: 0,
-          transition: { duration: 0.7, delay, ease: EASE },
+          transition: { duration: 0.5, delay: Math.min(delay, 0.12), ease: EASE },
         });
         observer.disconnect();
       },
-      { rootMargin: "0px 0px -32px 0px", threshold: 0 },
+      { rootMargin: "80px 0px 80px 0px", threshold: 0 },
     );
     observer.observe(element);
     return () => observer.disconnect();
@@ -90,11 +93,12 @@ export function MotionReveal({
   return (
     <Element
       ref={setRef}
-      className={className}
+      className={["nm-motion-reveal", className].filter(Boolean).join(" ")}
       initial={false}
       animate={controls}
       onFocusCapture={() => {
-        void controls.start({ opacity: 1, y: 0, transition: { duration: 0 } });
+        hasEntered.current = true;
+        controls.set({ y: 0 });
       }}
     >
       {children}
